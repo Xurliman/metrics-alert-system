@@ -18,10 +18,16 @@ func UpdateMetrics(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
+	metricType := r.PathValue("type")
+	if metricType != "gauge" && metricType != "counter" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 	metricVal := r.PathValue("value")
 	_, err := strconv.ParseInt(metricVal, 10, 64)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 	w.WriteHeader(http.StatusOK)
 }
