@@ -1,8 +1,8 @@
 package main
 
 import (
+	"github.com/Xurliman/metrics-alert-system/cmd/server/handlers"
 	"net/http"
-	"strings"
 )
 
 func main() {
@@ -12,22 +12,7 @@ func main() {
 }
 
 func run() error {
-	http.HandleFunc("/update/counter/", webhook)
-	http.HandleFunc("/update/gauge/", webhook)
-	return http.ListenAndServe(`:8080`, nil)
-}
-
-func webhook(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	path := r.URL.Path
-	nameAndVal := strings.ReplaceAll(path, "/update/counter/", "")
-	if nameAndVal == "" {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-	w.WriteHeader(http.StatusOK)
-	return
+	mux := http.NewServeMux()
+	mux.HandleFunc("POST /update/{type}/{name}/{value}", handlers.UpdateMetrics)
+	return http.ListenAndServe(`:8080`, mux)
 }
