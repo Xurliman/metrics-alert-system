@@ -3,7 +3,6 @@ package services
 import (
 	"fmt"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/models"
-	"io"
 	"log"
 	"math/rand"
 	"net/http"
@@ -68,12 +67,7 @@ func SendMetrics(metrics models.Metrics) {
 		if err != nil {
 			log.Printf("Error sending request for gauge metrics: %s\n", err)
 		}
-		defer func(Body io.ReadCloser) {
-			err := Body.Close()
-			if err != nil {
-				log.Printf("Error closing body for gauge metrics: %s\n", err)
-			}
-		}(response.Body)
+		defer response.Body.Close()
 		log.Printf("Sent gauge %s with value %f, response: %s\n", metric, value, response.Status)
 	}
 
@@ -88,12 +82,7 @@ func SendMetrics(metrics models.Metrics) {
 		if err != nil {
 			log.Printf("Error sending request for counter metrics: %s\n", err)
 		}
-		defer func(Body io.ReadCloser) {
-			err := Body.Close()
-			if err != nil {
-				log.Printf("Error closing body for counter metrics: %s\n", err)
-			}
-		}(response.Body)
-		log.Printf("Sent counter %s with value %f, response: %s\n", metric, value, response.Status)
+		defer response.Body.Close()
+		log.Printf("Sent counter %s with value %v, response: %s\n", metric, value, response.Status)
 	}
 }
