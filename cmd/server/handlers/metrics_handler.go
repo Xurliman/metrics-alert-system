@@ -24,10 +24,20 @@ func UpdateMetrics(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	metricVal := r.PathValue("value")
-	_, err := strconv.ParseInt(metricVal, 10, 64)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
+	if metricType == "counter" {
+		_, err := strconv.ParseInt(metricVal, 10, 64)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
 	}
+	if metricType == "gauge" {
+		_, err := strconv.ParseFloat(metricVal, 64)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+	}
+
 	w.WriteHeader(http.StatusOK)
 }

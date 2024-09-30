@@ -10,11 +10,17 @@ func main() {
 	reportInterval := 10 * time.Second
 
 	metrics := services.CollectMetrics()
+	services.SendMetrics(metrics)
+	pollTicker := time.NewTicker(pollInterval)
+	reportTicker := time.NewTicker(reportInterval)
+
+	defer pollTicker.Stop()
+	defer reportTicker.Stop()
 	for {
 		select {
-		case <-time.Tick(pollInterval):
+		case <-pollTicker.C:
 			metrics = services.CollectMetrics()
-		case <-time.Tick(reportInterval):
+		case <-reportTicker.C:
 			services.SendMetrics(metrics)
 		}
 	}

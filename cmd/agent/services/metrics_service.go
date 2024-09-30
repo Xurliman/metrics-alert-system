@@ -68,7 +68,6 @@ func SendMetrics(metrics models.Metrics) {
 			log.Printf("Error sending request for gauge metrics: %s\n", err)
 		}
 		defer response.Body.Close()
-		log.Printf("Sent gauge %s with value %f, response: %s\n", metric, value, response.Status)
 	}
 
 	for metric, value := range metrics.Counter {
@@ -83,6 +82,5 @@ func SendMetrics(metrics models.Metrics) {
 			log.Printf("Error sending request for counter metrics: %s\n", err)
 		}
 		defer response.Body.Close()
-		log.Printf("Sent counter %s with value %v, response: %s\n", metric, value, response.Status)
 	}
 }
