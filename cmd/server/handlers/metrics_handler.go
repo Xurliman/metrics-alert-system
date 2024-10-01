@@ -13,14 +13,14 @@ func UpdateMetrics(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	metricType := r.PathValue("type")
+	if metricType != "gauge" && metricType != "counter" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 	metricName := r.PathValue("name")
 	if metricName == "" {
 		w.WriteHeader(http.StatusNotFound)
-		return
-	}
-	metricType := r.PathValue("type")
-	if metricType != "gauge" && metricType != "counter" {
-		w.WriteHeader(http.StatusNotImplemented)
 		return
 	}
 	metricVal := r.PathValue("value")
@@ -38,6 +38,5 @@ func UpdateMetrics(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-
 	w.WriteHeader(http.StatusOK)
 }
