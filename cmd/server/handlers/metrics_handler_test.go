@@ -63,9 +63,12 @@ func TestUpdateMetrics(t *testing.T) {
 			request, err := http.NewRequest(test.method, test.url, nil)
 			assert.NoError(t, err)
 			response, err := client.Do(request)
-			assert.NoError(t, err)
-			defer response.Body.Close()
-			assert.Equal(t, test.expected.statusCode, response.StatusCode)
+			if assert.NoError(t, err) {
+				defer response.Body.Close()
+				assert.Equal(t, test.expected.statusCode, response.StatusCode)
+			} else {
+				assert.Fail(t, err.Error())
+			}
 		})
 	}
 }

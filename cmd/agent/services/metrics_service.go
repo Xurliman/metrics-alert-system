@@ -3,7 +3,6 @@ package services
 import (
 	"fmt"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/models"
-	"log"
 	"math/rand"
 	"net/http"
 	"runtime"
@@ -58,12 +57,12 @@ func SendMetrics(client http.Client, metrics models.Metrics) {
 		url := fmt.Sprintf("http://localhost:8080/update/gauge/%s/%f", metric, value)
 		response, err := client.Post(url, "text/plain", nil)
 		if err != nil {
-			log.Printf("Error sending request for gauge metrics: %s\n", err)
+			//log.Printf("Error sending request for gauge metrics: %s\n", err)
 			return
 		}
 		err = response.Body.Close()
 		if err != nil {
-			log.Printf("Error closing response body: %s\n", err)
+			//log.Printf("Error closing response body: %s\n", err)
 			return
 		}
 	}
@@ -72,12 +71,12 @@ func SendMetrics(client http.Client, metrics models.Metrics) {
 		url := fmt.Sprintf("http://localhost:8080/update/counter/%s/%v", metric, value)
 		response, err := client.Post(url, "text/plain", nil)
 		if err != nil {
-			log.Printf("Error creating request for counter metrics: %s\n", err)
+			//log.Printf("Error creating request for counter metrics: %s\n", err)
 			return
 		}
 		err = response.Body.Close()
 		if err != nil {
-			log.Printf("Error closing response body for gauge metrics: %s\n", err)
+			//log.Printf("Error closing response body for gauge metrics: %s\n", err)
 			return
 		}
 	}
