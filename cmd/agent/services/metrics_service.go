@@ -3,7 +3,6 @@ package services
 import (
 	"fmt"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/models"
-	"io"
 	"log"
 	"math/rand"
 	"net/http"
@@ -55,45 +54,31 @@ func CollectMetrics() models.Metrics {
 }
 
 func SendMetrics(metrics models.Metrics) {
-	client := &http.Client{}
 	for metric, value := range metrics.Gauge {
 		url := fmt.Sprintf("http://127.0.0.1:8080/update/gauge/%s/%f", metric, value)
-		request, err := http.NewRequest(http.MethodPost, url, nil)
-		if err != nil {
-			log.Printf("Error creating request for gauge metrics: %s\n", err)
-			continue
-		}
-		request.Header.Set("Content-Type", "text/plain")
-		response, err := client.Do(request)
+		response, err := http.Post(url, "text/plain", nil)
 		if err != nil {
 			log.Printf("Error sending request for gauge metrics: %s\n", err)
+			return
 		}
-		if response != nil {
-			io.Copy(io.Discard, response.Body)
-			err = response.Body.Close()
-			if err != nil {
-				log.Printf("Error closing response body for gauge metrics: %s\n", err)
-			}
+		err = response.Body.Close()
+		if err != nil {
+			log.Printf("Error closing response body: %s\n", err)
+			return
 		}
 	}
 
 	for metric, value := range metrics.Counter {
 		url := fmt.Sprintf("http://127.0.0.1:8080/update/counter/%s/%v", metric, value)
-		request, err := http.NewRequest(http.MethodPost, url, nil)
+		response, err := http.Post(url, "text/plain", nil)
 		if err != nil {
 			log.Printf("Error creating request for counter metrics: %s\n", err)
+			return
 		}
-		request.Header.Set("Content-Type", "text/plain")
-		response, err := client.Do(request)
+		err = response.Body.Close()
 		if err != nil {
-			log.Printf("Error sending request for counter metrics: %s\n", err)
-		}
-		if response != nil {
-			io.Copy(io.Discard, response.Body)
-			err = response.Body.Close()
-			if err != nil {
-				log.Printf("Error closing response body for gauge metrics: %s\n", err)
-			}
+			log.Printf("Error closing response body for gauge metrics: %s\n", err)
+			return
 		}
 	}
 }
