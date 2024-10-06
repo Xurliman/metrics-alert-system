@@ -1,18 +1,13 @@
 package main
 
 import (
-	"github.com/Xurliman/metrics-alert-system/cmd/server/handlers"
-	"net/http"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/routes"
 )
 
 func main() {
-	if err := run(); err != nil {
-		panic(err)
+	r := routes.SetupRoutes()
+	err := r.Run(":8080")
+	if err != nil {
+		return
 	}
-}
-
-func run() error {
-	mux := http.NewServeMux()
-	mux.HandleFunc("POST /update/{type}/{name}/{value}", handlers.UpdateMetrics)
-	return http.ListenAndServe(`:8080`, mux)
 }
