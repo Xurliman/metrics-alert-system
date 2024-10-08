@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"github.com/Xurliman/metrics-alert-system/cmd/server/routes"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/mocks/servicemocks"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"net/http"
@@ -9,7 +9,20 @@ import (
 	"testing"
 )
 
+func setupRoutes(service *servicemocks.MetricsServiceInterface) *gin.Engine {
+	controller := NewMetricsController(service)
+	gin.SetMode(gin.TestMode)
+	r := gin.Default()
+	r.LoadHTMLFiles("../../public/templates/metrics-all.html")
+	r.GET("/", controller.Index)
+	r.GET("/value/:type/:name", controller.Show)
+	r.POST("/update/:type/:name/:value", controller.Validate)
+	return r
+}
+
 func TestMetricsController_Index(t *testing.T) {
+	service := servicemocks.NewMetricsServiceInterface(t)
+	router := setupRoutes(service)
 	type expected struct {
 		statusCode int
 	}
@@ -28,63 +41,89 @@ func TestMetricsController_Index(t *testing.T) {
 			},
 		},
 	}
+
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			router := routes.SetupRoutes()
-			w := httptest.NewRecorder()
-			r := httptest.NewRequest(test.method, test.url, nil)
-			router.ServeHTTP(w, r)
-
-			result := w.Result()
-			assert.Equal(t, test.expected.statusCode, result.StatusCode)
-			defer result.Body.Close()
+			myMap := make(map[string]string)
+			service.On("GetAll").Return(myMap)
+			req := httptest.NewRequest(test.method, test.url, nil)
+			resp := httptest.NewRecorder()
+			router.ServeHTTP(resp, req)
+			assert.Equal(t, test.expected.statusCode, resp.Code)
 		})
 	}
 }
 
 func TestMetricsController_Show(t *testing.T) {
+	service := servicemocks.NewMetricsServiceInterface(t)
+	router := setupRoutes(service)
 	type expected struct {
 		statusCode int
 	}
 	tests := []struct {
-		name     string
-		method   string
-		url      string
-		expected expected
+		name        string
+		metricsType string
+		metricsName string
+		method      string
+		url         string
+		expected    expected
 	}{
 		{
-			name:   "first",
-			method: http.MethodGet,
-			url:    "http://localhost:8080/value/gauge/LastGC",
+			name:        "first",
+			metricsType: "counter",
+			metricsName: "someMetric",
+			method:      http.MethodPost,
+			url:         "http://localhost:8080/value/counter/someMetric/",
+			expected: expected{
+				statusCode: http.StatusNotFound,
+			},
+		},
+		{
+			name:        "second",
+			metricsType: "gauge",
+			metricsName: "someMetric",
+			method:      http.MethodGet,
+			url:         "http://localhost:8080/value/gauge/someMetric/",
+			expected: expected{
+				statusCode: http.StatusNotFound,
+			},
+		},
+		{
+			name:        "third",
+			metricsType: "gauge",
+			metricsName: "GCCPUFraction",
+			method:      http.MethodGet,
+			url:         "http://localhost:8080/value/gauge/GCCPUFraction/",
 			expected: expected{
 				statusCode: http.StatusOK,
 			},
 		},
 		{
-			name:   "second",
-			method: http.MethodGet,
-			url:    "http://localhost:8080/update/gauge/someMetric",
+			name:        "fourth",
+			metricsType: "gauge",
+			metricsName: "HeapObjects",
+			method:      http.MethodGet,
+			url:         "http://localhost:8080/value/counter/HeapObjects/",
 			expected: expected{
 				statusCode: http.StatusNotFound,
 			},
 		},
 	}
+
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			gin.SetMode(gin.TestMode)
-			router := gin.Default()
-			w := httptest.NewRecorder()
-			r := httptest.NewRequest(test.method, test.url, nil)
-			router.ServeHTTP(w, r)
-
-			result := w.Result()
-			assert.Equal(t, test.expected.statusCode, result.StatusCode)
-			defer result.Body.Close()
+			service.On("FindByName", test.metricsType, test.metricsName)
+			req := httptest.NewRequest(test.method, test.url, nil)
+			resp := httptest.NewRecorder()
+			router.ServeHTTP(resp, req)
+			assert.Equal(t, test.expected.statusCode, resp.Code)
 		})
 	}
 }
 
 func TestMetricsController_Validate(t *testing.T) {
+	service := servicemocks.NewMetricsServiceInterface(t)
+	router := setupRoutes(service)
 	type expected struct {
 		statusCode int
 	}
@@ -107,7 +146,7 @@ func TestMetricsController_Validate(t *testing.T) {
 			method: http.MethodGet,
 			url:    "http://localhost:8080/update/gauge/someMetric/527",
 			expected: expected{
-				statusCode: http.StatusBadRequest,
+				statusCode: http.StatusNotFound,
 			},
 		},
 		{
@@ -135,17 +174,13 @@ func TestMetricsController_Validate(t *testing.T) {
 			},
 		},
 	}
+
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			gin.SetMode(gin.TestMode)
-			router := gin.Default()
-			w := httptest.NewRecorder()
-			r := httptest.NewRequest(test.method, test.url, nil)
-			router.ServeHTTP(w, r)
-
-			result := w.Result()
-			assert.Equal(t, test.expected.statusCode, result.StatusCode)
-			defer result.Body.Close()
+			req := httptest.NewRequest(test.method, test.url, nil)
+			resp := httptest.NewRecorder()
+			router.ServeHTTP(resp, req)
+			assert.Equal(t, test.expected.statusCode, resp.Code)
 		})
 	}
 }

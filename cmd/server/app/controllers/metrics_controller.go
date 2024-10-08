@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -16,6 +17,7 @@ func NewMetricsController(service interfaces.MetricsServiceInterface) *MetricsCo
 }
 
 func (c *MetricsController) Validate(ctx *gin.Context) {
+	log.Println("VALIDATE METRICS")
 	if ctx.Request.Method != http.MethodPost {
 		ctx.Status(http.StatusBadRequest)
 	}
@@ -48,16 +50,19 @@ func (c *MetricsController) Validate(ctx *gin.Context) {
 }
 
 func (c *MetricsController) Index(ctx *gin.Context) {
+	log.Println("INDEX METRICS")
 	data := c.service.GetAll()
 	ctx.HTML(http.StatusOK, "metrics-all.html", data)
 }
 
 func (c *MetricsController) Show(ctx *gin.Context) {
+	log.Println("SHOW METRICS")
 	metricsType := ctx.Param("type")
 	metricsName := ctx.Param("name")
 	metricsValue, err := c.service.FindByName(metricsType, metricsName)
 	if err != nil {
 		ctx.Status(http.StatusNotFound)
+		return
 	}
 	ctx.String(http.StatusOK, metricsValue)
 }

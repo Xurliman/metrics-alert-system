@@ -1,14 +1,22 @@
 package routes
 
 import (
+	"fmt"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/controllers"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/services"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+	"os"
 )
 
 func SetupRoutes() *gin.Engine {
-	gin.SetMode(gin.DebugMode)
-	r := gin.Default()
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("Using env from machine")
+	}
+	mode := os.Getenv("GIN_MODE")
+	gin.SetMode(mode)
+	r := gin.New()
 	r.LoadHTMLFiles("./cmd/server/public/templates/metrics-all.html")
 	metricsService := services.NewMetricsService()
 	metricsController := controllers.NewMetricsController(metricsService)
