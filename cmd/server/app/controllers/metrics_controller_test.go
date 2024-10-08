@@ -19,7 +19,7 @@ func setupRoutes(service *servicemocks.MetricsServiceInterface) *gin.Engine {
 	r.LoadHTMLFiles("../../public/templates/metrics-all.html")
 	r.GET("/", controller.Index)
 	r.GET("/value/:type/:name/", controller.Show)
-	r.POST("/update/:type/:name/:value", controller.Validate)
+	r.POST("/update/:type/:name/:value", controller.Update)
 	return r
 }
 
@@ -88,10 +88,10 @@ func TestMetricsController_Show(t *testing.T) {
 			metricsType: "gauge",
 			metricsName: "someMetric",
 			method:      http.MethodGet,
-			wantErr:     true,
+			wantErr:     false,
 			url:         "http://localhost:8080/value/gauge/someMetric/",
 			expected: expected{
-				statusCode: http.StatusNotFound,
+				statusCode: http.StatusOK,
 			},
 		},
 		{
@@ -135,54 +135,67 @@ func TestMetricsController_Show(t *testing.T) {
 	}
 }
 
-func TestMetricsController_Validate(t *testing.T) {
+func TestMetricsController_Update(t *testing.T) {
 	service := servicemocks.NewMetricsServiceInterface(t)
 	router := setupRoutes(service)
 	type expected struct {
 		statusCode int
 	}
 	tests := []struct {
-		name     string
-		method   string
-		url      string
-		expected expected
+		name         string
+		metricsType  string
+		metricsName  string
+		metricsValue string
+		wantErr      bool
+		method       string
+		url          string
+		expected     expected
 	}{
+
 		{
-			name:   "first",
-			method: http.MethodPost,
-			url:    "http://localhost:8080/update/counter/someMetric/527",
+			name:         "third",
+			metricsType:  "gauge",
+			metricsName:  "someMetric",
+			metricsValue: "527",
+			wantErr:      false,
+			method:       http.MethodPost,
+			url:          "http://localhost:8080/update/gauge/someMetric/527",
 			expected: expected{
 				statusCode: http.StatusOK,
 			},
 		},
 		{
-			name:   "second",
-			method: http.MethodGet,
-			url:    "http://localhost:8080/update/gauge/someMetric/527",
+			name:         "first",
+			metricsType:  "counter",
+			metricsName:  "someMetric",
+			metricsValue: "527",
+			wantErr:      false,
+			method:       http.MethodPost,
+			url:          "http://localhost:8080/update/counter/someMetric/527",
+			expected: expected{
+				statusCode: http.StatusOK,
+			},
+		},
+		{
+			name:         "second",
+			metricsType:  "gauge",
+			metricsName:  "someMetric",
+			metricsValue: "527",
+			wantErr:      true,
+			method:       http.MethodGet,
+			url:          "http://localhost:8080/update/gauge/someMetric/527",
 			expected: expected{
 				statusCode: http.StatusNotFound,
 			},
 		},
 		{
-			name:   "third",
-			method: http.MethodPost,
-			url:    "http://localhost:8080/update/gauge/someMetric/527",
-			expected: expected{
-				statusCode: http.StatusOK,
-			},
-		},
-		{
-			name:   "fourth",
-			method: http.MethodPost,
-			url:    "http://localhost:8080/update/unknown/someMetric/527",
-			expected: expected{
-				statusCode: http.StatusBadRequest,
-			},
-		},
-		{
-			name:   "fifth",
-			method: http.MethodPost,
-			url:    "http://localhost:8080/update/counter/someMetric/unknown",
+			name:         "fourth",
+			metricsType:  "counter",
+			metricsName:  "someMetric",
+			metricsValue: "unknown",
+			wantErr:      true,
+			method:       http.MethodPost,
+			url:          "http://localhost:8080/update/counter/someMetric/unknown",
 			expected: expected{
 				statusCode: http.StatusBadRequest,
 			},
@@ -191,6 +204,11 @@ func TestMetricsController_Validate(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
+			if test.wantErr {
+				service.On("Save", test.metricsType, test.metricsName, test.metricsValue).Return(errors.New("invalid metrics value for counter type"))
+			} else {
+				service.On("Save", test.metricsType, test.metricsName, test.metricsValue).Return(nil)
+			}
 			req := httptest.NewRequest(test.method, test.url, nil)
 			resp := httptest.NewRecorder()
 			router.ServeHTTP(resp, req)

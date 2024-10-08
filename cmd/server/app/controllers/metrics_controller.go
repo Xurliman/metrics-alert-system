@@ -4,7 +4,6 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"strconv"
 )
 
 type MetricsController struct {
@@ -15,7 +14,7 @@ func NewMetricsController(service interfaces.MetricsServiceInterface) *MetricsCo
 	return &MetricsController{service: service}
 }
 
-func (c *MetricsController) Validate(ctx *gin.Context) {
+func (c *MetricsController) Update(ctx *gin.Context) {
 	if ctx.Request.Method != http.MethodPost {
 		ctx.Status(http.StatusBadRequest)
 	}
@@ -30,19 +29,10 @@ func (c *MetricsController) Validate(ctx *gin.Context) {
 		return
 	}
 	metricsValue := ctx.Param("value")
-	if metricsType == "counter" {
-		_, err := strconv.ParseInt(metricsValue, 10, 64)
-		if err != nil {
-			ctx.Status(http.StatusBadRequest)
-			return
-		}
-	}
-	if metricsType == "gauge" {
-		_, err := strconv.ParseFloat(metricsValue, 64)
-		if err != nil {
-			ctx.Status(http.StatusBadRequest)
-			return
-		}
+	err := c.service.Save(metricsType, metricsName, metricsValue)
+	if err != nil {
+		ctx.Status(http.StatusBadRequest)
+		return
 	}
 	ctx.Status(http.StatusOK)
 }

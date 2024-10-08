@@ -18,10 +18,12 @@ func SetupRoutes() *gin.Engine {
 	gin.SetMode(mode)
 	r := gin.New()
 	r.LoadHTMLFiles("./cmd/server/public/templates/metrics-all.html")
+
 	metricsService := services.NewMetricsService()
 	metricsController := controllers.NewMetricsController(metricsService)
 	r.GET("/", metricsController.Index)
 	r.GET("/value/:type/:name/", metricsController.Show)
-	r.POST("/update/:type/:name/:value/", metricsController.Validate)
+	r.POST("/update/:type/:name/:value/", metricsController.Update)
+
 	return r
 }

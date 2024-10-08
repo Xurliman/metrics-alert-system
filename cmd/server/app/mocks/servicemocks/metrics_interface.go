@@ -57,6 +57,24 @@ func (_m *MetricsServiceInterface) GetAll() map[string]string {
 	return r0
 }
 
+// Save provides a mock function with given fields: metricsType, metricsName, metricsValue
+func (_m *MetricsServiceInterface) Save(metricsType string, metricsName string, metricsValue string) error {
+	ret := _m.Called(metricsType, metricsName, metricsValue)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Save")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string, string, string) error); ok {
+		r0 = rf(metricsType, metricsName, metricsValue)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // NewMetricsServiceInterface creates a new instance of MetricsServiceInterface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewMetricsServiceInterface(t interface {
