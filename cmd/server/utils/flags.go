@@ -30,7 +30,7 @@ func (o *Options) String() string {
 	return o.host + ":" + strconv.Itoa(o.port)
 }
 
-func GetParsedPort() string {
+func GetPort() string {
 	options := &Options{
 		host: "localhost",
 		port: 8080,

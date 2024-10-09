@@ -15,6 +15,22 @@ type Options struct {
 	pollInterval   int
 }
 
+func (o *Options) SetHost(host string) {
+	o.host = host
+}
+
+func (o *Options) SetPort(port int) {
+	o.port = port
+}
+
+func (o *Options) SetReportInterval(reportInterval int) {
+	o.reportInterval = reportInterval
+}
+
+func (o *Options) SetPollInterval(pollInterval int) {
+	o.pollInterval = pollInterval
+}
+
 func (o *Options) Set(flagValue string) (err error) {
 	options := strings.Split(flagValue, ":")
 	if len(options) != 2 {
