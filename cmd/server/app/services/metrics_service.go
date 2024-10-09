@@ -7,8 +7,6 @@ import (
 	"strconv"
 )
 
-var pollCount int64
-
 type MetricsService struct {
 }
 
