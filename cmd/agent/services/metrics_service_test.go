@@ -17,10 +17,12 @@ func TestSendMetrics(t *testing.T) {
 	}
 	tests := []struct {
 		name string
+		addr string
 		args args
 	}{
 		{
 			name: "first",
+			addr: "localhost:8080",
 			args: args{
 				client: http.Client{},
 				metrics: models.Metrics{
@@ -63,7 +65,7 @@ func TestSendMetrics(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			SendMetrics(tt.args.client, tt.args.metrics)
+			SendMetrics(tt.args.client, tt.args.metrics, tt.addr)
 		})
 	}
 }

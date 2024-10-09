@@ -52,9 +52,9 @@ func CollectMetrics() models.Metrics {
 	return metrics
 }
 
-func SendMetrics(client http.Client, metrics models.Metrics) {
+func SendMetrics(client http.Client, metrics models.Metrics, address string) {
 	for metric, value := range metrics.Gauge {
-		url := fmt.Sprintf("http://localhost:8080/update/gauge/%s/%f", metric, value)
+		url := fmt.Sprintf("http://%s/update/gauge/%s/%f", address, metric, value)
 		response, err := client.Post(url, "text/plain", nil)
 		if err != nil {
 			return
@@ -66,7 +66,7 @@ func SendMetrics(client http.Client, metrics models.Metrics) {
 	}
 
 	for metric, value := range metrics.Counter {
-		url := fmt.Sprintf("http://localhost:8080/update/counter/%s/%v", metric, value)
+		url := fmt.Sprintf("http://%s/update/counter/%s/%v", address, metric, value)
 		response, err := client.Post(url, "text/plain", nil)
 		if err != nil {
 			return
