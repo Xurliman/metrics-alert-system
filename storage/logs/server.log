@@ -65,3 +65,31 @@
 2024-10-28 09:40:27	[34mINFO[0m	info	{"uri": "/update/gauge/testGauge/100", "method": "POST", "duration": "737.541µs", "status": 200, "size": -1}
 2024-10-28 09:40:27	[34mINFO[0m	info	{"uri": "/update/gauge/testGauge/none", "method": "POST", "duration": "1.209µs", "status": 400, "size": -1}
 2024-10-28 09:40:27	[34mINFO[0m	info	{"uri": "/update/unknown/testCounter/100", "method": "POST", "duration": "125ns", "status": 400, "size": -1}
+2024-10-28 09:44:50	[34mINFO[0m	Starting server on port %v	{"port": ":8080"}
+2024-10-28 09:44:50	[34mINFO[0m	info	{"uri": "/update/counter/testCounter/100", "method": "POST", "duration": "3.125µs", "status": 200, "size": -1}
+2024-10-28 09:44:50	[34mINFO[0m	info	{"uri": "/update/counter/testCounter/none", "method": "POST", "duration": "2.5µs", "status": 400, "size": -1}
+2024-10-28 09:44:50	[34mINFO[0m	info	{"uri": "/update/gauge/testGauge/100", "method": "POST", "duration": "133.542µs", "status": 200, "size": -1}
+2024-10-28 09:44:50	[34mINFO[0m	info	{"uri": "/update/gauge/testGauge/none", "method": "POST", "duration": "1.125µs", "status": 400, "size": -1}
+2024-10-28 09:44:50	[34mINFO[0m	info	{"uri": "/update/unknown/testCounter/100", "method": "POST", "duration": "209ns", "status": 400, "size": -1}
+2024-10-28 09:45:57	[34mINFO[0m	Starting server on port %v	{"port": ":8080"}
+2024-10-28 09:45:57	[34mINFO[0m	info	{"uri": "/update/counter/testCounter/100", "method": "POST", "duration": "2.167µs", "status": 200, "size": -1}
+2024-10-28 09:45:57	[34mINFO[0m	info	{"uri": "/update/counter/testCounter/none", "method": "POST", "duration": "7.834µs", "status": 400, "size": -1}
+2024-10-28 09:45:57	[34mINFO[0m	info	{"uri": "/update/gauge/testGauge/100", "method": "POST", "duration": "117.541µs", "status": 200, "size": -1}
+2024-10-28 09:45:57	[34mINFO[0m	info	{"uri": "/update/gauge/testGauge/none", "method": "POST", "duration": "1µs", "status": 400, "size": -1}
+2024-10-28 09:45:57	[34mINFO[0m	info	{"uri": "/update/unknown/testCounter/100", "method": "POST", "duration": "250ns", "status": 400, "size": -1}
+2024-10-28 09:46:15	[34mINFO[0m	Starting server on port %v	{"port": ":8080"}
+2024-10-28 09:46:15	[34mINFO[0m	info	{"uri": "/value/counter/testSetGet63/", "method": "GET", "duration": "13.666µs", "status": 404, "size": -1}
+2024-10-28 09:46:15	[34mINFO[0m	info	{"uri": "/update/counter/testSetGet63/273", "method": "POST", "duration": "2.583µs", "status": 200, "size": -1}
+2024-10-28 09:46:15	[34mINFO[0m	info	{"uri": "/value/counter/testSetGet63/", "method": "GET", "duration": "58.375µs", "status": 200, "size": 3}
+2024-10-28 09:46:15	[34mINFO[0m	info	{"uri": "/update/counter/testSetGet63/437", "method": "POST", "duration": "1.25µs", "status": 200, "size": -1}
+2024-10-28 09:46:15	[34mINFO[0m	info	{"uri": "/value/counter/testSetGet63/", "method": "GET", "duration": "3.583µs", "status": 200, "size": 3}
+2024-10-28 09:46:15	[34mINFO[0m	info	{"uri": "/update/counter/testSetGet63/939", "method": "POST", "duration": "1.084µs", "status": 200, "size": -1}
+2024-10-28 09:46:15	[34mINFO[0m	info	{"uri": "/value/counter/testSetGet63/", "method": "GET", "duration": "2.834µs", "status": 200, "size": 4}
+2024-10-28 09:46:15	[34mINFO[0m	info	{"uri": "/value/counter/testUnknown12/", "method": "GET", "duration": "1.834µs", "status": 404, "size": -1}
+2024-10-28 09:46:15	[34mINFO[0m	info	{"uri": "/update/gauge/testSetGet98/640746.259", "method": "POST", "duration": "44.416µs", "status": 200, "size": -1}
+2024-10-28 09:46:15	[34mINFO[0m	info	{"uri": "/value/gauge/testSetGet98/", "method": "GET", "duration": "33.666µs", "status": 200, "size": 10}
+2024-10-28 09:46:15	[34mINFO[0m	info	{"uri": "/update/gauge/testSetGet98/155196.435", "method": "POST", "duration": "1.041µs", "status": 200, "size": -1}
+2024-10-28 09:46:15	[34mINFO[0m	info	{"uri": "/value/gauge/testSetGet98/", "method": "GET", "duration": "5.5µs", "status": 200, "size": 10}
+2024-10-28 09:46:15	[34mINFO[0m	info	{"uri": "/update/gauge/testSetGet98/858351.446", "method": "POST", "duration": "1.084µs", "status": 200, "size": -1}
+2024-10-28 09:46:15	[34mINFO[0m	info	{"uri": "/value/gauge/testSetGet98/", "method": "GET", "duration": "3.042µs", "status": 200, "size": 10}
+2024-10-28 09:46:15	[34mINFO[0m	info	{"uri": "/value/gauge/testUnknown64/", "method": "GET", "duration": "1.541µs", "status": 404, "size": -1}

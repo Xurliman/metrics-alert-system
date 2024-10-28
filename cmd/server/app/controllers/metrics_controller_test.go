@@ -134,7 +134,7 @@ func TestMetricsController_Show(t *testing.T) {
 				case constants.GaugeMetricType:
 					service.On("FindGaugeMetric", test.metricsName).Return(strconv.FormatFloat(memStats.GCCPUFraction, 'f', -1, 64), nil)
 				case constants.CounterMetricType:
-					service.On("FindCounterMetric", test.metricsName).Return(strconv.FormatUint(memStats.HeapObjects, 64), nil)
+					service.On("FindCounterMetric", test.metricsName).Return(strconv.FormatUint(memStats.HeapObjects, 10), nil)
 				}
 			}
 			req := httptest.NewRequest(test.method, test.url, nil)
