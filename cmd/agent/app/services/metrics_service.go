@@ -2,7 +2,7 @@ package services
 
 import (
 	"fmt"
-	"github.com/Xurliman/metrics-alert-system/cmd/agent/models"
+	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/models"
 	"math/rand"
 	"net/http"
 	"runtime"

@@ -9,12 +9,68 @@ type MetricsServiceInterface struct {
 	mock.Mock
 }
 
-// FindByName provides a mock function with given fields: metricsType, metricsName
-func (_m *MetricsServiceInterface) FindByName(metricsType string, metricsName string) (string, error) {
+// FindCounterMetric provides a mock function with given fields: metricsName
+func (_m *MetricsServiceInterface) FindCounterMetric(metricsName string) (string, error) {
+	ret := _m.Called(metricsName)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindCounterMetric")
+	}
+
+	var r0 string
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (string, error)); ok {
+		return rf(metricsName)
+	}
+	if rf, ok := ret.Get(0).(func(string) string); ok {
+		r0 = rf(metricsName)
+	} else {
+		r0 = ret.Get(0).(string)
+	}
+
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(metricsName)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// FindGaugeMetric provides a mock function with given fields: metricsName
+func (_m *MetricsServiceInterface) FindGaugeMetric(metricsName string) (string, error) {
+	ret := _m.Called(metricsName)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindGaugeMetric")
+	}
+
+	var r0 string
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (string, error)); ok {
+		return rf(metricsName)
+	}
+	if rf, ok := ret.Get(0).(func(string) string); ok {
+		r0 = rf(metricsName)
+	} else {
+		r0 = ret.Get(0).(string)
+	}
+
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(metricsName)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// FindMetricByName provides a mock function with given fields: metricsType, metricsName
+func (_m *MetricsServiceInterface) FindMetricByName(metricsType string, metricsName string) (string, error) {
 	ret := _m.Called(metricsType, metricsName)
 
 	if len(ret) == 0 {
-		panic("no return value specified for FindByName")
+		panic("no return value specified for FindMetricByName")
 	}
 
 	var r0 string
@@ -57,12 +113,48 @@ func (_m *MetricsServiceInterface) GetAll() map[string]string {
 	return r0
 }
 
-// Save provides a mock function with given fields: metricsType, metricsName, metricsValue
-func (_m *MetricsServiceInterface) Save(metricsType string, metricsName string, metricsValue string) error {
+// SaveCounterMetric provides a mock function with given fields: metricsName, metricsValue
+func (_m *MetricsServiceInterface) SaveCounterMetric(metricsName string, metricsValue string) error {
+	ret := _m.Called(metricsName, metricsValue)
+
+	if len(ret) == 0 {
+		panic("no return value specified for SaveCounterMetric")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string, string) error); ok {
+		r0 = rf(metricsName, metricsValue)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// SaveGaugeMetric provides a mock function with given fields: metricsName, metricsValue
+func (_m *MetricsServiceInterface) SaveGaugeMetric(metricsName string, metricsValue string) error {
+	ret := _m.Called(metricsName, metricsValue)
+
+	if len(ret) == 0 {
+		panic("no return value specified for SaveGaugeMetric")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string, string) error); ok {
+		r0 = rf(metricsName, metricsValue)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// SaveMetric provides a mock function with given fields: metricsType, metricsName, metricsValue
+func (_m *MetricsServiceInterface) SaveMetric(metricsType string, metricsName string, metricsValue string) error {
 	ret := _m.Called(metricsType, metricsName, metricsValue)
 
 	if len(ret) == 0 {
-		panic("no return value specified for Save")
+		panic("no return value specified for SaveMetric")
 	}
 
 	var r0 error

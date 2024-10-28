@@ -1,57 +1,76 @@
 package config
 
 import (
-	"errors"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	"os"
 	"strconv"
 	"strings"
 	"time"
 )
 
+type ConfInterface interface {
+	GetHost() (string, error)
+	GetPollInterval() (time.Duration, error)
+	GetReportInterval() (time.Duration, error)
+}
+
+type Config struct{}
+
 func GetEnvironmentValue(key string) (string, error) {
 	if os.Getenv(key) == "" {
-		return "", errors.New("environment variable is missing")
+		return "", constants.ErrEnvValueMissing
 	}
 	return os.Getenv(key), nil
 }
 
-func GetHost() (string, error) {
+func (c *Config) GetHost() (string, error) {
 	address, err := GetEnvironmentValue("ADDRESS")
 	if err != nil {
 		return "", err
 	}
+
 	options := strings.Split(address, ":")
 	if len(options) < 2 {
-		return "", errors.New("need 2 values as host:port")
+		return "", constants.ErrWrongAddress
 	}
+
 	port, err := strconv.Atoi(options[1])
 	if err != nil {
 		return "", err
 	}
+
 	host := options[0]
 	return host + ":" + strconv.Itoa(port), nil
 }
 
-func GetPollInterval() (time.Duration, error) {
+func (c *Config) GetPollInterval() (time.Duration, error) {
 	pollInterval, err := GetEnvironmentValue("POLL_INTERVAL")
 	if err != nil {
 		return time.Duration(2), err
 	}
+
 	pollIntervalInt, err := strconv.Atoi(pollInterval)
 	if err != nil {
 		return time.Duration(2), err
 	}
+
 	return time.Duration(pollIntervalInt) * time.Second, nil
 }
 
-func GetReportInterval() (time.Duration, error) {
+func (c *Config) GetReportInterval() (time.Duration, error) {
 	reportInterval, err := GetEnvironmentValue("REPORT_INTERVAL")
 	if err != nil {
 		return time.Duration(10), err
 	}
+
 	reportIntervalInt, err := strconv.Atoi(reportInterval)
 	if err != nil {
 		return time.Duration(10), err
 	}
+
 	return time.Duration(reportIntervalInt) * time.Second, nil
+}
+
+func NewConfig() ConfInterface {
+	return &Config{}
 }

@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"errors"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/mocks/servicemocks"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
@@ -121,11 +121,21 @@ func TestMetricsController_Show(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			if test.wantErr {
-				service.On("FindByName", test.metricsType, test.metricsName).Return("", errors.New("not found"))
+				switch test.metricsType {
+				case constants.GaugeMetricType:
+					service.On("FindGaugeMetric", test.metricsName).Return("", constants.ErrInvalidMetricType)
+				case constants.CounterMetricType:
+					service.On("FindCounterMetric", test.metricsName).Return("", constants.ErrInvalidMetricType)
+				}
 			} else {
 				var memStats runtime.MemStats
 				runtime.ReadMemStats(&memStats)
-				service.On("FindByName", test.metricsType, test.metricsName).Return(strconv.FormatFloat(memStats.GCCPUFraction, 'f', -1, 64), nil)
+				switch test.metricsType {
+				case constants.GaugeMetricType:
+					service.On("FindGaugeMetric", test.metricsName).Return(strconv.FormatFloat(memStats.GCCPUFraction, 'f', -1, 64), nil)
+				case constants.CounterMetricType:
+					service.On("FindCounterMetric", test.metricsName).Return(strconv.FormatUint(memStats.HeapObjects, 64), nil)
+				}
 			}
 			req := httptest.NewRequest(test.method, test.url, nil)
 			resp := httptest.NewRecorder()
@@ -205,10 +215,21 @@ func TestMetricsController_Update(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			if test.wantErr {
-				service.On("Save", test.metricsType, test.metricsName, test.metricsValue).Return(errors.New("invalid metrics value for counter type"))
+				switch test.metricsType {
+				case constants.GaugeMetricType:
+					service.On("SaveGaugeMetric", test.metricsName, test.metricsValue).Return(constants.ErrInvalidGaugeMetricValue)
+				case constants.CounterMetricType:
+					service.On("SaveCounterMetric", test.metricsName, test.metricsValue).Return(constants.ErrInvalidCounterMetricValue)
+				}
 			} else {
-				service.On("Save", test.metricsType, test.metricsName, test.metricsValue).Return(nil)
+				switch test.metricsType {
+				case constants.GaugeMetricType:
+					service.On("SaveGaugeMetric", test.metricsName, test.metricsValue).Return(nil)
+				case constants.CounterMetricType:
+					service.On("SaveCounterMetric", test.metricsName, test.metricsValue).Return(nil)
+				}
 			}
+
 			req := httptest.NewRequest(test.method, test.url, nil)
 			resp := httptest.NewRecorder()
 			router.ServeHTTP(resp, req)

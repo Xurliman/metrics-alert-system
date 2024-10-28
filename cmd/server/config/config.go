@@ -1,7 +1,7 @@
 package config
 
 import (
-	"errors"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	"os"
 	"strconv"
 	"strings"
@@ -9,7 +9,7 @@ import (
 
 func GetEnvironmentValue(key string) (string, error) {
 	if os.Getenv(key) == "" {
-		return "", errors.New("environment variable is missing")
+		return "", constants.ErrEnvValueMissing
 	}
 	return os.Getenv(key), nil
 }
@@ -19,13 +19,24 @@ func GetPort() (string, error) {
 	if err != nil {
 		return "", err
 	}
+
 	options := strings.Split(address, ":")
 	if len(options) < 2 {
-		return "", errors.New("need 2 values as host:port")
+		return "", constants.ErrWrongAddress
 	}
+
 	port, err := strconv.Atoi(options[1])
 	if err != nil {
 		return "", err
 	}
+
 	return ":" + strconv.Itoa(port), nil
+}
+
+func GetAppEnv() string {
+	appEnv, err := GetEnvironmentValue("APP_ENV")
+	if err != nil {
+		return "development"
+	}
+	return appEnv
 }

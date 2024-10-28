@@ -1,8 +1,9 @@
 package main
 
 import (
+	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
+	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/services"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/config"
-	"github.com/Xurliman/metrics-alert-system/cmd/agent/services"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/utils"
 	"github.com/joho/godotenv"
 	"log"
@@ -11,10 +12,33 @@ import (
 )
 
 func main() {
-	address, pollInterval, reportInterval := handleStartupParameters()
+	err := godotenv.Load(constants.EnvFilePath)
+	if err != nil {
+		log.Fatal(constants.ErrLoadingEnv)
+	}
+
+	envCfg := utils.NewOptions()
+	cfg := config.NewConfig()
+
+	address, err := envCfg.GetHost()
+	if err != nil {
+		address, err = cfg.GetHost()
+	}
+
+	pollInterval, err := envCfg.GetPollInterval()
+	if err != nil {
+		pollInterval, err = cfg.GetPollInterval()
+	}
+
+	reportInterval, err := envCfg.GetReportInterval()
+	if err != nil {
+		reportInterval, err = cfg.GetReportInterval()
+	}
+
 	client := http.Client{Timeout: 10 * time.Second}
 	metrics := services.CollectMetrics()
 	services.SendMetrics(client, metrics, address)
+
 	pollTicker := time.NewTicker(pollInterval)
 	reportTicker := time.NewTicker(reportInterval)
 
@@ -28,25 +52,4 @@ func main() {
 			services.SendMetrics(client, metrics, address)
 		}
 	}
-}
-
-func handleStartupParameters() (address string, pollInterval, reportInterval time.Duration) {
-	options := utils.ParseFlags()
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-	address, err = config.GetHost()
-	if err != nil {
-		address = options.GetAddr()
-	}
-	pollInterval, err = config.GetPollInterval()
-	if err != nil {
-		pollInterval = options.GetPollInterval()
-	}
-	reportInterval, err = config.GetReportInterval()
-	if err != nil {
-		reportInterval = options.GetReportInterval()
-	}
-	return address, pollInterval, reportInterval
 }

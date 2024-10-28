@@ -9,7 +9,11 @@ type MetricsControllerInterface interface {
 }
 
 type MetricsServiceInterface interface {
-	FindByName(metricsType string, metricsName string) (metricsValue string, err error)
 	GetAll() map[string]string
-	Save(metricsType string, metricsName string, metricsValue string) error
+	FindMetricByName(metricsType string, metricsName string) (metricsValue string, err error)
+	FindCounterMetric(metricsName string) (metricsValue string, err error)
+	FindGaugeMetric(metricsName string) (metricsValue string, err error)
+	SaveGaugeMetric(metricsName string, metricsValue string) error
+	SaveCounterMetric(metricsName string, metricsValue string) error
+	SaveMetric(metricsType string, metricsName string, metricsValue string) error
 }
