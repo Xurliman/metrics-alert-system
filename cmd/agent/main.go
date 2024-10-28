@@ -22,17 +22,17 @@ func main() {
 
 	address, err := envCfg.GetHost()
 	if err != nil {
-		address, err = cfg.GetHost()
+		address, _ = cfg.GetHost()
 	}
 
 	pollInterval, err := envCfg.GetPollInterval()
 	if err != nil {
-		pollInterval, err = cfg.GetPollInterval()
+		pollInterval, _ = cfg.GetPollInterval()
 	}
 
 	reportInterval, err := envCfg.GetReportInterval()
 	if err != nil {
-		reportInterval, err = cfg.GetReportInterval()
+		reportInterval, _ = cfg.GetReportInterval()
 	}
 
 	client := http.Client{Timeout: 10 * time.Second}

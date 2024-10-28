@@ -22,7 +22,7 @@ func main() {
 
 	port, err := utils.GetPort()
 	if err != nil {
-		port, err = config.GetPort()
+		port, _ = config.GetPort()
 	}
 
 	utils.Logger.Info("Starting server on port %v",
