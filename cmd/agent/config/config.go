@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
+	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"os"
 	"strconv"
 	"strings"
@@ -26,7 +26,7 @@ func GetEnvironmentValue(key string) (string, error) {
 func (c *Config) GetHost() (string, error) {
 	address, err := GetEnvironmentValue("ADDRESS")
 	if err != nil {
-		return "", err
+		return constants.DefaultServerAddress, err
 	}
 
 	options := strings.Split(address, ":")

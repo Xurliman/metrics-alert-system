@@ -14,25 +14,25 @@ import (
 func main() {
 	err := godotenv.Load(constants.EnvFilePath)
 	if err != nil {
-		log.Fatal(constants.ErrLoadingEnv)
+		log.Println(constants.ErrLoadingEnv)
 	}
 
-	envCfg := utils.NewOptions()
-	cfg := config.NewConfig()
+	flagCfg := utils.NewOptions()
+	envCfg := config.NewConfig()
 
-	address, err := envCfg.GetHost()
+	address, err := flagCfg.GetHost()
 	if err != nil {
-		address, _ = cfg.GetHost()
+		address, _ = envCfg.GetHost()
 	}
 
-	pollInterval, err := envCfg.GetPollInterval()
+	pollInterval, err := flagCfg.GetPollInterval()
 	if err != nil {
-		pollInterval, _ = cfg.GetPollInterval()
+		pollInterval, _ = envCfg.GetPollInterval()
 	}
 
-	reportInterval, err := envCfg.GetReportInterval()
+	reportInterval, err := flagCfg.GetReportInterval()
 	if err != nil {
-		reportInterval, _ = cfg.GetReportInterval()
+		reportInterval, _ = envCfg.GetReportInterval()
 	}
 
 	client := http.Client{Timeout: 10 * time.Second}

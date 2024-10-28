@@ -17,7 +17,7 @@ func GetEnvironmentValue(key string) (string, error) {
 func GetPort() (string, error) {
 	address, err := GetEnvironmentValue("ADDRESS")
 	if err != nil {
-		return "", err
+		return ":8080", err
 	}
 
 	options := strings.Split(address, ":")

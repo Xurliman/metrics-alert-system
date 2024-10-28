@@ -35,7 +35,7 @@ func (cfg *EnvConfig) SetPollInterval(pollInterval int) {
 
 func (cfg *EnvConfig) GetHost() (string, error) {
 	host := cfg.String()
-	if host == "" {
+	if host == ":0" {
 		return "", constants.ErrHostNotPassedAsFlag
 	}
 	return host, nil
@@ -51,8 +51,8 @@ func (cfg *EnvConfig) GetReportInterval() (time.Duration, error) {
 
 func NewOptions() config.ConfInterface {
 	options := &EnvConfig{
-		host: "localhost",
-		port: 8080,
+		host: "",
+		port: 0,
 	}
 	flag.IntVar(&options.reportInterval, "r", 10, "set report interval")
 	flag.IntVar(&options.pollInterval, "p", 2, "set poll interval")

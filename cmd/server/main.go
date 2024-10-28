@@ -7,7 +7,6 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
-	"log"
 )
 
 func main() {
@@ -15,7 +14,7 @@ func main() {
 
 	err := godotenv.Load(constants.EnvFilePath)
 	if err != nil {
-		log.Fatal(constants.ErrLoadingEnv)
+		utils.Logger.Error("", zap.Error(constants.ErrLoadingEnv))
 	}
 
 	r := routes.SetupRoutes()

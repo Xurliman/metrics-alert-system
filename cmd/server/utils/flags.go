@@ -35,12 +35,12 @@ func (o *Options) String() string {
 func GetPort() (string, error) {
 	options := &Options{
 		host: "localhost",
-		port: 8080,
+		port: 0,
 	}
 	flag.Var(options, "a", "give server host:port (default: localhost:8080)")
 	flag.Parse()
 	port := ":" + strconv.Itoa(options.port)
-	if port == "" {
+	if port == ":0" {
 		return "", constants.ErrWrongPort
 	}
 	return port, nil
