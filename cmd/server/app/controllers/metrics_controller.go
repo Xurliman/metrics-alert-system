@@ -86,7 +86,6 @@ func (c *MetricsController) SaveBody(ctx *gin.Context) {
 		return
 	}
 	utils.JsonSuccess(ctx, metric)
-	return
 }
 
 func (c *MetricsController) Show(ctx *gin.Context) {
@@ -144,5 +143,4 @@ func (c *MetricsController) ShowBody(ctx *gin.Context) {
 	}
 
 	utils.JsonSuccess(ctx, metric)
-	return
 }
