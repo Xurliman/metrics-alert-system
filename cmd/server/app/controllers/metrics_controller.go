@@ -61,12 +61,12 @@ func (c *MetricsController) SaveBody(ctx *gin.Context) {
 	metricRequest := new(requests.MetricsSaveRequest)
 	err := ctx.ShouldBindWith(&metricRequest, binding.JSON)
 	if err != nil && err != io.EOF {
-		utils.JsonValidationError(ctx, err)
+		utils.JSONValidationError(ctx, err)
 		return
 	}
 
 	if err = metricRequest.Validate(); err != nil {
-		utils.JsonValidationError(ctx, err)
+		utils.JSONValidationError(ctx, err)
 		return
 	}
 
@@ -77,15 +77,15 @@ func (c *MetricsController) SaveBody(ctx *gin.Context) {
 	case constants.CounterMetricType:
 		metric, err = c.service.SaveWhenBody(services.Counter, *metricRequest)
 	default:
-		utils.JsonError(ctx, constants.ErrInvalidMetricType)
+		utils.JSONError(ctx, constants.ErrInvalidMetricType)
 		return
 	}
 
 	if err != nil {
-		utils.JsonInternalServerError(ctx, err)
+		utils.JSONInternalServerError(ctx, err)
 		return
 	}
-	utils.JsonSuccess(ctx, metric)
+	utils.JSONSuccess(ctx, metric)
 }
 
 func (c *MetricsController) Show(ctx *gin.Context) {
@@ -117,12 +117,12 @@ func (c *MetricsController) ShowBody(ctx *gin.Context) {
 	metricRequest := new(requests.MetricsShowRequest)
 	err := ctx.ShouldBindWith(&metricRequest, binding.JSON)
 	if err != nil && err != io.EOF {
-		utils.JsonValidationError(ctx, err)
+		utils.JSONValidationError(ctx, err)
 		return
 	}
 
 	if err = metricRequest.Validate(); err != nil {
-		utils.JsonValidationError(ctx, err)
+		utils.JSONValidationError(ctx, err)
 		return
 	}
 
@@ -133,14 +133,14 @@ func (c *MetricsController) ShowBody(ctx *gin.Context) {
 	case constants.CounterMetricType:
 		metric, err = c.service.Show(services.Counter, metricRequest.ID)
 	default:
-		utils.JsonError(ctx, constants.ErrInvalidMetricType)
+		utils.JSONError(ctx, constants.ErrInvalidMetricType)
 		return
 	}
 
 	if err != nil {
-		utils.JsonNotFound(ctx, err)
+		utils.JSONNotFound(ctx, err)
 		return
 	}
 
-	utils.JsonSuccess(ctx, metric)
+	utils.JSONSuccess(ctx, metric)
 }
