@@ -1,6 +1,8 @@
 package middlewares
 
 import (
+	"bytes"
+	"encoding/json"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -17,23 +19,40 @@ func NewLoggingMiddleware() Middleware {
 }
 
 func (l LoggingMiddleware) Handle(next gin.HandlerFunc) gin.HandlerFunc {
-	return func(c *gin.Context) {
+	return func(ctx *gin.Context) {
 		start := time.Now()
+		size := l.Request.Handle(ctx)
 
-		next(c)
+		var (
+			respBody bytes.Buffer
+		)
+		respCapture := &ResponseCapture{
+			ResponseWriter: ctx.Writer,
+			Body:           &respBody,
+		}
+		ctx.Writer = respCapture
 
-		l.Request.URI = c.Request.RequestURI
-		l.Request.Method = c.Request.Method
+		next(ctx)
+
 		l.Request.Duration = time.Since(start)
-		l.Response.Size = c.Writer.Size()
-		l.Response.StatusCode = c.Writer.Status()
+		l.Response.Size = size
+		l.Response.StatusCode = ctx.Writer.Status()
+		err := json.Unmarshal(respCapture.Body.Bytes(), &l.Response.Body)
+		if err != nil {
+			l.Response.Error = err
+		}
 		utils.Logger.Info(
 			"info",
 			zap.String("uri", l.Request.URI),
 			zap.String("method", l.Request.Method),
 			zap.Duration("duration", l.Request.Duration),
+			zap.Reflect("request_body", l.Request.Body),
+			zap.NamedError("request_err", l.Request.Error),
+
 			zap.Int("status", l.Response.StatusCode),
-			zap.Int("size", l.Response.Size),
+			zap.Int64("size", l.Response.Size),
+			zap.Reflect("response_body", l.Response.Body),
+			zap.NamedError("response_err", l.Response.Error),
 		)
 	}
 }

@@ -2,122 +2,167 @@ package services
 
 import (
 	"fmt"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/http/requests"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/mocks/servicemocks"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
 	"github.com/stretchr/testify/assert"
+	"runtime"
+	"strconv"
 	"testing"
 )
 
-func TestMetricsService_FindCounterMetric(t *testing.T) {
+func TestMetricsService_GetMetricValue(t *testing.T) {
+	var memStats runtime.MemStats
+	runtime.ReadMemStats(&memStats)
+
+	wantGaugeMetric := memStats.Alloc
 	type args struct {
-		metricsName string
+		metric     interfaces.MetricsInterface
+		metricName string
 	}
 	tests := []struct {
-		name    string
-		args    args
-		wantErr assert.ErrorAssertionFunc
+		name            string
+		args            args
+		wantMetricValue string
+		wantErr         assert.ErrorAssertionFunc
 	}{
 		{
-			name:    "first",
-			args:    args{metricsName: "test"},
-			wantErr: assert.Error,
+			name: "first",
+			args: args{
+				metric:     Gauge,
+				metricName: "Alloc",
+			},
+			wantMetricValue: strconv.FormatUint(wantGaugeMetric, 10),
+			wantErr:         assert.NoError,
+		},
+		{
+			name: "second",
+			args: args{
+				metric:     Gauge,
+				metricName: "HeapAlloc",
+			},
+			wantMetricValue: "",
+			wantErr:         assert.Error,
+		},
+		{
+			name: "third",
+			args: args{
+				metric:     Counter,
+				metricName: "PollCount",
+			},
+			wantMetricValue: "0",
+			wantErr:         assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &MetricsService{}
-			_, err := s.FindCounterMetric(tt.args.metricsName)
-			if !tt.wantErr(t, err, fmt.Sprintf("FindCounterMetric(%v)", tt.args.metricsName)) {
+			s := NewMetricsService()
+			metricsInterface := servicemocks.NewMetricsInterface(t)
+
+			if tt.wantMetricValue != "" {
+				metricsInterface.On("GetMetricValue", tt.args.metricName).Return(tt.wantMetricValue, nil)
+			} else {
+				metricsInterface.On("GetMetricValue", tt.args.metricName).Return(tt.wantMetricValue, constants.ErrMetricNotFound)
+			}
+
+			gotMetricValue, err := s.GetMetricValue(metricsInterface, tt.args.metricName)
+			if !tt.wantErr(t, err, fmt.Sprintf("GetMetricValue(%v, %v)", tt.args.metric, tt.args.metricName)) {
 				return
 			}
+			assert.Equalf(t, tt.wantMetricValue, gotMetricValue, "GetMetricValue(%v, %v)", tt.args.metric, tt.args.metricName)
 		})
 	}
 }
 
-func TestMetricsService_FindGaugeMetric(t *testing.T) {
-	type args struct {
-		metricsName string
-	}
-	tests := []struct {
-		name    string
-		args    args
-		wantErr assert.ErrorAssertionFunc
-	}{
-		{
-			name:    "first",
-			args:    args{metricsName: "HeapIdle"},
-			wantErr: assert.NoError,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			s := &MetricsService{}
-			_, err := s.FindGaugeMetric(tt.args.metricsName)
-			if !tt.wantErr(t, err, fmt.Sprintf("FindGaugeMetric(%v)", tt.args.metricsName)) {
-				return
-			}
-		})
-	}
-}
-
-func TestMetricsService_FindMetricByName(t *testing.T) {
-	type args struct {
-		metricsType string
-		metricsName string
-	}
-	tests := []struct {
-		name             string
-		args             args
-		wantMetricsValue string
-		wantErr          assert.ErrorAssertionFunc
-	}{
-		{
-			name:             "first",
-			args:             args{metricsType: "gauge", metricsName: "test"},
-			wantMetricsValue: "test",
-			wantErr:          assert.Error,
-		},
-		{
-			name:             "second",
-			args:             args{metricsType: "gauge", metricsName: "HeapIdle"},
-			wantMetricsValue: "test",
-			wantErr:          assert.NoError,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			s := &MetricsService{}
-			_, err := s.FindMetricByName(tt.args.metricsType, tt.args.metricsName)
-			if !tt.wantErr(t, err, fmt.Sprintf("FindMetricByName(%v, %v)", tt.args.metricsType, tt.args.metricsName)) {
-				return
-			}
-		})
-	}
-}
-
-func TestMetricsService_GetAll(t *testing.T) {
+func TestMetricsService_List(t *testing.T) {
 	tests := []struct {
 		name    string
 		wantErr bool
 	}{
 		{
-			name:    "Get All",
-			wantErr: true,
+			name:    "List All",
+			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &MetricsService{}
-			output := s.GetAll()
-			if !tt.wantErr {
-				assert.Equal(t, len(output), 0)
+			s := NewMetricsService()
+			assert.Equal(t, len(s.List()), 2)
+		})
+	}
+}
+
+func TestMetricsService_SaveWhenBody(t *testing.T) {
+	someGaugeMetric := float64(290)
+
+	type args struct {
+		metric        interfaces.MetricsInterface
+		metricRequest requests.MetricsSaveRequest
+	}
+	tests := []struct {
+		name      string
+		args      args
+		wantEntry *models.Metrics
+		wantErr   assert.ErrorAssertionFunc
+		exists    bool
+	}{
+		{
+			name: "first",
+			args: args{
+				metric: Gauge,
+				metricRequest: requests.MetricsSaveRequest{
+					ID:    "SomeMetric",
+					MType: constants.GaugeMetricType,
+					Value: &someGaugeMetric,
+				},
+			},
+			wantEntry: &models.Metrics{
+				ID:    "SomeMetric",
+				MType: constants.GaugeMetricType,
+				Value: &someGaugeMetric,
+			},
+			wantErr: assert.NoError,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := NewMetricsService()
+			metricsInterface := servicemocks.NewMetricsInterface(t)
+
+			if tt.exists {
+				metricsInterface.On("FindByName", tt.args.metricRequest.ID).Return(tt.wantEntry, nil)
+				metricsInterface.On("SaveBody", tt.args.metricRequest, tt.wantEntry).Return(&models.Metrics{
+					ID:    tt.args.metricRequest.ID,
+					MType: constants.GaugeMetricType,
+					Value: &someGaugeMetric,
+				}, nil)
+
+			} else {
+				var existingMetric *models.Metrics
+				metricsInterface.On("FindByName", tt.args.metricRequest.ID).Return(nil, constants.ErrMetricNotFound)
+				metricsInterface.On("SaveBody", tt.args.metricRequest, existingMetric).Return(&models.Metrics{
+					ID:    tt.args.metricRequest.ID,
+					MType: constants.GaugeMetricType,
+					Value: &someGaugeMetric,
+				}, nil)
 			}
+
+			gotEntry, err := s.SaveWhenBody(metricsInterface, tt.args.metricRequest)
+			if !tt.wantErr(t, err, fmt.Sprintf("SaveWhenBody(%v, %v)", tt.args.metric, tt.args.metricRequest)) {
+				return
+			}
+			assert.Equalf(t, tt.wantEntry, gotEntry, "SaveWhenBody(%v, %v)", tt.args.metric, tt.args.metricRequest)
 		})
 	}
 }
 
-func TestMetricsService_SaveCounterMetric(t *testing.T) {
+func TestMetricsService_SaveWhenParams(t *testing.T) {
 	type args struct {
-		metricsName  string
-		metricsValue string
+		metric      interfaces.MetricsInterface
+		metricName  string
+		metricValue string
 	}
 	tests := []struct {
 		name    string
@@ -125,83 +170,77 @@ func TestMetricsService_SaveCounterMetric(t *testing.T) {
 		wantErr assert.ErrorAssertionFunc
 	}{
 		{
-			name: "Save Counter Metric",
+			name: "first",
 			args: args{
-				metricsName:  "CounterMetric",
-				metricsValue: "0980",
+				metric:      Gauge,
+				metricName:  "Foo",
+				metricValue: "232039203",
 			},
 			wantErr: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &MetricsService{}
-			tt.wantErr(t, s.SaveCounterMetric(tt.args.metricsName, tt.args.metricsValue), fmt.Sprintf("SaveCounterMetric(%v, %v)", tt.args.metricsName, tt.args.metricsValue))
+			s := NewMetricsService()
+			tt.wantErr(t, s.SaveWhenParams(tt.args.metric, tt.args.metricName, tt.args.metricValue), fmt.Sprintf("SaveWhenParams(%v, %v, %v)", tt.args.metric, tt.args.metricName, tt.args.metricValue))
 		})
 	}
 }
 
-func TestMetricsService_SaveGaugeMetric(t *testing.T) {
-	type args struct {
-		metricsName  string
-		metricsValue string
-	}
-	tests := []struct {
-		name    string
-		args    args
-		wantErr assert.ErrorAssertionFunc
-	}{
-		{
-			name: "Save Gauge Metric",
-			args: args{
-				metricsName:  "HeapIdle",
-				metricsValue: "23109",
-			},
-			wantErr: assert.NoError,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			s := &MetricsService{}
-			tt.wantErr(t, s.SaveGaugeMetric(tt.args.metricsName, tt.args.metricsValue), fmt.Sprintf("SaveGaugeMetric(%v, %v)", tt.args.metricsName, tt.args.metricsValue))
-		})
-	}
-}
+func TestMetricsService_Show(t *testing.T) {
+	var memStats runtime.MemStats
+	runtime.ReadMemStats(&memStats)
+	wantAllocValue := float64(memStats.Alloc)
 
-func TestMetricsService_SaveMetric(t *testing.T) {
 	type args struct {
-		metricsType  string
-		metricsName  string
-		metricsValue string
+		metric     interfaces.MetricsInterface
+		metricName string
 	}
 	tests := []struct {
-		name    string
-		args    args
-		wantErr assert.ErrorAssertionFunc
+		name      string
+		args      args
+		wantEntry *models.Metrics
+		wantErr   assert.ErrorAssertionFunc
 	}{
 		{
-			name: "saveGauge",
+			name: "first",
 			args: args{
-				metricsName:  "test1",
-				metricsValue: "2302930",
-				metricsType:  "gauge",
+				metric:     Gauge,
+				metricName: "Foo",
 			},
-			wantErr: assert.NoError,
+			wantEntry: nil,
+			wantErr:   assert.Error,
 		},
 		{
-			name: "saveCounter",
+			name: "second",
 			args: args{
-				metricsName:  "test2",
-				metricsValue: "2302930",
-				metricsType:  "counter",
+				metric:     Gauge,
+				metricName: "Alloc",
+			},
+			wantEntry: &models.Metrics{
+				ID:    "Alloc",
+				MType: constants.GaugeMetricType,
+				Value: &wantAllocValue,
 			},
 			wantErr: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &MetricsService{}
-			tt.wantErr(t, s.SaveMetric(tt.args.metricsType, tt.args.metricsName, tt.args.metricsValue), fmt.Sprintf("SaveMetric(%v, %v, %v)", tt.args.metricsType, tt.args.metricsName, tt.args.metricsValue))
+			s := NewMetricsService()
+			metricsInterface := servicemocks.NewMetricsInterface(t)
+
+			if tt.wantEntry != nil {
+				metricsInterface.On("FindByName", tt.args.metricName).Return(tt.wantEntry, nil)
+			} else {
+				metricsInterface.On("FindByName", tt.args.metricName).Return(nil, constants.ErrMetricNotFound)
+			}
+
+			gotEntry, err := s.Show(metricsInterface, tt.args.metricName)
+			if !tt.wantErr(t, err, fmt.Sprintf("Show(%v, %v)", metricsInterface, tt.args.metricName)) {
+				return
+			}
+			assert.Equalf(t, tt.wantEntry, gotEntry, "Show(%v, %v)", metricsInterface, tt.args.metricName)
 		})
 	}
 }

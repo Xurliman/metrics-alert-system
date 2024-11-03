@@ -1,19 +1,30 @@
 package interfaces
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/http/requests"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
+	"github.com/gin-gonic/gin"
+)
 
-type MetricsControllerInterface interface {
-	Index(ctx *gin.Context)
-	Show(ctx *gin.Context)
-	Update(ctx *gin.Context)
+type MetricsInterface interface {
+	FindByName(metricName string) (*models.Metrics, error)
+	GetMetricValue(metricsName string) (metricsValue string, err error)
+	Save(metricName, metricValue string, existingMetric *models.Metrics) error
+	SaveBody(metricRequest requests.MetricsSaveRequest, existingMetric *models.Metrics) (entry *models.Metrics, err error)
 }
 
 type MetricsServiceInterface interface {
-	GetAll() map[string]string
-	FindMetricByName(metricsType string, metricsName string) (metricsValue string, err error)
-	FindCounterMetric(metricsName string) (metricsValue string, err error)
-	FindGaugeMetric(metricsName string) (metricsValue string, err error)
-	SaveGaugeMetric(metricsName string, metricsValue string) error
-	SaveCounterMetric(metricsName string, metricsValue string) error
-	SaveMetric(metricsType string, metricsName string, metricsValue string) error
+	List() map[string]string
+	GetMetricValue(metric MetricsInterface, metricName string) (metricValue string, err error)
+	Show(metric MetricsInterface, metricName string) (entry *models.Metrics, err error)
+	SaveWhenParams(metric MetricsInterface, metricName, metricValue string) error
+	SaveWhenBody(metric MetricsInterface, metricRequest requests.MetricsSaveRequest) (entry *models.Metrics, err error)
+}
+
+type MetricsControllerInterface interface {
+	List(ctx *gin.Context)
+	Show(ctx *gin.Context)
+	Save(ctx *gin.Context)
+	SaveBody(ctx *gin.Context)
+	ShowBody(ctx *gin.Context)
 }

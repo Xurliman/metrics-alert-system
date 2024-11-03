@@ -30,3 +30,6 @@ vendor/
 # Environment files
 cmd/server/.env
 cmd/agent/.env
+
+#logs
+storage/logs/server.log

@@ -1,93 +1,80 @@
 package services
 
 import (
-	"fmt"
+	"errors"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/http/requests"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
+	"runtime"
 	"strconv"
 )
 
-type MetricsService struct {
-}
+var MetricsCollection map[string]*models.Metrics
+
+type MetricsService struct{}
 
 func NewMetricsService() *MetricsService {
+	var memStats runtime.MemStats
+	runtime.ReadMemStats(&memStats)
+
+	gaugeMetricExample := float64(memStats.Alloc)
+	var counterMetricExample int64
+	MetricsCollection = map[string]*models.Metrics{
+		"Alloc": {
+			ID:    "Alloc",
+			MType: constants.GaugeMetricType,
+			Value: &gaugeMetricExample,
+		},
+		"PollCount": {
+			ID:    "PollCount",
+			MType: constants.CounterMetricType,
+			Delta: &counterMetricExample,
+		},
+	}
 	return &MetricsService{}
 }
 
-var metrics = models.ExistingMetrics()
-
-func (s *MetricsService) GetAll() map[string]string {
+func (s *MetricsService) List() map[string]string {
 	data := make(map[string]string)
-	for metricName, metricValue := range metrics.Gauge {
-		data[metricName] = strconv.FormatFloat(metricValue, 'f', -1, 64)
-	}
-	for metricName, metricValue := range metrics.Counter {
-		data[metricName] = strconv.FormatInt(metricValue, 10)
+	for metricName, metric := range MetricsCollection {
+		switch metric.MType {
+		case constants.GaugeMetricType:
+			data[metricName] = strconv.FormatFloat(*metric.Value, 'f', -1, 64)
+		case constants.CounterMetricType:
+			data[metricName] = strconv.FormatInt(*metric.Delta, 10)
+		}
 	}
 	return data
 }
 
-func (s *MetricsService) SaveGaugeMetric(metricsName string, metricsValue string) error {
-	if metricsName == "" {
-		return constants.ErrEmptyMetricName
-	}
-	metricVal, err := strconv.ParseFloat(metricsValue, 64)
-	if err != nil {
-		return constants.ErrInvalidGaugeMetricValue
-	}
-
-	metrics.Gauge[metricsName] = metricVal
-	return nil
+func (s *MetricsService) GetMetricValue(metric interfaces.MetricsInterface, metricName string) (metricValue string, err error) {
+	return metric.GetMetricValue(metricName)
 }
 
-func (s *MetricsService) SaveCounterMetric(metricsName string, metricsValue string) error {
-	metricVal, err := strconv.ParseInt(metricsValue, 10, 64)
-	if err != nil {
-		return constants.ErrInvalidCounterMetricValue
+func (s *MetricsService) SaveWhenParams(metric interfaces.MetricsInterface, metricName, metricValue string) error {
+	existingMetric, err := metric.FindByName(metricName)
+	if err != nil && !errors.Is(err, constants.ErrMetricNotFound) {
+		return err
 	}
 
-	metrics.Counter[metricsName] += metricVal
-	return nil
+	return metric.Save(metricName, metricValue, existingMetric)
 }
 
-func (s *MetricsService) SaveMetric(metricsType string, metricsName string, metricsValue string) error {
-	switch metricsType {
-	case constants.GaugeMetricType:
-		return s.SaveGaugeMetric(metricsName, metricsValue)
-	case constants.CounterMetricType:
-		return s.SaveCounterMetric(metricsName, metricsValue)
-	default:
-		return constants.ErrInvalidMetricType
-	}
-}
-
-func (s *MetricsService) FindGaugeMetric(metricsName string) (metricsValue string, err error) {
-	value, ok := metrics.Gauge[metricsName]
-	if !ok {
-		return metricsValue, fmt.Errorf("type gauge|metrics %s not found", metricsName)
+func (s *MetricsService) SaveWhenBody(metric interfaces.MetricsInterface, metricRequest requests.MetricsSaveRequest) (entry *models.Metrics, err error) {
+	existingMetric, err := metric.FindByName(metricRequest.ID)
+	if err != nil && !errors.Is(err, constants.ErrMetricNotFound) {
+		return nil, err
 	}
 
-	metricsValue = strconv.FormatFloat(value, 'f', -1, 64)
-	return metricsValue, nil
+	return metric.SaveBody(metricRequest, existingMetric)
 }
 
-func (s *MetricsService) FindCounterMetric(metricsName string) (metricsValue string, err error) {
-	value, ok := metrics.Counter[metricsName]
-	if !ok {
-		return metricsValue, fmt.Errorf("type counter|metrics %s not found", metricsName)
-	}
-
-	metricsValue = strconv.FormatInt(value, 10)
-	return metricsValue, nil
+func (s *MetricsService) Show(metric interfaces.MetricsInterface, metricName string) (entry *models.Metrics, err error) {
+	return metric.FindByName(metricName)
 }
 
-func (s *MetricsService) FindMetricByName(metricsType string, metricsName string) (metricsValue string, err error) {
-	switch metricsType {
-	case constants.GaugeMetricType:
-		return s.FindGaugeMetric(metricsName)
-	case constants.CounterMetricType:
-		return s.FindCounterMetric(metricsName)
-	default:
-		return metricsValue, constants.ErrInvalidMetricType
-	}
-}
+var (
+	Counter = counterMetricsService{}
+	Gauge   = gaugeMetricsService{}
+)

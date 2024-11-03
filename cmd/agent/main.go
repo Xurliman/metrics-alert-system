@@ -37,7 +37,9 @@ func main() {
 
 	client := http.Client{Timeout: 10 * time.Second}
 	metrics := services.CollectMetrics()
+
 	services.SendMetrics(client, metrics, address)
+	services.SendMetricsWithParam(client, metrics, address)
 
 	pollTicker := time.NewTicker(pollInterval)
 	reportTicker := time.NewTicker(reportInterval)

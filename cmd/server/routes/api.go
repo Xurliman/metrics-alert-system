@@ -15,8 +15,10 @@ func SetupRoutes() *gin.Engine {
 	metricsService := services.NewMetricsService()
 	metricsController := controllers.NewMetricsController(metricsService)
 
-	r.GET("/", logging.Handle(metricsController.Index))
-	r.GET("/value/:type/:name/", logging.Handle(metricsController.Show))
-	r.POST("/update/:type/:name/:value", logging.Handle(metricsController.Update))
+	r.GET("/", logging.Handle(metricsController.List))
+	r.GET("/value/:type/:name", logging.Handle(metricsController.Show))
+	r.POST("/value/", logging.Handle(metricsController.ShowBody))
+	r.POST("/update/:type/:name/:value", logging.Handle(metricsController.Save))
+	r.POST("/update/", logging.Handle(metricsController.SaveBody))
 	return r
 }

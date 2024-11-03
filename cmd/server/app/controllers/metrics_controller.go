@@ -3,8 +3,14 @@ package controllers
 import (
 	"errors"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/http/requests"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/services"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"io"
 	"net/http"
 )
 
@@ -12,23 +18,27 @@ type MetricsController struct {
 	service interfaces.MetricsServiceInterface
 }
 
-func NewMetricsController(service interfaces.MetricsServiceInterface) *MetricsController {
+func NewMetricsController(service interfaces.MetricsServiceInterface) interfaces.MetricsControllerInterface {
 	return &MetricsController{service: service}
 }
 
-func (c *MetricsController) Update(ctx *gin.Context) {
-	var (
-		metricsType  = ctx.Param("type")
-		metricsName  = ctx.Param("name")
-		metricsValue = ctx.Param("value")
-		err          error
-	)
+func (c *MetricsController) List(ctx *gin.Context) {
+	data := c.service.List()
+	ctx.HTML(http.StatusOK, "metrics-all.html", data)
+}
 
-	switch metricsType {
+func (c *MetricsController) Save(ctx *gin.Context) {
+	var (
+		metricType  = ctx.Param("type")
+		metricName  = ctx.Param("name")
+		metricValue = ctx.Param("value")
+		err         error
+	)
+	switch metricType {
 	case constants.GaugeMetricType:
-		err = c.service.SaveGaugeMetric(metricsName, metricsValue)
+		err = c.service.SaveWhenParams(services.Gauge, metricName, metricValue)
 	case constants.CounterMetricType:
-		err = c.service.SaveCounterMetric(metricsName, metricsValue)
+		err = c.service.SaveWhenParams(services.Counter, metricName, metricValue)
 	default:
 		ctx.Status(http.StatusBadRequest)
 		return
@@ -47,9 +57,36 @@ func (c *MetricsController) Update(ctx *gin.Context) {
 	ctx.Status(http.StatusOK)
 }
 
-func (c *MetricsController) Index(ctx *gin.Context) {
-	data := c.service.GetAll()
-	ctx.HTML(http.StatusOK, "metrics-all.html", data)
+func (c *MetricsController) SaveBody(ctx *gin.Context) {
+	metricRequest := new(requests.MetricsSaveRequest)
+	err := ctx.ShouldBindWith(&metricRequest, binding.JSON)
+	if err != nil && err != io.EOF {
+		utils.JsonValidationError(ctx, err)
+		return
+	}
+
+	if err = metricRequest.Validate(); err != nil {
+		utils.JsonValidationError(ctx, err)
+		return
+	}
+
+	var metric *models.Metrics
+	switch metricRequest.MType {
+	case constants.GaugeMetricType:
+		metric, err = c.service.SaveWhenBody(services.Gauge, *metricRequest)
+	case constants.CounterMetricType:
+		metric, err = c.service.SaveWhenBody(services.Counter, *metricRequest)
+	default:
+		utils.JsonError(ctx, constants.ErrInvalidMetricType)
+		return
+	}
+
+	if err != nil {
+		utils.JsonInternalServerError(ctx, err)
+		return
+	}
+	utils.JsonSuccess(ctx, metric)
+	return
 }
 
 func (c *MetricsController) Show(ctx *gin.Context) {
@@ -62,9 +99,9 @@ func (c *MetricsController) Show(ctx *gin.Context) {
 
 	switch metricsType {
 	case constants.GaugeMetricType:
-		metricsValue, err = c.service.FindGaugeMetric(metricsName)
+		metricsValue, err = c.service.GetMetricValue(services.Gauge, metricsName)
 	case constants.CounterMetricType:
-		metricsValue, err = c.service.FindCounterMetric(metricsName)
+		metricsValue, err = c.service.GetMetricValue(services.Counter, metricsName)
 	}
 
 	defer func(err error) {
@@ -75,4 +112,37 @@ func (c *MetricsController) Show(ctx *gin.Context) {
 		ctx.String(http.StatusOK, metricsValue)
 
 	}(err)
+}
+
+func (c *MetricsController) ShowBody(ctx *gin.Context) {
+	metricRequest := new(requests.MetricsShowRequest)
+	err := ctx.ShouldBindWith(&metricRequest, binding.JSON)
+	if err != nil && err != io.EOF {
+		utils.JsonValidationError(ctx, err)
+		return
+	}
+
+	if err = metricRequest.Validate(); err != nil {
+		utils.JsonValidationError(ctx, err)
+		return
+	}
+
+	var metric *models.Metrics
+	switch metricRequest.MType {
+	case constants.GaugeMetricType:
+		metric, err = c.service.Show(services.Gauge, metricRequest.ID)
+	case constants.CounterMetricType:
+		metric, err = c.service.Show(services.Counter, metricRequest.ID)
+	default:
+		utils.JsonError(ctx, constants.ErrInvalidMetricType)
+		return
+	}
+
+	if err != nil {
+		utils.JsonNotFound(ctx, err)
+		return
+	}
+
+	utils.JsonSuccess(ctx, metric)
+	return
 }

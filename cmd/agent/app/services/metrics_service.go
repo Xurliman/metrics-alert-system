@@ -1,8 +1,12 @@
 package services
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/models"
+	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/requests"
 	"math/rand"
 	"net/http"
 	"runtime"
@@ -54,7 +58,53 @@ func CollectMetrics() models.Metrics {
 
 func SendMetrics(client http.Client, metrics models.Metrics, address string) {
 	for metric, value := range metrics.Gauge {
-		url := fmt.Sprintf("http://%s/update/gauge/%s/%f", address, metric, value)
+		url := fmt.Sprintf("http://%s/update/", address)
+		request, err := json.Marshal(requests.MetricsRequest{
+			ID:    metric,
+			MType: constants.GaugeMetricType,
+			Value: &value,
+		})
+		if err != nil {
+			return
+		}
+
+		response, err := client.Post(url, "application/json", bytes.NewReader(request))
+		if err != nil {
+			return
+		}
+
+		err = response.Body.Close()
+		if err != nil {
+			return
+		}
+	}
+
+	for metric, value := range metrics.Counter {
+		url := fmt.Sprintf("http://%s/update/", address)
+		request, err := json.Marshal(requests.MetricsRequest{
+			ID:    metric,
+			MType: constants.CounterMetricType,
+			Delta: &value,
+		})
+		if err != nil {
+			return
+		}
+
+		response, err := client.Post(url, "application/json", bytes.NewReader(request))
+		if err != nil {
+			return
+		}
+
+		err = response.Body.Close()
+		if err != nil {
+			return
+		}
+	}
+}
+
+func SendMetricsWithParam(client http.Client, metrics models.Metrics, address string) {
+	for metric, value := range metrics.Gauge {
+		url := fmt.Sprintf("http://%s/update/%s/%s/%f", address, constants.GaugeMetricType, metric, value)
 		response, err := client.Post(url, "text/plain", nil)
 		if err != nil {
 			return
@@ -66,7 +116,7 @@ func SendMetrics(client http.Client, metrics models.Metrics, address string) {
 	}
 
 	for metric, value := range metrics.Counter {
-		url := fmt.Sprintf("http://%s/update/counter/%s/%v", address, metric, value)
+		url := fmt.Sprintf("http://%s/update/%s/%s/%v", address, constants.CounterMetricType, metric, value)
 		response, err := client.Post(url, "text/plain", nil)
 		if err != nil {
 			return

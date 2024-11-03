@@ -11,4 +11,6 @@ var (
 	ErrInvalidCounterMetricValue = errors.New("invalid metrics value for counter type")
 	ErrInvalidGaugeMetricValue   = errors.New("invalid metrics value for gauge type")
 	ErrEmptyMetricName           = errors.New("metrics name is empty")
+	ErrMetricExists              = errors.New("metric exists")
+	ErrMetricNotFound            = errors.New("metric not found")
 )
