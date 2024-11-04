@@ -40,6 +40,8 @@ func main() {
 
 	services.SendMetrics(client, metrics, address)
 	services.SendMetricsWithParam(client, metrics, address)
+	services.SendCompressedMetrics(client, metrics, address)
+	services.SendCompressedMetricsWithParam(client, metrics, address)
 
 	pollTicker := time.NewTicker(pollInterval)
 	reportTicker := time.NewTicker(reportInterval)

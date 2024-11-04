@@ -23,9 +23,7 @@ func (l LoggingMiddleware) Handle(next gin.HandlerFunc) gin.HandlerFunc {
 		start := time.Now()
 		size := l.Request.Handle(ctx)
 
-		var (
-			respBody bytes.Buffer
-		)
+		var respBody bytes.Buffer
 		respCapture := &ResponseCapture{
 			ResponseWriter: ctx.Writer,
 			Body:           &respBody,

@@ -8,6 +8,8 @@ import (
 )
 
 func SetupRoutes() *gin.Engine {
+	compression := middlewares.NewCompressingMiddleware()
+	decompression := middlewares.NewDecompressingMiddleware()
 	r := gin.New()
 	r.LoadHTMLFiles("./cmd/server/public/templates/metrics-all.html")
 
@@ -15,10 +17,10 @@ func SetupRoutes() *gin.Engine {
 	metricsService := services.NewMetricsService()
 	metricsController := controllers.NewMetricsController(metricsService)
 
-	r.GET("/", logging.Handle(metricsController.List))
-	r.GET("/value/:type/:name", logging.Handle(metricsController.Show))
-	r.POST("/value/", logging.Handle(metricsController.ShowBody))
-	r.POST("/update/:type/:name/:value", logging.Handle(metricsController.Save))
-	r.POST("/update/", logging.Handle(metricsController.SaveBody))
+	r.GET("/", decompression.Handle(logging.Handle(compression.Handle(metricsController.List))))
+	r.GET("/value/:type/:name", decompression.Handle(logging.Handle(compression.Handle(metricsController.Show))))
+	r.POST("/value/", decompression.Handle(logging.Handle(compression.Handle(metricsController.ShowBody))))
+	r.POST("/update/:type/:name/:value", decompression.Handle(logging.Handle(compression.Handle(metricsController.Save))))
+	r.POST("/update/", decompression.Handle(logging.Handle(compression.Handle(metricsController.SaveBody))))
 	return r
 }

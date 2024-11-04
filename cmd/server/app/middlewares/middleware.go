@@ -42,7 +42,7 @@ func (request *Request) Handle(ctx *gin.Context) (size int64) {
 	if err != nil {
 		errors.Join(request.Error, err)
 	}
-	
+
 	return size
 }
 

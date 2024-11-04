@@ -7,6 +7,7 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/models"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/requests"
+	"github.com/Xurliman/metrics-alert-system/cmd/agent/utils"
 	"math/rand"
 	"net/http"
 	"runtime"
@@ -126,4 +127,120 @@ func SendMetricsWithParam(client http.Client, metrics models.Metrics, address st
 			return
 		}
 	}
+}
+
+func SendCompressedMetrics(client http.Client, metrics models.Metrics, address string) {
+	for metric, value := range metrics.Gauge {
+		url := fmt.Sprintf("http://%s/update/", address)
+		body, err := json.Marshal(requests.MetricsRequest{
+			ID:    metric,
+			MType: constants.GaugeMetricType,
+			Value: &value,
+		})
+		if err != nil {
+			return
+		}
+
+		request, err := compress(body, url)
+		if err != nil {
+			return
+		}
+
+		response, err := client.Do(request)
+		if err != nil {
+			return
+		}
+
+		err = response.Body.Close()
+		if err != nil {
+			return
+		}
+	}
+
+	for metric, value := range metrics.Counter {
+		url := fmt.Sprintf("http://%s/update/", address)
+		body, err := json.Marshal(requests.MetricsRequest{
+			ID:    metric,
+			MType: constants.CounterMetricType,
+			Delta: &value,
+		})
+		if err != nil {
+			return
+		}
+
+		request, err := compress(body, url)
+		if err != nil {
+			return
+		}
+
+		response, err := client.Do(request)
+		if err != nil {
+			return
+		}
+
+		err = response.Body.Close()
+		if err != nil {
+			return
+		}
+	}
+}
+
+func SendCompressedMetricsWithParam(client http.Client, metrics models.Metrics, address string) {
+	for metric, value := range metrics.Gauge {
+		url := fmt.Sprintf("http://%s/update/%s/%s/%f", address, constants.GaugeMetricType, metric, value)
+		req, err := http.NewRequest("POST", url, nil)
+		if err != nil {
+			return
+		}
+
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Content-Encoding", "gzip")
+
+		response, err := client.Do(req)
+		if err != nil {
+			return
+		}
+		err = response.Body.Close()
+		if err != nil {
+			return
+		}
+	}
+
+	for metric, value := range metrics.Counter {
+		url := fmt.Sprintf("http://%s/update/%s/%s/%v", address, constants.CounterMetricType, metric, value)
+		req, err := http.NewRequest("POST", url, nil)
+		if err != nil {
+			return
+		}
+
+		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Content-Encoding", "gzip")
+
+		response, err := client.Do(req)
+		if err != nil {
+			return
+		}
+
+		err = response.Body.Close()
+		if err != nil {
+			return
+		}
+	}
+}
+
+func compress(body []byte, url string) (*http.Request, error) {
+	compressedRequest, err := utils.Compress(body)
+	if err != nil {
+		return nil, err
+	}
+
+	request, err := http.NewRequest("POST", url, bytes.NewReader(compressedRequest))
+	if err != nil {
+		return nil, err
+	}
+
+	request.Header.Set("Content-Type", "application/json")
+	request.Header.Set("Content-Encoding", "gzip")
+
+	return request, nil
 }
