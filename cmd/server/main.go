@@ -52,15 +52,10 @@ func main() {
 	go func() {
 		storeTicker := time.NewTicker(storeInterval)
 		defer storeTicker.Stop()
-		for {
-			select {
-			case <-storeTicker.C:
-				err = Archive(services.MetricsCollection, fileStoragePath)
-				if err != nil {
-					utils.Logger.Error("archiving data went wrong",
-						zap.Error(err),
-					)
-				}
+		for range storeTicker.C {
+			err = Archive(services.MetricsCollection, fileStoragePath)
+			if err != nil {
+				utils.Logger.Error("archiving data went wrong", zap.Error(err))
 			}
 		}
 	}()
