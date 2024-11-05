@@ -6,32 +6,14 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/http/requests"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
-	"runtime"
 	"strconv"
 )
 
-var MetricsCollection map[string]*models.Metrics
+var MetricsCollection = make(map[string]*models.Metrics)
 
 type MetricsService struct{}
 
 func NewMetricsService() *MetricsService {
-	var memStats runtime.MemStats
-	runtime.ReadMemStats(&memStats)
-
-	gaugeMetricExample := float64(memStats.Alloc)
-	var counterMetricExample int64
-	MetricsCollection = map[string]*models.Metrics{
-		"Alloc": {
-			ID:    "Alloc",
-			MType: constants.GaugeMetricType,
-			Value: &gaugeMetricExample,
-		},
-		"PollCount": {
-			ID:    "PollCount",
-			MType: constants.CounterMetricType,
-			Delta: &counterMetricExample,
-		},
-	}
 	return &MetricsService{}
 }
 

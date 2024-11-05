@@ -12,14 +12,19 @@ import (
 	"github.com/gin-gonic/gin/binding"
 	"io"
 	"net/http"
+	"time"
 )
 
 type MetricsController struct {
-	service interfaces.MetricsServiceInterface
+	service         interfaces.MetricsServiceInterface
+	storeTicker     *time.Ticker
+	fileStoragePath string
 }
 
 func NewMetricsController(service interfaces.MetricsServiceInterface) interfaces.MetricsControllerInterface {
-	return &MetricsController{service: service}
+	return &MetricsController{
+		service: service,
+	}
 }
 
 func (c *MetricsController) List(ctx *gin.Context) {
@@ -85,6 +90,7 @@ func (c *MetricsController) SaveBody(ctx *gin.Context) {
 		utils.JSONInternalServerError(ctx, err)
 		return
 	}
+
 	utils.JSONSuccess(ctx, metric)
 }
 

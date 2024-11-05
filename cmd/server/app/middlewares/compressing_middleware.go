@@ -31,19 +31,10 @@ func (c CompressingMiddleware) Handle(next gin.HandlerFunc) gin.HandlerFunc {
 			}
 		}(gz)
 
-		gzw := &GzipResponseWriter{ResponseWriter: ctx.Writer, Writer: gz}
+		gzw := &utils.GzipResponseWriter{ResponseWriter: ctx.Writer, Writer: gz}
 		ctx.Writer = gzw
 		ctx.Writer.Header().Set("Content-Encoding", "gzip")
 
 		next(ctx)
 	}
-}
-
-type GzipResponseWriter struct {
-	gin.ResponseWriter
-	Writer *gzip.Writer
-}
-
-func (gzw *GzipResponseWriter) Write(data []byte) (int, error) {
-	return gzw.Writer.Write(data)
 }

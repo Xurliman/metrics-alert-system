@@ -631,3 +631,1006 @@
 2024-11-04 05:21:36	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "28.791µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
 2024-11-04 05:21:36	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "32.833µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
 2024-11-04 05:21:36	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "34.625µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:39:16	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "248.166µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:39:16	[34mINFO[0m	❌ metric not found
+2024-11-04 22:39:16	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "308.333µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:39:16	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:39:16	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "77.083µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:39:16	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "28.959µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:39:16	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "30.75µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:39:16	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "34.583µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:39:16	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "31.208µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:39:16	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:39:16	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "91.75µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:39:16	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.333µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:39:16	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "30.084µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:39:16	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "37.25µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:40:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "261.875µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:40:27	[34mINFO[0m	❌ metric not found
+2024-11-04 22:40:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "336.583µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:40:27	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:40:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "82.375µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:40:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "30.292µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:40:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "106.375µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:40:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "31.125µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:40:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "30.166µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:40:27	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:40:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "118.375µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:40:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.166µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:40:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "32.166µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:40:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "34µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:44:09	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "264.25µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:44:09	[34mINFO[0m	❌ metric not found
+2024-11-04 22:44:09	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "323µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:44:09	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:44:09	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "78.958µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:44:09	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "29.625µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:44:09	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "38.417µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:44:09	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "32.916µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:44:09	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "30.875µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:44:09	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:44:09	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "97.042µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:44:09	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "35.5µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:44:09	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "35.083µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:44:09	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "36.584µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:44:51	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "265.459µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:44:51	[34mINFO[0m	❌ metric not found
+2024-11-04 22:44:51	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "315.458µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:44:51	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:44:51	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "78.083µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:44:51	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "29.25µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:44:51	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "36.458µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:44:51	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "38.917µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:44:51	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "31.542µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:44:51	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:44:51	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "96.584µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:44:51	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.25µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:44:51	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "31.375µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:44:51	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "35.792µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:45:10	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "265.917µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:45:10	[34mINFO[0m	❌ metric not found
+2024-11-04 22:45:10	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "315.542µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:45:10	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:45:10	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "75µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:45:10	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "28.292µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:45:10	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "38.459µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:45:10	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "34.917µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:45:10	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "31.584µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:45:10	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:45:10	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "98.542µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:45:10	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.667µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:45:10	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "37.458µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:45:10	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "35µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:46:44	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "261.584µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:46:44	[34mINFO[0m	❌ metric not found
+2024-11-04 22:46:44	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "310.125µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:46:44	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:46:44	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "73.417µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:46:44	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "28.125µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:46:44	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "36.542µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:46:44	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "32.166µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:46:44	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "30.916µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:46:44	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:46:44	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "94.875µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:46:44	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.625µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:46:44	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "30.958µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:46:44	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "35.417µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:46:58	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "264.5µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:46:58	[34mINFO[0m	❌ metric not found
+2024-11-04 22:46:58	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "333.75µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:46:58	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:46:58	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "76.459µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:46:58	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "30.584µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:46:58	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "31.5µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:46:58	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "33.083µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:46:58	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "30.625µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:46:58	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:46:58	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "93.5µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:46:58	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.583µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:46:58	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "32.375µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:46:58	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "40.459µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:50:24	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "300.875µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:50:24	[34mINFO[0m	❌ metric not found
+2024-11-04 22:50:24	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "324.625µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:50:24	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:50:24	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "76.083µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:50:24	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "30.125µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:50:24	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "35.75µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:50:24	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "33.917µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:50:24	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "32.417µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:50:24	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:50:24	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "92.875µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:50:24	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.584µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:50:24	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "38.334µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:50:24	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "42.667µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:51:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "265.584µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:51:27	[34mINFO[0m	❌ metric not found
+2024-11-04 22:51:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "396.417µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:51:27	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:51:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "80.958µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:51:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "30.584µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:51:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "36.333µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:51:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "32.542µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:51:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "30.125µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:51:27	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:51:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "101.291µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:51:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.125µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:51:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "32.583µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:51:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "34µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:51:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "355.917µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:51:49	[34mINFO[0m	❌ metric not found
+2024-11-04 22:51:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "331.875µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:51:49	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:51:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "75.333µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:51:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "29.917µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:51:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "31.958µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:51:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "32.083µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:51:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "32.75µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:51:49	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:51:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "84.834µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:51:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "28.542µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:51:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "31.666µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:51:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "35.167µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:52:04	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "264.083µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:52:04	[34mINFO[0m	❌ metric not found
+2024-11-04 22:52:04	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "339.084µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:52:04	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:52:04	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "85.875µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:52:04	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "34.541µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:52:04	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "36.625µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:52:04	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "32µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:52:04	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "31.041µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:52:04	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:52:04	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "105.125µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:52:04	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "35.375µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:52:04	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "31.709µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:52:04	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "34.708µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:52:22	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "260.208µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:52:22	[34mINFO[0m	❌ metric not found
+2024-11-04 22:52:22	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "327.916µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:52:22	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:52:22	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "78.709µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:52:22	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "34.167µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:52:22	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "31.541µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:52:22	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "38.125µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:52:22	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "32.583µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:52:22	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:52:22	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "95.458µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:52:22	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.958µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:52:22	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "31.833µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:52:22	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "34.292µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:52:32	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "270.334µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:52:32	[34mINFO[0m	❌ metric not found
+2024-11-04 22:52:32	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "302.041µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:52:32	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:52:32	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "77.416µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:52:32	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "28.416µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:52:32	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "40.042µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:52:32	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "29.75µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:52:32	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "30.917µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:52:32	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:52:32	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "84.709µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:52:32	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.333µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:52:32	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "30.875µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:52:32	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "35.958µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:52:39	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "263µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:52:39	[34mINFO[0m	❌ metric not found
+2024-11-04 22:52:39	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "330µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:52:39	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:52:39	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "77.292µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:52:39	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "30.25µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:52:39	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "30.583µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:52:39	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "40.125µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:52:39	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "32.417µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:52:39	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:52:39	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "96.666µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:52:39	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "31.042µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:52:39	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "38.375µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:52:39	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "35.5µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:53:06	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "266.042µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:53:06	[34mINFO[0m	❌ metric not found
+2024-11-04 22:53:06	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "312.209µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:53:06	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:53:06	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "77.5µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:53:06	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "28.792µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:53:06	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "38.459µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:53:06	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "30.084µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:53:06	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "29.75µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:53:06	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:53:06	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "94.208µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:53:06	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.917µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:53:06	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "31.5µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:53:06	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "37µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:55:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "262.458µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:55:13	[34mINFO[0m	❌ metric not found
+2024-11-04 22:55:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "400.417µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:55:13	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:55:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "75.584µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:55:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "30.459µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:55:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "38.917µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:55:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "53.25µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:55:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "30.458µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:55:13	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:55:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "88.333µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:55:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.625µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:55:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "32.083µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:55:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "34.375µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:55:23	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "261.875µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:55:23	[34mINFO[0m	❌ metric not found
+2024-11-04 22:55:23	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "316.459µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:55:23	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:55:23	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "74.291µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:55:23	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "29.75µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:55:23	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "38.167µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:55:23	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "36.167µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:55:23	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "30.917µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:55:23	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:55:23	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "95.125µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:55:23	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "30.708µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:55:23	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "30.375µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:55:23	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "36.5µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:57:11	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "266.042µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:57:11	[34mINFO[0m	❌ metric not found
+2024-11-04 22:57:11	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "319.5µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:57:11	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:57:11	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "76.459µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:57:11	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "29.542µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:57:11	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "38.625µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:57:11	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "31.958µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:57:11	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "30.791µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:57:11	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:57:11	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "94.375µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:57:11	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.917µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:57:11	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "32.334µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:57:11	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "34.334µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:57:25	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "267.167µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:57:25	[34mINFO[0m	❌ metric not found
+2024-11-04 22:57:25	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "309.458µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:57:25	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:57:25	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "75.167µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:57:25	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "30.375µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:57:25	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "41.875µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:57:25	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "38.25µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:57:25	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "32.917µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:57:25	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:57:25	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "105.458µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:57:25	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.334µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:57:25	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "31.958µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:57:25	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "37.917µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:57:37	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "266.792µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:57:37	[34mINFO[0m	❌ metric not found
+2024-11-04 22:57:37	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "318.75µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:57:37	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:57:37	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "73.459µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:57:37	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "36.083µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:57:37	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "40.125µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:57:37	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "36.208µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:57:37	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "28.917µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:57:37	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:57:37	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "86.083µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:57:37	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.375µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:57:37	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "32.917µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:57:37	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "35.875µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:57:59	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "262.333µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:57:59	[34mINFO[0m	❌ metric not found
+2024-11-04 22:57:59	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "326.625µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:57:59	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:57:59	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "77.583µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:57:59	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "27.834µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:57:59	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "38.041µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:57:59	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "31.042µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:57:59	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "29.875µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:57:59	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:57:59	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "97.417µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:57:59	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "30.792µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:57:59	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "31.875µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:57:59	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "32.5µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:58:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "272.25µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:58:13	[34mINFO[0m	❌ metric not found
+2024-11-04 22:58:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "312.5µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:58:13	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:58:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "76.333µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:58:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "29.208µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:58:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "38.208µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:58:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "36.708µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:58:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "28.25µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:58:13	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:58:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "95.375µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:58:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.583µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:58:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "30.875µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:58:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "35.5µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:58:32	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "275.834µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:58:32	[34mINFO[0m	❌ metric not found
+2024-11-04 22:58:32	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "303.667µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:58:32	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:58:32	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "77.416µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:58:32	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "30.625µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:58:32	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "31.458µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:58:32	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "38.834µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:58:32	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "32.667µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:58:32	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:58:32	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "97.208µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:58:32	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "30.25µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:58:32	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "31.458µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:58:32	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "35.667µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:58:42	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "270.292µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:58:42	[34mINFO[0m	❌ metric not found
+2024-11-04 22:58:42	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "337.084µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:58:42	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:58:42	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "80.125µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:58:42	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "30.917µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:58:42	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "66.667µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:58:42	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "34.167µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:58:42	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "30.417µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:58:42	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:58:42	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "86.5µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:58:42	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.958µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:58:42	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "68.333µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:58:42	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "42.375µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:59:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "259.916µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 22:59:13	[34mINFO[0m	❌ metric not found
+2024-11-04 22:59:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "299.666µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 22:59:13	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 22:59:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "72.958µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 22:59:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "43.042µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:59:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "30.834µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:59:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "28.375µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 22:59:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "28.625µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:59:13	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 22:59:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "81.667µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 22:59:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "28.25µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:59:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "31.292µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 22:59:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "33.875µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:01:09	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "278.375µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:01:09	[34mINFO[0m	❌ metric not found
+2024-11-04 23:01:09	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "314.75µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:01:09	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:01:09	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "72.708µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:01:09	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "30.792µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:01:09	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "31.166µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:01:09	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "28.416µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:01:09	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "28.708µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:01:09	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:01:09	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "82.083µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:01:09	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.041µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:01:09	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "31.084µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:01:09	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "33.667µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:03:12	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "304.833µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:03:12	[34mINFO[0m	❌ metric not found
+2024-11-04 23:03:12	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "315.708µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:03:12	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:03:12	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "75.375µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:03:12	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "28.542µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:03:12	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "31.708µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:03:12	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "35.833µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:03:12	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "31.833µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:03:12	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:03:12	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "96.5µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:03:12	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "30.042µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:03:12	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "32.417µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:03:12	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "34.708µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:03:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "267.708µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:03:49	[34mINFO[0m	❌ metric not found
+2024-11-04 23:03:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "342.583µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:03:49	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:03:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "87.375µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:03:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "31.666µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:03:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "52.167µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:03:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "32.709µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:03:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "30.625µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:03:49	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:03:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "91.333µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:03:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.458µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:03:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "31.334µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:03:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "35.209µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:05:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "267.083µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:05:27	[34mINFO[0m	❌ metric not found
+2024-11-04 23:05:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "312.583µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:05:27	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:05:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "78.416µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:05:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "31.917µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:05:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "37.375µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:05:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "38.5µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:05:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "33.416µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:05:27	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:05:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "97µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:05:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "30µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:05:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "32µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:05:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "36.5µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:05:44	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "371.291µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:05:44	[34mINFO[0m	❌ metric not found
+2024-11-04 23:05:44	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "321µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:05:44	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:05:44	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "73.625µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:05:44	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "30.209µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:05:44	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "31.167µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:05:44	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "30µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:05:44	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "28.959µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:05:44	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:05:44	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "81.583µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:05:44	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.083µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:05:44	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "31.666µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:05:44	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "36.5µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:05:58	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "256.5µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:05:58	[34mINFO[0m	❌ metric not found
+2024-11-04 23:05:58	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "310.084µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:05:58	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:05:58	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "74.916µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:05:58	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "30µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:05:58	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "30.833µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:05:58	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "29.583µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:05:58	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "29.542µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:05:58	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:05:58	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "80.917µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:05:58	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "28.958µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:05:58	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "30.875µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:05:58	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "33.625µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:06:05	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "260.5µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:06:05	[34mINFO[0m	❌ metric not found
+2024-11-04 23:06:05	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "333.042µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:06:05	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:06:05	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "78.541µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:06:05	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "29.875µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:06:05	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "85.125µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:06:05	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "32.333µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:06:05	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "32.166µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:06:05	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:06:05	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "176.583µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:06:05	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "32.375µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:06:05	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "32.666µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:06:05	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "37.5µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:06:46	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "262.959µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:06:46	[34mINFO[0m	❌ metric not found
+2024-11-04 23:06:46	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "324µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:06:46	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:06:46	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "76.667µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:06:46	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "30.625µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:06:46	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "37.625µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:06:46	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "31.791µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:06:46	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "30.125µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:06:46	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:06:46	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "88.667µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:06:46	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "35.5µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:06:46	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "34.958µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:06:46	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "39.958µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:07:37	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "264.459µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:07:37	[34mINFO[0m	❌ metric not found
+2024-11-04 23:07:37	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "325.75µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:07:37	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:07:37	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "77.25µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:07:37	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "29.75µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:07:37	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "58.958µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:07:37	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "30.958µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:07:37	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "28.709µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:07:37	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:07:37	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "100.417µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:07:37	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.458µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:07:37	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "31.666µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:07:37	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "35.042µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:10:56	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "262.5µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:10:56	[34mINFO[0m	❌ metric not found
+2024-11-04 23:10:56	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "335.958µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:10:56	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:10:56	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "74.041µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:10:56	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "29.333µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:10:56	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "31.459µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:10:56	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "35.334µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:10:56	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "30.542µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:10:56	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:10:56	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "82.583µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:10:56	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "33.833µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:10:56	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "34.541µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:10:56	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "36.333µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:13:30	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "258.167µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:13:30	[34mINFO[0m	❌ metric not found
+2024-11-04 23:13:30	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "322.083µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:13:30	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:13:30	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "77.792µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:13:30	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "29.917µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:13:30	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "37.25µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:13:30	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "32.083µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:13:30	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "30.583µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:13:30	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:13:30	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "97.333µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:13:30	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "31.166µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:13:30	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "32.5µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:13:30	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "37.959µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:13:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "267.75µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:13:49	[34mINFO[0m	❌ metric not found
+2024-11-04 23:13:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "319.792µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:13:49	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:13:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "74.875µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:13:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "30.25µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:13:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "37.042µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:13:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "31.333µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:13:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "30.417µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:13:49	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:13:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "174.958µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:13:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "31.791µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:13:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "34.334µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:13:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "38.542µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:14:35	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "287.416µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:14:35	[34mINFO[0m	❌ metric not found
+2024-11-04 23:14:35	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "314.084µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:14:35	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:14:35	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "76.125µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:14:35	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "43.375µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:14:35	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "37.459µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:14:35	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "30.083µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:14:35	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "29.75µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:14:35	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:14:35	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "92.542µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:14:35	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "28.833µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:14:35	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "35.583µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:14:35	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "35.25µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:14:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "260.75µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:14:49	[34mINFO[0m	❌ metric not found
+2024-11-04 23:14:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "326.833µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:14:49	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:14:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "76.042µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:14:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "30.75µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:14:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "41.167µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:14:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "31.542µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:14:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "35.333µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:14:49	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:14:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "95.167µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:14:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "30µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:14:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "32.666µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:14:49	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "35.792µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:15:12	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "244.5µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:15:12	[34mINFO[0m	❌ metric not found
+2024-11-04 23:15:12	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "312.166µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:15:12	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:15:12	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "135.542µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:15:12	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "37.166µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:15:12	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "35.875µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:15:12	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "39.541µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:15:12	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "31.375µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:15:12	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:15:12	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "86.875µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:15:12	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:15:12	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "31.375µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:15:12	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "32.875µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:16:43	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "277.958µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:16:43	[34mINFO[0m	❌ metric not found
+2024-11-04 23:16:43	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "314.209µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:16:43	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:16:43	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "77.5µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:16:43	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "30.708µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:16:43	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "30.5µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:16:43	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "29µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:16:43	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "27.833µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:16:43	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:16:43	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "83.041µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:16:43	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "28.459µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:16:43	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "30.167µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:16:43	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "32.833µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:18:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "257.667µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:18:40	[34mINFO[0m	❌ metric not found
+2024-11-04 23:18:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "325.792µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:18:40	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:18:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "87.625µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:18:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "29.25µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:18:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "38.209µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:18:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "36.5µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:18:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "29.917µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:18:40	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:18:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "98.083µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:18:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.041µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:18:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "31.625µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:18:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "35.084µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:19:41	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "271µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:19:41	[34mINFO[0m	❌ metric not found
+2024-11-04 23:19:41	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "322.125µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:19:41	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:19:41	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "76.791µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:19:41	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "27.458µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:19:41	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "30.666µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:19:41	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "28.416µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:19:41	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "28.708µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:19:41	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:19:41	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "95.792µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:19:41	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "32.167µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:19:41	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "31.125µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:19:41	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "35.042µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:19:55	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "262.875µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:19:55	[34mINFO[0m	❌ metric not found
+2024-11-04 23:19:55	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "325.792µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:19:55	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:19:55	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "73.875µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:19:55	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "27.875µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:19:55	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "37.167µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:19:55	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "29.917µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:19:55	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "28.917µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:19:55	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:19:55	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "125.5µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:19:55	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.792µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:19:55	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "32.208µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:19:55	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "34.042µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:20:21	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "259.667µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:20:21	[34mINFO[0m	❌ metric not found
+2024-11-04 23:20:21	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "328.5µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:20:21	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:20:21	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "131.458µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:20:21	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "31.208µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:20:21	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "36.792µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:20:21	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "32.458µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:20:21	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "30.917µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:20:21	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:20:21	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "190.75µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:20:21	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "32.667µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:20:21	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "33µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:20:21	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "35.958µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:21:02	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "266.584µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:21:02	[34mINFO[0m	❌ metric not found
+2024-11-04 23:21:02	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "331.542µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:21:02	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:21:02	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "79.75µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:21:02	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "28.708µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:21:02	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "30.667µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:21:02	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "28.083µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:21:02	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "50.167µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:21:02	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:21:02	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "84.375µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:21:02	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.125µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:21:02	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "31.334µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:21:02	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "33.875µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:21:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "249.292µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:21:27	[34mINFO[0m	❌ metric not found
+2024-11-04 23:21:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "302.333µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:21:27	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:21:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "74.625µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:21:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "31.458µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:21:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "32.5µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:21:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "38.666µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:21:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "33.291µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:21:27	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:21:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "108.084µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:21:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "35.459µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:21:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "31µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:21:27	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "34.5µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:21:46	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "240.959µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:21:46	[34mINFO[0m	❌ metric not found
+2024-11-04 23:21:46	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "304.5µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:21:46	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:21:46	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "73µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:21:46	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "27.917µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:21:46	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "31.666µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:21:46	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "34.291µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:21:46	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "30.334µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:21:46	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:21:46	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "93.833µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:21:46	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.834µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:21:46	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "31.417µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:21:46	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "33.792µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:21:57	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "276.75µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:21:57	[34mINFO[0m	❌ metric not found
+2024-11-04 23:21:57	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "322.583µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:21:57	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:21:57	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "76.75µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:21:57	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "28.125µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:21:57	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "30.833µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:21:57	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "28.833µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:21:57	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "29.167µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:21:57	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:21:57	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "84.25µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:21:57	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.167µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:21:57	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "30.709µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:21:57	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "35.666µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:22:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "258.625µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:22:13	[34mINFO[0m	❌ metric not found
+2024-11-04 23:22:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "310.625µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:22:13	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:22:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "73.291µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:22:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "27.75µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:22:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "37.583µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:22:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "30.041µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:22:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "29.792µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:22:13	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:22:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "93.541µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:22:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.666µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:22:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "31.541µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:22:13	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "34.583µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:22:34	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "269.083µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-04 23:22:34	[34mINFO[0m	❌ metric not found
+2024-11-04 23:22:34	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "314.333µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-04 23:22:34	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-04 23:22:34	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "79.333µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-04 23:22:34	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "30.042µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:22:34	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "32.125µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:22:34	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "37.667µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-04 23:22:34	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "32.042µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:22:34	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-04 23:22:34	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "98.708µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-04 23:22:34	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "30.5µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:22:34	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "33.667µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-04 23:22:34	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "36.875µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:06:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "256.583µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-05 00:06:40	[34mINFO[0m	❌ metric not found
+2024-11-05 00:06:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "305.5µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-05 00:06:40	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-05 00:06:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "73.667µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-05 00:06:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "32.541µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:06:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "32.125µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-05 00:06:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "29.209µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-05 00:06:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "29.167µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:06:40	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-05 00:06:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "83.125µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-05 00:06:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.333µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:06:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "31.166µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:06:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "34.5µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:03	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "301.084µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-05 00:07:03	[34mINFO[0m	❌ metric not found
+2024-11-05 00:07:03	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "358.75µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-05 00:07:03	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-05 00:07:03	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "92.458µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-05 00:07:03	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "32.875µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:03	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "34.375µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-05 00:07:03	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "29.875µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-05 00:07:03	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "29.834µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:03	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-05 00:07:03	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "93.083µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-05 00:07:03	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.667µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:03	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "32.291µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:03	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "37.833µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:23	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "258.375µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-05 00:07:23	[34mINFO[0m	❌ metric not found
+2024-11-05 00:07:23	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "340.959µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-05 00:07:23	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-05 00:07:23	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "105.375µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-05 00:07:23	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "32.459µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:23	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "34.416µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-05 00:07:23	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "30.417µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-05 00:07:23	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "30.875µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:23	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-05 00:07:23	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "91.333µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-05 00:07:23	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.708µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:23	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "31.083µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:23	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "35.209µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:33	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "260.333µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-05 00:07:33	[34mINFO[0m	❌ metric not found
+2024-11-05 00:07:33	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "348.666µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-05 00:07:33	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-05 00:07:33	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "85µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-05 00:07:33	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "34.375µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:33	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "32.208µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-05 00:07:33	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "34.458µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-05 00:07:33	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "30.625µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:33	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-05 00:07:33	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "83.542µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-05 00:07:33	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "28.541µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:33	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "32.417µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:33	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "34.541µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "259.917µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-05 00:07:40	[34mINFO[0m	❌ metric not found
+2024-11-05 00:07:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "320.042µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-05 00:07:40	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-05 00:07:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "73.458µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-05 00:07:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "27.459µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "31.167µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-05 00:07:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "28.375µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-05 00:07:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "28.875µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:40	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-05 00:07:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "82.833µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-05 00:07:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "28.708µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "30.959µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:40	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "42µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:52	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "265.583µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-05 00:07:52	[34mINFO[0m	❌ metric not found
+2024-11-05 00:07:52	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "340.917µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-05 00:07:52	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-05 00:07:52	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "76.583µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-05 00:07:52	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "32.709µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:52	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "32.083µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-05 00:07:52	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "29.584µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-05 00:07:52	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "30.5µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:52	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-05 00:07:52	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "88.791µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-05 00:07:52	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "34.083µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:52	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "33.959µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:07:52	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "38.334µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:08:10	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "261.334µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-05 00:08:10	[34mINFO[0m	❌ metric not found
+2024-11-05 00:08:10	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "323µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-05 00:08:10	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-05 00:08:10	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "80.75µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-05 00:08:10	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "31.916µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:08:10	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "41.542µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-05 00:08:10	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "34µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-05 00:08:10	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "31.583µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:08:10	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-05 00:08:10	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "105.417µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-05 00:08:10	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "30.25µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:08:10	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "31.542µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:08:10	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "33.042µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:13:30	[34mINFO[0m	info	{"uri": "http://localhost:8080/", "method": "GET", "duration": "258.708µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "invalid character '<' looking for beginning of value"}
+2024-11-05 00:13:30	[34mINFO[0m	❌ metric not found
+2024-11-05 00:13:30	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "310.042µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 404, "size": 0, "response_body": {"data":null,"message":"metric not found","status":404,"success":false}}
+2024-11-05 00:13:30	[34mINFO[0m	✅{
+    "id": "PollCount",
+    "type": "counter"
+}
+2024-11-05 00:13:30	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/", "method": "POST", "duration": "85.167µs", "request_body": {"id":"PollCount","type":"counter"}, "status": 200, "size": 0, "response_body": {"data":null,"id":"PollCount","message":"metric not found","status":404,"success":false,"type":"counter"}}
+2024-11-05 00:13:30	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/someMetric/", "method": "GET", "duration": "30.042µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:13:30	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/someMetric/", "method": "GET", "duration": "31.666µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-05 00:13:30	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/gauge/GCCPUFraction/", "method": "GET", "duration": "30.334µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "json: cannot unmarshal number into Go value of type map[string]interface {}"}
+2024-11-05 00:13:30	[34mINFO[0m	info	{"uri": "http://localhost:8080/value/counter/HeapObjects/", "method": "GET", "duration": "29.75µs", "request_body": null, "status": 404, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:13:30	[34mINFO[0m	❌ invalid metrics value for gauge type
+2024-11-05 00:13:30	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/", "method": "POST", "duration": "82.417µs", "request_body": {"id":"HeapIdle","type":"gauge"}, "status": 500, "size": 0, "response_body": {"data":null,"message":"invalid metrics value for gauge type","status":500,"success":false}}
+2024-11-05 00:13:30	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/gauge/someMetric/527", "method": "POST", "duration": "29.667µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:13:30	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/527", "method": "POST", "duration": "30.959µs", "request_body": null, "status": 200, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}
+2024-11-05 00:13:30	[34mINFO[0m	info	{"uri": "http://localhost:8080/update/counter/someMetric/unknown", "method": "POST", "duration": "36.084µs", "request_body": null, "status": 400, "size": 0, "response_body": null, "response_err": "unexpected end of JSON input"}

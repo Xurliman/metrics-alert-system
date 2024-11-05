@@ -40,6 +40,7 @@ func DevelopmentLogger() zapcore.Core {
 		MaxSize:    2, // megabytes
 		MaxBackups: 3,
 		MaxAge:     7, // days
+
 	})
 	level := zap.NewAtomicLevelAt(zap.DebugLevel)
 	developmentCfg := zap.NewDevelopmentEncoderConfig()

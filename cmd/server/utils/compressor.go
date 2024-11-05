@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"compress/flate"
 	"compress/gzip"
+	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"io"
 )
@@ -27,6 +28,15 @@ func Compress(data []byte) ([]byte, error) {
 	}
 
 	return buf.Bytes(), nil
+}
+
+type GzipResponseWriter struct {
+	gin.ResponseWriter
+	Writer *gzip.Writer
+}
+
+func (gzw *GzipResponseWriter) Write(data []byte) (int, error) {
+	return gzw.Writer.Write(data)
 }
 
 func Decompress(data []byte) ([]byte, error) {

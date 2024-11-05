@@ -12,5 +12,7 @@ var (
 	ErrInvalidGaugeMetricValue   = errors.New("invalid metrics value for gauge type")
 	ErrEmptyMetricName           = errors.New("metrics name is empty")
 	ErrMetricExists              = errors.New("metric exists")
+	ErrWrongStoreInterval        = errors.New("wrong store interval")
+	ErrWrongFileStoragePath      = errors.New("wrong file storage path")
 	ErrMetricNotFound            = errors.New("metric not found")
 )
