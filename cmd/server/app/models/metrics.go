@@ -1,55 +1,25 @@
 package models
 
-import (
-	"math/rand"
-	"runtime"
-)
-
 type Metrics struct {
-	Gauge   map[string]float64 `json:"gauge"`
-	Counter map[string]int64   `json:"counter"`
+	ID    string   `json:"id"`              // имя метрики
+	MType string   `json:"type"`            // параметр, принимающий значение gauge или counter
+	Value *float64 `json:"value,omitempty"` // значение метрики в случае передачи gauge
+	Delta *int64   `json:"delta,omitempty"` // значение метрики в случае передачи counter
 }
 
-var pollCount int64
-
-func ExistingMetrics() Metrics {
-	var memStats runtime.MemStats
-	runtime.ReadMemStats(&memStats)
-	metrics := Metrics{
-		Gauge: map[string]float64{
-			"Alloc":         float64(memStats.Alloc),
-			"BuckHashSys":   float64(memStats.BuckHashSys),
-			"Frees":         float64(memStats.Frees),
-			"GCCPUFraction": memStats.GCCPUFraction,
-			"GCSys":         float64(memStats.GCSys),
-			"HeapAlloc":     float64(memStats.HeapAlloc),
-			"HeapIdle":      float64(memStats.HeapIdle),
-			"HeapInuse":     float64(memStats.HeapInuse),
-			"HeapObjects":   float64(memStats.HeapObjects),
-			"HeapReleased":  float64(memStats.HeapReleased),
-			"HeapSys":       float64(memStats.HeapSys),
-			"LastGC":        float64(memStats.LastGC),
-			"Lookups":       float64(memStats.Lookups),
-			"MCacheInuse":   float64(memStats.MCacheInuse),
-			"MCacheSys":     float64(memStats.MCacheSys),
-			"MSpanInuse":    float64(memStats.MSpanInuse),
-			"MSpanSys":      float64(memStats.MSpanSys),
-			"Mallocs":       float64(memStats.Mallocs),
-			"NextGC":        float64(memStats.NextGC),
-			"NumForcedGC":   float64(memStats.NumForcedGC),
-			"NumGC":         float64(memStats.NumGC),
-			"OtherSys":      float64(memStats.OtherSys),
-			"PauseTotalNs":  float64(memStats.PauseTotalNs),
-			"StackInuse":    float64(memStats.StackInuse),
-			"StackSys":      float64(memStats.StackSys),
-			"Sys":           float64(memStats.Sys),
-			"TotalAlloc":    float64(memStats.TotalAlloc),
-			"RandomValue":   rand.Float64(),
-		},
-		Counter: map[string]int64{
-			"PollCount": pollCount,
-		},
+func (m *Metrics) Equals(someMetric *Metrics) bool {
+	flag := false
+	if m.ID == someMetric.ID {
+		flag = true
 	}
-	pollCount++
-	return metrics
+	if m.MType == someMetric.MType {
+		flag = true
+	}
+	if m.Value == someMetric.Value {
+		flag = true
+	}
+	if m.Delta == someMetric.Delta {
+		flag = true
+	}
+	return flag
 }
