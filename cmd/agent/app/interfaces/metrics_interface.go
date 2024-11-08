@@ -19,5 +19,5 @@ type MetricsService interface {
 
 type MetricsRepository interface {
 	GetRequestBody(metric *models.Metrics) ([]byte, error)
-	GetRequestUrl(metric *models.Metrics, address string) (string, error)
+	GetRequestURL(metric *models.Metrics, address string) (string, error)
 }

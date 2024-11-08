@@ -33,7 +33,7 @@ func (r *MetricsRepository) GetRequestBody(metric *models.Metrics) ([]byte, erro
 	}
 }
 
-func (r *MetricsRepository) GetRequestUrl(metric *models.Metrics, address string) (string, error) {
+func (r *MetricsRepository) GetRequestURL(metric *models.Metrics, address string) (string, error) {
 	switch metric.MType {
 	case constants.GaugeMetricType:
 		return fmt.Sprintf("http://%s/update/%s/%s/%f",

@@ -78,11 +78,11 @@ func TestMetricsRepository_GetRequestUrl(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			r := &MetricsRepository{}
 			address := "localhost:8080"
-			got, err := r.GetRequestUrl(tt.metric, address)
-			if !tt.wantErr(t, err, fmt.Sprintf("GetRequestUrl(%v, %v)", tt.metric, address)) {
+			got, err := r.GetRequestURL(tt.metric, address)
+			if !tt.wantErr(t, err, fmt.Sprintf("GetRequestURL(%v, %v)", tt.metric, address)) {
 				return
 			}
-			assert.Equalf(t, tt.want, got, "GetRequestUrl(%v, %v)", tt.metric, address)
+			assert.Equalf(t, tt.want, got, "GetRequestURL(%v, %v)", tt.metric, address)
 		})
 	}
 }
