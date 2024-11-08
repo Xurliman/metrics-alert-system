@@ -14,5 +14,6 @@ var (
 	ErrMetricExists              = errors.New("metric exists")
 	ErrWrongStoreInterval        = errors.New("wrong store interval")
 	ErrWrongFileStoragePath      = errors.New("wrong file storage path")
+	ErrDatabaseDSNEmpty          = errors.New("database DSN is empty")
 	ErrMetricNotFound            = errors.New("metric not found")
 )

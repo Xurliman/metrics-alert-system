@@ -6,10 +6,13 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/http/requests"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/repositories"
 	"strconv"
 )
 
-type gaugeMetricsService struct{}
+type gaugeMetricsService struct {
+	repository repositories.MetricsRepository
+}
 
 func NewGaugeMetricsService() interfaces.MetricsInterface {
 	return &gaugeMetricsService{}

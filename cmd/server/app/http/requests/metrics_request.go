@@ -5,11 +5,6 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
 )
 
-// MetricsShowRequest Could you please give instructions on how to evaluate my custom validator func "required_if"
-// I wanted to make smth like omitempty if required_if=MType:counter is not true,
-// but the following is not even getting to the logic where I've implemented this custom func...
-// another option was writing omitempty OR required_if but this doesn't work either:
-// panicking Undefined validation function 'omitempty' on field 'Value'
 type MetricsShowRequest struct {
 	ID    string   `json:"id" validate:"required"`
 	MType string   `json:"type" validate:"required,oneof=gauge counter"`

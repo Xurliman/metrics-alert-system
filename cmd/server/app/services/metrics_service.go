@@ -6,15 +6,20 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/http/requests"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
+	"github.com/gin-gonic/gin"
 	"strconv"
 )
 
 var MetricsCollection = make(map[string]*models.Metrics)
 
-type MetricsService struct{}
+type MetricsService struct {
+	repository interfaces.MetricRepositoryInterface
+}
 
-func NewMetricsService() *MetricsService {
-	return &MetricsService{}
+func NewMetricsService(repository interfaces.MetricRepositoryInterface) *MetricsService {
+	return &MetricsService{
+		repository: repository,
+	}
 }
 
 func (s *MetricsService) List() map[string]string {
@@ -54,6 +59,10 @@ func (s *MetricsService) SaveWhenBody(metric interfaces.MetricsInterface, metric
 
 func (s *MetricsService) Show(metric interfaces.MetricsInterface, metricName string) (entry *models.Metrics, err error) {
 	return metric.FindByName(metricName)
+}
+
+func (s *MetricsService) Ping(ctx *gin.Context) error {
+	return s.repository.Ping(ctx)
 }
 
 var (

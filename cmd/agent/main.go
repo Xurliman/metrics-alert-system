@@ -2,6 +2,8 @@ package main
 
 import (
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
+	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/controllers"
+	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/repositories"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/services"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/config"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/utils"
@@ -36,12 +38,13 @@ func main() {
 	}
 
 	client := http.Client{Timeout: 10 * time.Second}
-	metrics := services.CollectMetrics()
+	metricRepository := repositories.NewMetricsRepository()
+	metricsService := services.NewMetricsService(metricRepository)
+	metricController := controllers.NewMetricsController(client, metricsService, address)
 
-	services.SendMetrics(client, metrics, address)
-	services.SendMetricsWithParam(client, metrics, address)
-	services.SendCompressedMetrics(client, metrics, address)
-	services.SendCompressedMetricsWithParam(client, metrics, address)
+	metricController.SendMetrics()
+	metricController.SendCompressedMetrics()
+	metricController.SendCompressedMetricsWithParams()
 
 	pollTicker := time.NewTicker(pollInterval)
 	reportTicker := time.NewTicker(reportInterval)
@@ -51,9 +54,9 @@ func main() {
 	for {
 		select {
 		case <-pollTicker.C:
-			metrics = services.CollectMetrics()
+			metricController.CollectMetrics()
 		case <-reportTicker.C:
-			services.SendMetrics(client, metrics, address)
+			metricController.SendMetricsWithParams()
 		}
 	}
 }

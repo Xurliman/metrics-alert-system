@@ -150,3 +150,12 @@ func (c *MetricsController) ShowBody(ctx *gin.Context) {
 
 	utils.JSONSuccess(ctx, metric)
 }
+
+func (c *MetricsController) Ping(ctx *gin.Context) {
+	err := c.service.Ping(ctx)
+	if err != nil {
+		utils.JSONInternalServerError(ctx, err)
+		return
+	}
+	utils.JSONSuccess(ctx, "successfully connected to the database")
+}

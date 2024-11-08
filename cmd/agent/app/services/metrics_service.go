@@ -1,246 +1,131 @@
 package services
 
 import (
-	"bytes"
-	"encoding/json"
-	"fmt"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
+	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/models"
-	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/requests"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/utils"
 	"math/rand"
-	"net/http"
 	"runtime"
 )
 
-var pollCount int64
+type MetricsService struct {
+	repository           interfaces.MetricsRepository
+	metricsCollection    map[string]*models.Metrics
+	memStats             runtime.MemStats
+	oldMetricsCollection models.OldMetrics
+}
 
-func CollectMetrics() models.Metrics {
+func NewMetricsService(repository interfaces.MetricsRepository) *MetricsService {
 	var memStats runtime.MemStats
 	runtime.ReadMemStats(&memStats)
-	metrics := models.Metrics{
+
+	return &MetricsService{
+		repository:        repository,
+		metricsCollection: make(map[string]*models.Metrics),
+		memStats:          memStats,
+	}
+}
+
+var pollCount int64
+
+func (s *MetricsService) CollectMetricValues() {
+	oldCollection := models.OldMetrics{
 		Gauge: map[string]float64{
-			"Alloc":         float64(memStats.Alloc),
-			"BuckHashSys":   float64(memStats.BuckHashSys),
-			"Frees":         float64(memStats.Frees),
-			"GCCPUFraction": memStats.GCCPUFraction,
-			"GCSys":         float64(memStats.GCSys),
-			"HeapAlloc":     float64(memStats.HeapAlloc),
-			"HeapIdle":      float64(memStats.HeapIdle),
-			"HeapInuse":     float64(memStats.HeapInuse),
-			"HeapObjects":   float64(memStats.HeapObjects),
-			"HeapReleased":  float64(memStats.HeapReleased),
-			"HeapSys":       float64(memStats.HeapSys),
-			"LastGC":        float64(memStats.LastGC),
-			"Lookups":       float64(memStats.Lookups),
-			"MCacheInuse":   float64(memStats.MCacheInuse),
-			"MCacheSys":     float64(memStats.MCacheSys),
-			"MSpanInuse":    float64(memStats.MSpanInuse),
-			"MSpanSys":      float64(memStats.MSpanSys),
-			"Mallocs":       float64(memStats.Mallocs),
-			"NextGC":        float64(memStats.NextGC),
-			"NumForcedGC":   float64(memStats.NumForcedGC),
-			"NumGC":         float64(memStats.NumGC),
-			"OtherSys":      float64(memStats.OtherSys),
-			"PauseTotalNs":  float64(memStats.PauseTotalNs),
-			"StackInuse":    float64(memStats.StackInuse),
-			"StackSys":      float64(memStats.StackSys),
-			"Sys":           float64(memStats.Sys),
-			"TotalAlloc":    float64(memStats.TotalAlloc),
+			"Alloc":         float64(s.memStats.Alloc),
+			"BuckHashSys":   float64(s.memStats.BuckHashSys),
+			"Frees":         float64(s.memStats.Frees),
+			"GCCPUFraction": s.memStats.GCCPUFraction,
+			"GCSys":         float64(s.memStats.GCSys),
+			"HeapAlloc":     float64(s.memStats.HeapAlloc),
+			"HeapIdle":      float64(s.memStats.HeapIdle),
+			"HeapInuse":     float64(s.memStats.HeapInuse),
+			"HeapObjects":   float64(s.memStats.HeapObjects),
+			"HeapReleased":  float64(s.memStats.HeapReleased),
+			"HeapSys":       float64(s.memStats.HeapSys),
+			"LastGC":        float64(s.memStats.LastGC),
+			"Lookups":       float64(s.memStats.Lookups),
+			"MCacheInuse":   float64(s.memStats.MCacheInuse),
+			"MCacheSys":     float64(s.memStats.MCacheSys),
+			"MSpanInuse":    float64(s.memStats.MSpanInuse),
+			"MSpanSys":      float64(s.memStats.MSpanSys),
+			"Mallocs":       float64(s.memStats.Mallocs),
+			"NextGC":        float64(s.memStats.NextGC),
+			"NumForcedGC":   float64(s.memStats.NumForcedGC),
+			"NumGC":         float64(s.memStats.NumGC),
+			"OtherSys":      float64(s.memStats.OtherSys),
+			"PauseTotalNs":  float64(s.memStats.PauseTotalNs),
+			"StackInuse":    float64(s.memStats.StackInuse),
+			"StackSys":      float64(s.memStats.StackSys),
+			"Sys":           float64(s.memStats.Sys),
+			"TotalAlloc":    float64(s.memStats.TotalAlloc),
 			"RandomValue":   rand.Float64(),
 		},
 		Counter: map[string]int64{
 			"PollCount": pollCount,
 		},
 	}
-	pollCount++
-	return metrics
+	s.oldMetricsCollection = oldCollection
+	s.CollectMetrics()
 }
 
-func SendMetrics(client http.Client, metrics models.Metrics, address string) {
-	for metric, value := range metrics.Gauge {
-		url := fmt.Sprintf("http://%s/update/", address)
-		request, err := json.Marshal(requests.MetricsRequest{
+func (s *MetricsService) CollectMetrics() {
+	metrics := make(map[string]*models.Metrics)
+	for metric, value := range s.oldMetricsCollection.Gauge {
+		metrics[metric] = &models.Metrics{
 			ID:    metric,
 			MType: constants.GaugeMetricType,
 			Value: &value,
-		})
-		if err != nil {
-			return
-		}
-
-		response, err := client.Post(url, "application/json", bytes.NewReader(request))
-		if err != nil {
-			return
-		}
-
-		err = response.Body.Close()
-		if err != nil {
-			return
 		}
 	}
-
-	for metric, value := range metrics.Counter {
-		url := fmt.Sprintf("http://%s/update/", address)
-		request, err := json.Marshal(requests.MetricsRequest{
+	for metric, value := range s.oldMetricsCollection.Counter {
+		metrics[metric] = &models.Metrics{
 			ID:    metric,
 			MType: constants.CounterMetricType,
 			Delta: &value,
-		})
-		if err != nil {
-			return
-		}
-
-		response, err := client.Post(url, "application/json", bytes.NewReader(request))
-		if err != nil {
-			return
-		}
-
-		err = response.Body.Close()
-		if err != nil {
-			return
 		}
 	}
+	s.metricsCollection = metrics
 }
 
-func SendMetricsWithParam(client http.Client, metrics models.Metrics, address string) {
-	for metric, value := range metrics.Gauge {
-		url := fmt.Sprintf("http://%s/update/%s/%s/%f", address, constants.GaugeMetricType, metric, value)
-		response, err := client.Post(url, "text/plain", nil)
+func (s *MetricsService) GetRequestBodies() ([][]byte, error) {
+	var requestsToSend [][]byte
+	for _, metric := range s.metricsCollection {
+		request, err := s.repository.GetRequestBody(metric)
 		if err != nil {
-			return
+			return nil, err
 		}
-		err = response.Body.Close()
-		if err != nil {
-			return
-		}
+		requestsToSend = append(requestsToSend, request)
 	}
-
-	for metric, value := range metrics.Counter {
-		url := fmt.Sprintf("http://%s/update/%s/%s/%v", address, constants.CounterMetricType, metric, value)
-		response, err := client.Post(url, "text/plain", nil)
-		if err != nil {
-			return
-		}
-		err = response.Body.Close()
-		if err != nil {
-			return
-		}
-	}
+	return requestsToSend, nil
 }
 
-func SendCompressedMetrics(client http.Client, metrics models.Metrics, address string) {
-	for metric, value := range metrics.Gauge {
-		url := fmt.Sprintf("http://%s/update/", address)
-		body, err := json.Marshal(requests.MetricsRequest{
-			ID:    metric,
-			MType: constants.GaugeMetricType,
-			Value: &value,
-		})
+func (s *MetricsService) GetCompressedRequestBodies() ([][]byte, error) {
+	var requestsToSend [][]byte
+	for _, metric := range s.metricsCollection {
+		request, err := s.repository.GetRequestBody(metric)
 		if err != nil {
-			return
+			return nil, err
 		}
 
-		request, err := compress(body, url)
+		compressedRequest, err := utils.Compress(request)
 		if err != nil {
-			return
+			return nil, err
 		}
 
-		response, err := client.Do(request)
-		if err != nil {
-			return
-		}
-
-		err = response.Body.Close()
-		if err != nil {
-			return
-		}
+		requestsToSend = append(requestsToSend, compressedRequest)
 	}
-
-	for metric, value := range metrics.Counter {
-		url := fmt.Sprintf("http://%s/update/", address)
-		body, err := json.Marshal(requests.MetricsRequest{
-			ID:    metric,
-			MType: constants.CounterMetricType,
-			Delta: &value,
-		})
-		if err != nil {
-			return
-		}
-
-		request, err := compress(body, url)
-		if err != nil {
-			return
-		}
-
-		response, err := client.Do(request)
-		if err != nil {
-			return
-		}
-
-		err = response.Body.Close()
-		if err != nil {
-			return
-		}
-	}
+	return requestsToSend, nil
 }
 
-func SendCompressedMetricsWithParam(client http.Client, metrics models.Metrics, address string) {
-	for metric, value := range metrics.Gauge {
-		url := fmt.Sprintf("http://%s/update/%s/%s/%f", address, constants.GaugeMetricType, metric, value)
-		req, err := http.NewRequest("POST", url, nil)
+func (s *MetricsService) GetRequestUrls(address string) ([]string, error) {
+	var urls []string
+	for _, metric := range s.metricsCollection {
+		url, err := s.repository.GetRequestUrl(metric, address)
 		if err != nil {
-			return
+			return nil, err
 		}
-
-		req.Header.Set("Content-Type", "application/json")
-		req.Header.Set("Content-Encoding", "gzip")
-
-		response, err := client.Do(req)
-		if err != nil {
-			return
-		}
-		err = response.Body.Close()
-		if err != nil {
-			return
-		}
+		urls = append(urls, url)
 	}
-
-	for metric, value := range metrics.Counter {
-		url := fmt.Sprintf("http://%s/update/%s/%s/%v", address, constants.CounterMetricType, metric, value)
-		req, err := http.NewRequest("POST", url, nil)
-		if err != nil {
-			return
-		}
-
-		req.Header.Set("Content-Type", "application/json")
-		req.Header.Set("Content-Encoding", "gzip")
-
-		response, err := client.Do(req)
-		if err != nil {
-			return
-		}
-
-		err = response.Body.Close()
-		if err != nil {
-			return
-		}
-	}
-}
-
-func compress(body []byte, url string) (*http.Request, error) {
-	compressedRequest, err := utils.Compress(body)
-	if err != nil {
-		return nil, err
-	}
-
-	request, err := http.NewRequest("POST", url, bytes.NewReader(compressedRequest))
-	if err != nil {
-		return nil, err
-	}
-
-	request.Header.Set("Content-Type", "application/json")
-	request.Header.Set("Content-Encoding", "gzip")
-
-	return request, nil
+	return urls, nil
 }

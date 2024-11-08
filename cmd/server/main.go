@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/services"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/config"
@@ -9,12 +10,9 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
-	"log"
 	"runtime"
 	"time"
 )
-
-var lastSavedMetrics = make(map[string]*models.Metrics)
 
 func main() {
 	utils.Logger = utils.NewLogger(config.GetAppEnv())
@@ -42,18 +40,29 @@ func main() {
 	}
 
 	shouldRestore := flagOptions.GetShouldRestore() && config.GetShouldRestore()
-	SetMetrics(shouldRestore, fileStoragePath)
+	archiveService, err := services.NewArchiveService(fileStoragePath)
+	if err != nil {
+		utils.Logger.Error("error related to archiving", zap.Error(err))
+	}
+
+	SetMetrics(shouldRestore, archiveService)
+
+	dsn, err := flagOptions.GetDatabaseDSN()
+	if err != nil {
+		dsn = config.GetDatabaseDSN()
+	}
+	config.Open(dsn)
+
 	r := routes.SetupRoutes()
-	utils.Logger.Error("Starting server on port %v",
+	utils.Logger.Error("Starting server on port ",
 		zap.String("port", port),
 	)
-	log.Printf("store interval %v", storeInterval)
 
 	go func() {
 		storeTicker := time.NewTicker(storeInterval)
 		defer storeTicker.Stop()
 		for range storeTicker.C {
-			err = Archive(services.MetricsCollection, fileStoragePath)
+			err = archiveService.Archive(services.MetricsCollection)
 			if err != nil {
 				utils.Logger.Error("archiving data went wrong", zap.Error(err))
 			}
@@ -63,31 +72,6 @@ func main() {
 	if err != nil {
 		return
 	}
-}
-
-func Archive(metrics map[string]*models.Metrics, fileStoragePath string) (err error) {
-	log.Println("archiving")
-	toSave := make(map[string]*models.Metrics)
-	for currentMetricKey, currentMetric := range metrics {
-		if lastMetric, exists := lastSavedMetrics[currentMetricKey]; exists && currentMetric.Equals(lastMetric) {
-			continue
-		}
-		toSave[currentMetricKey] = currentMetric
-	}
-
-	archiveWriter, err := utils.NewArchiveWriter(fileStoragePath)
-	if err != nil {
-		utils.Logger.Error("creating archive writer error", zap.Error(err))
-		log.Fatal("error creating archive writer ", err)
-	}
-	defer func(archiveWriter *utils.ArchiveWriter) {
-		err = archiveWriter.Close()
-		if err != nil {
-			utils.Logger.Error("closing write archive error", zap.Error(err))
-		}
-	}(archiveWriter)
-
-	return archiveWriter.Archive(toSave)
 }
 
 func LoadDefaultMetricCollection() map[string]*models.Metrics {
@@ -110,35 +94,15 @@ func LoadDefaultMetricCollection() map[string]*models.Metrics {
 	}
 }
 
-func LoadMetricsFromFile(fileStoragePath string) (map[string]*models.Metrics, error) {
-	archiveReader, err := utils.NewArchiveReader(fileStoragePath)
-	if err != nil {
-		return nil, err
-	}
-	defer func(archiveReader *utils.ArchiveReader) {
-		err = archiveReader.Close()
-		if err != nil {
-			utils.Logger.Error("closing read archive error", zap.Error(err))
-		}
-	}(archiveReader)
-
-	loadedMetrics, err := archiveReader.LoadMetrics()
-	if err != nil {
-		return nil, err
-	}
-
-	return loadedMetrics, nil
-}
-
-func SetMetrics(shouldRestore bool, fileStoragePath string) {
+func SetMetrics(shouldRestore bool, archiveService interfaces.ArchiveServiceInterface) {
 	if !shouldRestore {
 		services.MetricsCollection = LoadDefaultMetricCollection()
 		return
 	}
 
-	metrics, err := LoadMetricsFromFile(fileStoragePath)
+	metrics, err := archiveService.Load()
 	if err != nil {
-		utils.Logger.Error("error loading metrics from file", zap.Error(err), zap.String("file", fileStoragePath))
+		utils.Logger.Error("error loading metrics from file", zap.Error(err))
 		services.MetricsCollection = LoadDefaultMetricCollection()
 		return
 	}
