@@ -12,9 +12,9 @@ type MetricsController interface {
 
 type MetricsService interface {
 	CollectMetricValues()
+	GetRequestURLs(address string) ([]string, error)
 	GetRequestBodies() ([][]byte, error)
 	GetCompressedRequestBodies() ([][]byte, error)
-	GetRequestUrls(address string) ([]string, error)
 }
 
 type MetricsRepository interface {

@@ -118,7 +118,7 @@ func (s *MetricsService) GetCompressedRequestBodies() ([][]byte, error) {
 	return requestsToSend, nil
 }
 
-func (s *MetricsService) GetRequestUrls(address string) ([]string, error) {
+func (s *MetricsService) GetRequestURLs(address string) ([]string, error) {
 	var urls []string
 	for _, metric := range s.metricsCollection {
 		url, err := s.repository.GetRequestURL(metric, address)

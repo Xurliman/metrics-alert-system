@@ -46,7 +46,7 @@ func (c *MetricsController) SendMetrics() {
 }
 
 func (c *MetricsController) SendMetricsWithParams() {
-	urls, err := c.service.GetRequestUrls(c.address)
+	urls, err := c.service.GetRequestURLs(c.address)
 	if err != nil {
 		return
 	}
@@ -92,7 +92,7 @@ func (c *MetricsController) SendCompressedMetrics() {
 }
 
 func (c *MetricsController) SendCompressedMetricsWithParams() {
-	urls, err := c.service.GetRequestUrls(c.address)
+	urls, err := c.service.GetRequestURLs(c.address)
 	if err != nil {
 		return
 	}
