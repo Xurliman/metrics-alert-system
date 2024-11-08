@@ -52,7 +52,7 @@ func TestMetricsRepository_GetRequestBody(t *testing.T) {
 	}
 }
 
-func TestMetricsRepository_GetRequestUrl(t *testing.T) {
+func TestMetricsRepository_GetRequestURL(t *testing.T) {
 	var memStats runtime.MemStats
 	runtime.ReadMemStats(&memStats)
 	allocValue := float64(memStats.Alloc)
