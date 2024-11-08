@@ -31,8 +31,7 @@ func (l LoggingMiddleware) Handle(next gin.HandlerFunc) gin.HandlerFunc {
 		ctx.Writer = respCapture
 
 		next(ctx)
-
-		time.Now()
+		
 		l.Request.Duration = time.Since(start)
 		l.Response.Size = size
 		l.Response.StatusCode = ctx.Writer.Status()
