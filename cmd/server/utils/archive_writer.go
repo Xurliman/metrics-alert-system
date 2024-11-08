@@ -37,7 +37,19 @@ func (aw *ArchiveWriter) Close() error {
 }
 
 func (aw *ArchiveWriter) Archive(metrics map[string]*models.Metrics) error {
-	err := aw.encoder.Encode(metrics)
+	err := aw.file.Truncate(0)
+	if err != nil {
+		return err
+	}
+	// Reset the file's offset to the beginning
+	_, err = aw.file.Seek(0, 0)
+	if err != nil {
+		return err
+	}
+	aw.writer = bufio.NewWriter(aw.file)
+	aw.encoder = json.NewEncoder(aw.writer)
+
+	err = aw.encoder.Encode(metrics)
 	if err != nil {
 		return err
 	}
