@@ -13,10 +13,10 @@ import (
 var MetricsCollection = make(map[string]*models.Metrics)
 
 type MetricsService struct {
-	repository interfaces.MetricRepositoryInterface
+	repository interfaces.MetricsRepositoryInterface
 }
 
-func NewMetricsService(repository interfaces.MetricRepositoryInterface) *MetricsService {
+func NewMetricsService(repository interfaces.MetricsRepositoryInterface) *MetricsService {
 	return &MetricsService{
 		repository: repository,
 	}

@@ -12,7 +12,7 @@ type MetricsRepository struct {
 	db                *sql.DB
 }
 
-func NewMetricsRepository(db *sql.DB) interfaces.MetricRepositoryInterface {
+func NewMetricsRepository(db *sql.DB) interfaces.MetricsRepositoryInterface {
 	return &MetricsRepository{
 		metricsCollection: make(map[string]*models.Metrics),
 		db:                db,

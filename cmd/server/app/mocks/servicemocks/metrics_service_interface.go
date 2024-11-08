@@ -4,6 +4,7 @@ package servicemocks
 
 import (
 	interfaces "github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
+	gin "github.com/gin-gonic/gin"
 	mock "github.com/stretchr/testify/mock"
 
 	models "github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
@@ -59,6 +60,24 @@ func (_m *MetricsServiceInterface) List() map[string]string {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(map[string]string)
 		}
+	}
+
+	return r0
+}
+
+// Ping provides a mock function with given fields: ctx
+func (_m *MetricsServiceInterface) Ping(ctx *gin.Context) error {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Ping")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*gin.Context) error); ok {
+		r0 = rf(ctx)
+	} else {
+		r0 = ret.Error(0)
 	}
 
 	return r0

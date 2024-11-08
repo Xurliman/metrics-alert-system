@@ -13,6 +13,11 @@ import (
 	"testing"
 )
 
+func setupMetricsService(t *testing.T) *MetricsService {
+	repo := servicemocks.NewMetricsRepositoryInterface(t)
+	return NewMetricsService(repo)
+}
+
 func TestMetricsService_GetMetricValue(t *testing.T) {
 	var memStats runtime.MemStats
 	runtime.ReadMemStats(&memStats)
@@ -58,7 +63,7 @@ func TestMetricsService_GetMetricValue(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := NewMetricsService()
+			s := setupMetricsService(t)
 			metricsInterface := servicemocks.NewMetricsInterface(t)
 
 			if tt.wantMetricValue != "" {
@@ -88,7 +93,7 @@ func TestMetricsService_List(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := NewMetricsService()
+			s := setupMetricsService(t)
 			s.List()
 			//assert.Equal(t, len(s.List()), 0)
 		})
@@ -129,7 +134,7 @@ func TestMetricsService_SaveWhenBody(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := NewMetricsService()
+			s := setupMetricsService(t)
 			metricsInterface := servicemocks.NewMetricsInterface(t)
 
 			if tt.exists {
@@ -182,7 +187,7 @@ func TestMetricsService_SaveWhenParams(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := NewMetricsService()
+			s := setupMetricsService(t)
 			metricsInterface := servicemocks.NewMetricsInterface(t)
 			metricsInterface.On("FindByName", tt.args.metricName).Return(nil, constants.ErrMetricNotFound)
 			metricsInterface.On("Save", tt.args.metricName, tt.args.metricValue, (*models.Metrics)(nil)).Return(nil)
@@ -231,7 +236,7 @@ func TestMetricsService_Show(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := NewMetricsService()
+			s := setupMetricsService(t)
 			metricsInterface := servicemocks.NewMetricsInterface(t)
 
 			if tt.wantEntry != nil {

@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type MetricRepositoryInterface interface {
+type MetricsRepositoryInterface interface {
 	Ping(ctx *gin.Context) error
 }
 
