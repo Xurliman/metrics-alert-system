@@ -24,7 +24,7 @@ func TestMetricsService_CollectMetrics(t *testing.T) {
 		metricsCollection:    nil,
 	}
 
-	service.CollectMetrics()
+	service.ConvertToMetrics()
 
 	if len(service.metricsCollection) != 4 {
 		t.Errorf("Expected 4 metrics, got %d", len(service.metricsCollection))

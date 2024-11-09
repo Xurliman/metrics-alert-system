@@ -10,62 +10,105 @@ import (
 	"strconv"
 )
 
-var MetricsCollection = make(map[string]*models.Metrics)
-
 type MetricsService struct {
+	sw         interfaces.Switch
 	repository interfaces.MetricsRepositoryInterface
 }
 
-func NewMetricsService(repository interfaces.MetricsRepositoryInterface) *MetricsService {
+func NewMetricsService(repository interfaces.MetricsRepositoryInterface, switcher interfaces.Switch) *MetricsService {
 	return &MetricsService{
 		repository: repository,
+		sw:         switcher,
 	}
 }
 
 func (s *MetricsService) List() map[string]string {
 	data := make(map[string]string)
-	for metricName, metric := range MetricsCollection {
+	metricsCollection := s.repository.List()
+	for metricName, metric := range metricsCollection {
 		switch metric.MType {
 		case constants.GaugeMetricType:
-			data[metricName] = strconv.FormatFloat(*metric.Value, 'f', -1, 64)
+			data[metricName] = gaugeStrVal(metric)
 		case constants.CounterMetricType:
-			data[metricName] = strconv.FormatInt(*metric.Delta, 10)
+			data[metricName] = counterStrVal(metric)
 		}
 	}
 	return data
 }
 
-func (s *MetricsService) GetMetricValue(metric interfaces.MetricsInterface, metricName string) (metricValue string, err error) {
-	return metric.GetMetricValue(metricName)
+func (s *MetricsService) GetMetricValue(metricType, metricName string) (metricValue string, err error) {
+	metric, err := s.repository.FindByName(metricName)
+	if err != nil {
+		return "", err
+	}
+	switch metricType {
+	case constants.GaugeMetricType:
+		metricValue = gaugeStrVal(metric)
+	case constants.CounterMetricType:
+		metricValue = counterStrVal(metric)
+	}
+	return metricValue, nil
 }
 
-func (s *MetricsService) SaveWhenParams(metric interfaces.MetricsInterface, metricName, metricValue string) error {
-	existingMetric, err := metric.FindByName(metricName)
+func (s *MetricsService) SaveWhenParams(metricType, metricName, metricValue string) error {
+	if metricName == "" {
+		return constants.ErrEmptyMetricName
+	}
+
+	existingMetric, err := s.repository.FindByName(metricName)
 	if err != nil && !errors.Is(err, constants.ErrMetricNotFound) {
 		return err
 	}
 
-	return metric.Save(metricName, metricValue, existingMetric)
+	var metric *models.Metrics
+	switch metricType {
+	case constants.GaugeMetricType:
+		metric, err = s.sw.ConvertParams(GaugeConverter, existingMetric, metricName, metricValue)
+	case constants.CounterMetricType:
+		metric, err = s.sw.ConvertParams(CounterConverter, existingMetric, metricName, metricValue)
+	default:
+		return constants.ErrInvalidMetricType
+	}
+	if err != nil {
+		return err
+	}
+	_ = s.repository.Save(metric)
+	return nil
 }
 
-func (s *MetricsService) SaveWhenBody(metric interfaces.MetricsInterface, metricRequest requests.MetricsSaveRequest) (entry *models.Metrics, err error) {
-	existingMetric, err := metric.FindByName(metricRequest.ID)
+func (s *MetricsService) SaveWhenBody(metricRequest requests.MetricsSaveRequest) (entry *models.Metrics, err error) {
+	existingMetric, err := s.repository.FindByName(metricRequest.ID)
 	if err != nil && !errors.Is(err, constants.ErrMetricNotFound) {
 		return nil, err
 	}
 
-	return metric.SaveBody(metricRequest, existingMetric)
+	var metric *models.Metrics
+	switch metricRequest.MType {
+	case constants.GaugeMetricType:
+		metric, err = s.sw.ConvertRequest(GaugeConverter, existingMetric, metricRequest)
+	case constants.CounterMetricType:
+		metric, err = s.sw.ConvertRequest(CounterConverter, existingMetric, metricRequest)
+	default:
+		return nil, constants.ErrInvalidMetricType
+	}
+	if err != nil {
+		return nil, err
+	}
+	return s.repository.Save(metric), nil
 }
 
-func (s *MetricsService) Show(metric interfaces.MetricsInterface, metricName string) (entry *models.Metrics, err error) {
-	return metric.FindByName(metricName)
+func (s *MetricsService) Show(metricName string) (metric *models.Metrics, err error) {
+	return s.repository.FindByName(metricName)
 }
 
 func (s *MetricsService) Ping(ctx *gin.Context) error {
 	return s.repository.Ping(ctx)
 }
 
-var (
-	Counter = counterMetricsService{}
-	Gauge   = gaugeMetricsService{}
-)
+func gaugeStrVal(metric *models.Metrics) (val string) {
+	return strconv.FormatFloat(*metric.Value, 'f', -1, 64)
+}
+
+func counterStrVal(metric *models.Metrics) (val string) {
+	return strconv.FormatInt(*metric.Delta, 10)
+}

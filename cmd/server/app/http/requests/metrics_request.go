@@ -1,6 +1,7 @@
 package requests
 
 import (
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
 )
@@ -34,11 +35,24 @@ type MetricsSaveRequest struct {
 func (r *MetricsSaveRequest) Validate() error {
 	return utils.ExtractValidationErrors(r)
 }
-func (r *MetricsSaveRequest) ToModel() models.Metrics {
-	return models.Metrics{
-		ID:    r.ID,
-		MType: r.MType,
-		Value: r.Value,
-		Delta: r.Delta,
+func (r *MetricsSaveRequest) ToModel(existingMetric *models.Metrics) (*models.Metrics, error) {
+	if r.Delta == nil {
+		return nil, constants.ErrInvalidCounterMetricValue
+	}
+
+	switch existingMetric {
+	case nil:
+		return &models.Metrics{
+			ID:    r.ID,
+			MType: constants.CounterMetricType,
+			Delta: r.Delta,
+		}, nil
+	default:
+		if existingMetric.MType != constants.CounterMetricType {
+			return nil, constants.ErrMetricExists
+		}
+		*existingMetric.Delta += *r.Delta
+		return existingMetric, nil
+
 	}
 }

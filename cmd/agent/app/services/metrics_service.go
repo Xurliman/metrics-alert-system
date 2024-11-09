@@ -12,62 +12,64 @@ import (
 type MetricsService struct {
 	repository           interfaces.MetricsRepository
 	metricsCollection    map[string]*models.Metrics
-	memStats             runtime.MemStats
 	oldMetricsCollection models.OldMetrics
 }
 
 func NewMetricsService(repository interfaces.MetricsRepository) *MetricsService {
-	var memStats runtime.MemStats
-	runtime.ReadMemStats(&memStats)
 
 	return &MetricsService{
 		repository:        repository,
 		metricsCollection: make(map[string]*models.Metrics),
-		memStats:          memStats,
 	}
 }
+
+var pollCount int64
 
 func (s *MetricsService) CollectMetricValues() {
+	var memStats runtime.MemStats
+	runtime.ReadMemStats(&memStats)
+
 	oldCollection := models.OldMetrics{
 		Gauge: map[string]float64{
-			"Alloc":       float64(s.memStats.Alloc),
-			"BuckHashSys": float64(s.memStats.BuckHashSys),
-			//"Frees":         float64(s.memStats.Frees),
-			"GCCPUFraction": s.memStats.GCCPUFraction,
-			"GCSys":         float64(s.memStats.GCSys),
-			//"HeapAlloc":     float64(s.memStats.HeapAlloc),
-			//"HeapIdle":     float64(s.memStats.HeapIdle),
-			//"HeapInuse":    float64(s.memStats.HeapInuse),
-			//"HeapObjects":  float64(s.memStats.HeapObjects),
-			"HeapReleased": float64(s.memStats.HeapReleased),
-			"HeapSys":      float64(s.memStats.HeapSys),
-			"LastGC":       float64(s.memStats.LastGC),
-			"Lookups":      float64(s.memStats.Lookups),
-			"MCacheInuse":  float64(s.memStats.MCacheInuse),
-			"MCacheSys":    float64(s.memStats.MCacheSys),
-			"MSpanInuse":   float64(s.memStats.MSpanInuse),
-			"MSpanSys":     float64(s.memStats.MSpanSys),
-			//"Mallocs":      float64(s.memStats.Mallocs),
-			"NextGC":       float64(s.memStats.NextGC),
-			"NumForcedGC":  float64(s.memStats.NumForcedGC),
-			"NumGC":        float64(s.memStats.NumGC),
-			"OtherSys":     float64(s.memStats.OtherSys),
-			"PauseTotalNs": float64(s.memStats.PauseTotalNs),
-			"StackInuse":   float64(s.memStats.StackInuse),
-			"StackSys":     float64(s.memStats.StackSys),
-			"Sys":          float64(s.memStats.Sys),
-			//"TotalAlloc":   float64(s.memStats.TotalAlloc),
-			"RandomValue": rand.Float64(),
+			"Alloc":         float64(memStats.Alloc),
+			"BuckHashSys":   float64(memStats.BuckHashSys),
+			"Frees":         float64(memStats.Frees),
+			"GCCPUFraction": memStats.GCCPUFraction,
+			"GCSys":         float64(memStats.GCSys),
+			"HeapAlloc":     float64(memStats.HeapAlloc),
+			"HeapIdle":      float64(memStats.HeapIdle),
+			"HeapInuse":     float64(memStats.HeapInuse),
+			"HeapObjects":   float64(memStats.HeapObjects),
+			"HeapReleased":  float64(memStats.HeapReleased),
+			"HeapSys":       float64(memStats.HeapSys),
+			"LastGC":        float64(memStats.LastGC),
+			"Lookups":       float64(memStats.Lookups),
+			"MCacheInuse":   float64(memStats.MCacheInuse),
+			"MCacheSys":     float64(memStats.MCacheSys),
+			"MSpanInuse":    float64(memStats.MSpanInuse),
+			"MSpanSys":      float64(memStats.MSpanSys),
+			"Mallocs":       float64(memStats.Mallocs),
+			"NextGC":        float64(memStats.NextGC),
+			"NumForcedGC":   float64(memStats.NumForcedGC),
+			"NumGC":         float64(memStats.NumGC),
+			"OtherSys":      float64(memStats.OtherSys),
+			"PauseTotalNs":  float64(memStats.PauseTotalNs),
+			"StackInuse":    float64(memStats.StackInuse),
+			"StackSys":      float64(memStats.StackSys),
+			"Sys":           float64(memStats.Sys),
+			"TotalAlloc":    float64(memStats.TotalAlloc),
+			"RandomValue":   rand.Float64(),
 		},
 		Counter: map[string]int64{
-			//"PollCount": pollCount,
+			"PollCount": pollCount,
 		},
 	}
+	pollCount++
 	s.oldMetricsCollection = oldCollection
-	s.CollectMetrics()
+	s.ConvertToMetrics()
 }
 
-func (s *MetricsService) CollectMetrics() {
+func (s *MetricsService) ConvertToMetrics() {
 	metrics := make(map[string]*models.Metrics)
 	for metric, value := range s.oldMetricsCollection.Gauge {
 		metrics[metric] = &models.Metrics{

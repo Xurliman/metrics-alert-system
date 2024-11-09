@@ -3,8 +3,8 @@
 package servicemocks
 
 import (
-	interfaces "github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
 	gin "github.com/gin-gonic/gin"
+
 	mock "github.com/stretchr/testify/mock"
 
 	models "github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
@@ -17,9 +17,9 @@ type MetricsServiceInterface struct {
 	mock.Mock
 }
 
-// GetMetricValue provides a mock function with given fields: metric, metricName
-func (_m *MetricsServiceInterface) GetMetricValue(metric interfaces.MetricsInterface, metricName string) (string, error) {
-	ret := _m.Called(metric, metricName)
+// GetMetricValue provides a mock function with given fields: metricType, metricName
+func (_m *MetricsServiceInterface) GetMetricValue(metricType string, metricName string) (string, error) {
+	ret := _m.Called(metricType, metricName)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetMetricValue")
@@ -27,17 +27,17 @@ func (_m *MetricsServiceInterface) GetMetricValue(metric interfaces.MetricsInter
 
 	var r0 string
 	var r1 error
-	if rf, ok := ret.Get(0).(func(interfaces.MetricsInterface, string) (string, error)); ok {
-		return rf(metric, metricName)
+	if rf, ok := ret.Get(0).(func(string, string) (string, error)); ok {
+		return rf(metricType, metricName)
 	}
-	if rf, ok := ret.Get(0).(func(interfaces.MetricsInterface, string) string); ok {
-		r0 = rf(metric, metricName)
+	if rf, ok := ret.Get(0).(func(string, string) string); ok {
+		r0 = rf(metricType, metricName)
 	} else {
 		r0 = ret.Get(0).(string)
 	}
 
-	if rf, ok := ret.Get(1).(func(interfaces.MetricsInterface, string) error); ok {
-		r1 = rf(metric, metricName)
+	if rf, ok := ret.Get(1).(func(string, string) error); ok {
+		r1 = rf(metricType, metricName)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -83,9 +83,9 @@ func (_m *MetricsServiceInterface) Ping(ctx *gin.Context) error {
 	return r0
 }
 
-// SaveWhenBody provides a mock function with given fields: metric, metricRequest
-func (_m *MetricsServiceInterface) SaveWhenBody(metric interfaces.MetricsInterface, metricRequest requests.MetricsSaveRequest) (*models.Metrics, error) {
-	ret := _m.Called(metric, metricRequest)
+// SaveWhenBody provides a mock function with given fields: metricRequest
+func (_m *MetricsServiceInterface) SaveWhenBody(metricRequest requests.MetricsSaveRequest) (*models.Metrics, error) {
+	ret := _m.Called(metricRequest)
 
 	if len(ret) == 0 {
 		panic("no return value specified for SaveWhenBody")
@@ -93,19 +93,19 @@ func (_m *MetricsServiceInterface) SaveWhenBody(metric interfaces.MetricsInterfa
 
 	var r0 *models.Metrics
 	var r1 error
-	if rf, ok := ret.Get(0).(func(interfaces.MetricsInterface, requests.MetricsSaveRequest) (*models.Metrics, error)); ok {
-		return rf(metric, metricRequest)
+	if rf, ok := ret.Get(0).(func(requests.MetricsSaveRequest) (*models.Metrics, error)); ok {
+		return rf(metricRequest)
 	}
-	if rf, ok := ret.Get(0).(func(interfaces.MetricsInterface, requests.MetricsSaveRequest) *models.Metrics); ok {
-		r0 = rf(metric, metricRequest)
+	if rf, ok := ret.Get(0).(func(requests.MetricsSaveRequest) *models.Metrics); ok {
+		r0 = rf(metricRequest)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*models.Metrics)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(interfaces.MetricsInterface, requests.MetricsSaveRequest) error); ok {
-		r1 = rf(metric, metricRequest)
+	if rf, ok := ret.Get(1).(func(requests.MetricsSaveRequest) error); ok {
+		r1 = rf(metricRequest)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -113,17 +113,17 @@ func (_m *MetricsServiceInterface) SaveWhenBody(metric interfaces.MetricsInterfa
 	return r0, r1
 }
 
-// SaveWhenParams provides a mock function with given fields: metric, metricName, metricValue
-func (_m *MetricsServiceInterface) SaveWhenParams(metric interfaces.MetricsInterface, metricName string, metricValue string) error {
-	ret := _m.Called(metric, metricName, metricValue)
+// SaveWhenParams provides a mock function with given fields: metricType, metricName, metricValue
+func (_m *MetricsServiceInterface) SaveWhenParams(metricType string, metricName string, metricValue string) error {
+	ret := _m.Called(metricType, metricName, metricValue)
 
 	if len(ret) == 0 {
 		panic("no return value specified for SaveWhenParams")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(interfaces.MetricsInterface, string, string) error); ok {
-		r0 = rf(metric, metricName, metricValue)
+	if rf, ok := ret.Get(0).(func(string, string, string) error); ok {
+		r0 = rf(metricType, metricName, metricValue)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -131,9 +131,9 @@ func (_m *MetricsServiceInterface) SaveWhenParams(metric interfaces.MetricsInter
 	return r0
 }
 
-// Show provides a mock function with given fields: metric, metricName
-func (_m *MetricsServiceInterface) Show(metric interfaces.MetricsInterface, metricName string) (*models.Metrics, error) {
-	ret := _m.Called(metric, metricName)
+// Show provides a mock function with given fields: metricName
+func (_m *MetricsServiceInterface) Show(metricName string) (*models.Metrics, error) {
+	ret := _m.Called(metricName)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Show")
@@ -141,19 +141,19 @@ func (_m *MetricsServiceInterface) Show(metric interfaces.MetricsInterface, metr
 
 	var r0 *models.Metrics
 	var r1 error
-	if rf, ok := ret.Get(0).(func(interfaces.MetricsInterface, string) (*models.Metrics, error)); ok {
-		return rf(metric, metricName)
+	if rf, ok := ret.Get(0).(func(string) (*models.Metrics, error)); ok {
+		return rf(metricName)
 	}
-	if rf, ok := ret.Get(0).(func(interfaces.MetricsInterface, string) *models.Metrics); ok {
-		r0 = rf(metric, metricName)
+	if rf, ok := ret.Get(0).(func(string) *models.Metrics); ok {
+		r0 = rf(metricName)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*models.Metrics)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(interfaces.MetricsInterface, string) error); ok {
-		r1 = rf(metric, metricName)
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(metricName)
 	} else {
 		r1 = ret.Error(1)
 	}

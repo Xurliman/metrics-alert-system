@@ -42,10 +42,6 @@ func main() {
 	metricsService := services.NewMetricsService(metricRepository)
 	metricController := controllers.NewMetricsController(client, metricsService, address)
 
-	metricController.SendMetrics()
-	metricController.SendCompressedMetrics()
-	metricController.SendCompressedMetricsWithParams()
-
 	pollTicker := time.NewTicker(pollInterval)
 	reportTicker := time.NewTicker(reportInterval)
 
@@ -57,6 +53,9 @@ func main() {
 			metricController.CollectMetrics()
 		case <-reportTicker.C:
 			metricController.SendMetricsWithParams()
+			metricController.SendMetrics()
+			metricController.SendCompressedMetrics()
+			//metricController.SendCompressedMetricsWithParams()
 		}
 	}
 }
