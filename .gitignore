@@ -34,6 +34,3 @@ cmd/agent/.env
 
 #logs
 storage/logs/*
-
-#json
-storage/archive/metrics.json
