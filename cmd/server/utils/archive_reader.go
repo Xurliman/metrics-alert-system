@@ -6,33 +6,6 @@ import (
 	"os"
 )
 
-type ArchiveWriter struct {
-	file    *os.File
-	encoder *json.Encoder
-}
-
-func NewArchiveWriter(filename string) (*ArchiveWriter, error) {
-	wd, err := os.Getwd()
-	if err != nil {
-		return nil, err
-	}
-
-	file, err := os.OpenFile(wd+filename, os.O_WRONLY|os.O_CREATE, 0666)
-	if err != nil {
-		return nil, err
-	}
-
-	return &ArchiveWriter{file: file, encoder: json.NewEncoder(file)}, nil
-}
-
-func (aw *ArchiveWriter) Close() error {
-	return aw.file.Close()
-}
-
-func (aw *ArchiveWriter) Archive(metrics map[string]*models.Metrics) error {
-	return aw.encoder.Encode(metrics)
-}
-
 type ArchiveReader struct {
 	file    *os.File
 	decoder *json.Decoder

@@ -6,15 +6,12 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/middlewares"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/mocks/servicemocks"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
-	"github.com/Xurliman/metrics-alert-system/cmd/server/app/services"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"net/http"
 	"net/http/httptest"
-	"runtime"
-	"strconv"
 	"strings"
 	"testing"
 )
@@ -57,102 +54,19 @@ func TestMetricsController_List(t *testing.T) {
 		},
 	}
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			myMap := make(map[string]string)
-			service.On("List").Return(myMap)
-			req := httptest.NewRequest(test.method, test.url, nil)
-			resp := httptest.NewRecorder()
-			router.ServeHTTP(resp, req)
-			assert.Equal(t, test.expected.statusCode, resp.Code)
-		})
-	}
-}
-
-func TestMetricsController_ShowBody(t *testing.T) {
-	service := servicemocks.NewMetricsServiceInterface(t)
-	router := setupRoutes(service)
-	tests := []struct {
-		name       string
-		url        string
-		metricType string
-		metricName string
-		body       string
-		wantBody   string
-		want       map[string]interface{}
-		wantErr    bool
-	}{
-		{
-			name:       "first",
-			url:        "http://localhost:8080/value/",
-			metricType: constants.GaugeMetricType,
-			metricName: "HeapIdle",
-			body: `{
-				"id" : "HeapIdle",
-				"type": "gauge"
-			}`,
-			wantBody: `{
-    "success": false,
-    "status": 404,
-    "message": "metric not found",
-    "data": null
-}`,
-			want: map[string]interface{}{
-				"success": false,
-				"status":  float64(404),
-				"message": "metric not found",
-				"data":    nil,
-			},
-			wantErr: true,
-		},
-		{
-			name:       "second",
-			url:        "http://localhost:8080/value/",
-			metricType: constants.CounterMetricType,
-			metricName: "PollCount",
-			body: `{
-				"id" : "PollCount",
-				"type" : "counter"
-			}`,
-			wantBody: `{
-	"id": "PollCount",
-	"type": "counter"
-}`,
-			want: map[string]interface{}{
-				"id":   "PollCount",
-				"type": "counter",
-			},
-			wantErr: false,
-		},
-	}
-
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			switch tt.metricType {
-			case constants.GaugeMetricType:
-				service.On("Show", services.Gauge, tt.metricName).Return(nil, constants.ErrMetricNotFound)
-			case constants.CounterMetricType:
-				service.On("Show", services.Counter, tt.metricName).Return(&models.Metrics{
-					ID:    tt.metricName,
-					MType: tt.metricType,
-				}, nil)
-			}
-			body := strings.NewReader(tt.body)
-			req := httptest.NewRequest(http.MethodPost, tt.url, body)
+			myMap := make(map[string]string)
+			service.On("List").Return(myMap)
+			req := httptest.NewRequest(tt.method, tt.url, nil)
 			resp := httptest.NewRecorder()
-
 			router.ServeHTTP(resp, req)
-			var got map[string]interface{}
-			err := json.Unmarshal(resp.Body.Bytes(), &got)
-			assert.NoError(t, err)
-
-			assert.Equal(t, tt.want, got)
-			service.AssertExpectations(t)
+			assert.Equal(t, tt.expected.statusCode, resp.Code)
 		})
 	}
 }
 
-func TestMetricsController_Show(t *testing.T) {
+func TestMetricsController_Save(t *testing.T) {
 	service := servicemocks.NewMetricsServiceInterface(t)
 	router := setupRoutes(service)
 	type expected struct {
@@ -160,82 +74,77 @@ func TestMetricsController_Show(t *testing.T) {
 	}
 	tests := []struct {
 		name        string
-		metricsType string
-		metricsName string
-		method      string
+		metricType  string
+		metricName  string
+		metricValue string
 		wantErr     bool
+		method      string
 		url         string
 		expected    expected
 	}{
+
+		{
+			name:        "third",
+			metricType:  "gauge",
+			metricName:  "someMetric",
+			metricValue: "527",
+			wantErr:     false,
+			method:      http.MethodPost,
+			url:         "http://localhost:8080/update/gauge/someMetric/527",
+			expected: expected{
+				statusCode: http.StatusOK,
+			},
+		},
 		{
 			name:        "first",
-			metricsType: "counter",
-			metricsName: "someMetric",
-			method:      http.MethodGet,
-			wantErr:     true,
-			url:         "http://localhost:8080/value/counter/someMetric/",
+			metricType:  "counter",
+			metricName:  "someMetric",
+			metricValue: "527",
+			wantErr:     false,
+			method:      http.MethodPost,
+			url:         "http://localhost:8080/update/counter/someMetric/527",
 			expected: expected{
-				statusCode: http.StatusNotFound,
+				statusCode: http.StatusOK,
 			},
 		},
 		{
 			name:        "second",
-			metricsType: "gauge",
-			metricsName: "someMetric",
-			method:      http.MethodGet,
-			wantErr:     false,
-			url:         "http://localhost:8080/value/gauge/someMetric/",
-			expected: expected{
-				statusCode: http.StatusOK,
-			},
-		},
-		{
-			name:        "third",
-			metricsType: "gauge",
-			metricsName: "GCCPUFraction",
-			method:      http.MethodGet,
-			wantErr:     false,
-			url:         "http://localhost:8080/value/gauge/GCCPUFraction/",
-			expected: expected{
-				statusCode: http.StatusOK,
-			},
-		},
-		{
-			name:        "fourth",
-			metricsType: "counter",
-			metricsName: "HeapObjects",
-			method:      http.MethodGet,
+			metricType:  "gauge",
+			metricName:  "someMetric",
+			metricValue: "527",
 			wantErr:     true,
-			url:         "http://localhost:8080/value/counter/HeapObjects/",
+			method:      http.MethodGet,
+			url:         "http://localhost:8080/update/gauge/someMetric/527",
 			expected: expected{
 				statusCode: http.StatusNotFound,
 			},
 		},
+		{
+			name:        "fourth",
+			metricType:  "counter",
+			metricName:  "someMetric",
+			metricValue: "unknown",
+			wantErr:     true,
+			method:      http.MethodPost,
+			url:         "http://localhost:8080/update/counter/someMetric/unknown",
+			expected: expected{
+				statusCode: http.StatusBadRequest,
+			},
+		},
 	}
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			if test.wantErr {
-				switch test.metricsType {
-				case constants.GaugeMetricType:
-					service.On("GetMetricValue", services.Gauge, test.metricsName).Return("", constants.ErrInvalidMetricType)
-				case constants.CounterMetricType:
-					service.On("GetMetricValue", services.Counter, test.metricsName).Return("", constants.ErrInvalidMetricType)
-				}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if tt.wantErr {
+				service.On("SaveWhenParams", tt.metricType, tt.metricName, tt.metricValue).Return(constants.ErrInvalidGaugeMetricValue)
 			} else {
-				var memStats runtime.MemStats
-				runtime.ReadMemStats(&memStats)
-				switch test.metricsType {
-				case constants.GaugeMetricType:
-					service.On("GetMetricValue", services.Gauge, test.metricsName).Return(strconv.FormatFloat(memStats.GCCPUFraction, 'f', -1, 64), nil)
-				case constants.CounterMetricType:
-					service.On("GetMetricValue", services.Counter, test.metricsName).Return(strconv.FormatUint(memStats.HeapObjects, 10), nil)
-				}
+				service.On("SaveWhenParams", tt.metricType, tt.metricName, tt.metricValue).Return(nil)
 			}
-			req := httptest.NewRequest(test.method, test.url, nil)
+
+			req := httptest.NewRequest(tt.method, tt.url, nil)
 			resp := httptest.NewRecorder()
 			router.ServeHTTP(resp, req)
-			assert.Equal(t, test.expected.statusCode, resp.Code)
+			assert.Equal(t, tt.expected.statusCode, resp.Code)
 		})
 	}
 }
@@ -277,7 +186,7 @@ func TestMetricsController_SaveBody(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			service.On("SaveWhenBody", services.Gauge, mock.AnythingOfType("requests.MetricsSaveRequest")).Return(nil, constants.ErrInvalidGaugeMetricValue)
+			service.On("SaveWhenBody", mock.AnythingOfType("requests.MetricsSaveRequest")).Return(nil, constants.ErrInvalidGaugeMetricValue)
 
 			body := strings.NewReader(tt.body)
 			req := httptest.NewRequest(http.MethodPost, tt.url, body)
@@ -293,95 +202,168 @@ func TestMetricsController_SaveBody(t *testing.T) {
 	}
 }
 
-func TestMetricsController_Save(t *testing.T) {
+func TestMetricsController_Show(t *testing.T) {
 	service := servicemocks.NewMetricsServiceInterface(t)
 	router := setupRoutes(service)
 	type expected struct {
 		statusCode int
 	}
 	tests := []struct {
-		name         string
-		metricsType  string
-		metricsName  string
-		metricsValue string
-		wantErr      bool
-		method       string
-		url          string
-		expected     expected
+		name       string
+		metricType string
+		metricName string
+		method     string
+		wantErr    bool
+		url        string
+		expected   expected
 	}{
-
 		{
-			name:         "third",
-			metricsType:  "gauge",
-			metricsName:  "someMetric",
-			metricsValue: "527",
-			wantErr:      false,
-			method:       http.MethodPost,
-			url:          "http://localhost:8080/update/gauge/someMetric/527",
-			expected: expected{
-				statusCode: http.StatusOK,
-			},
-		},
-		{
-			name:         "first",
-			metricsType:  "counter",
-			metricsName:  "someMetric",
-			metricsValue: "527",
-			wantErr:      false,
-			method:       http.MethodPost,
-			url:          "http://localhost:8080/update/counter/someMetric/527",
-			expected: expected{
-				statusCode: http.StatusOK,
-			},
-		},
-		{
-			name:         "second",
-			metricsType:  "gauge",
-			metricsName:  "someMetric",
-			metricsValue: "527",
-			wantErr:      true,
-			method:       http.MethodGet,
-			url:          "http://localhost:8080/update/gauge/someMetric/527",
+			name:       "first",
+			metricType: "counter",
+			metricName: "someMetric",
+			method:     http.MethodGet,
+			wantErr:    true,
+			url:        "http://localhost:8080/value/counter/someMetric/",
 			expected: expected{
 				statusCode: http.StatusNotFound,
 			},
 		},
 		{
-			name:         "fourth",
-			metricsType:  "counter",
-			metricsName:  "someMetric",
-			metricsValue: "unknown",
-			wantErr:      true,
-			method:       http.MethodPost,
-			url:          "http://localhost:8080/update/counter/someMetric/unknown",
+			name:       "second",
+			metricType: "gauge",
+			metricName: "someMetric",
+			method:     http.MethodGet,
+			wantErr:    false,
+			url:        "http://localhost:8080/value/gauge/someMetric/",
 			expected: expected{
-				statusCode: http.StatusBadRequest,
+				statusCode: http.StatusOK,
+			},
+		},
+		{
+			name:       "third",
+			metricType: "gauge",
+			metricName: "GCCPUFraction",
+			method:     http.MethodGet,
+			wantErr:    false,
+			url:        "http://localhost:8080/value/gauge/GCCPUFraction/",
+			expected: expected{
+				statusCode: http.StatusOK,
+			},
+		},
+		{
+			name:       "fourth",
+			metricType: "counter",
+			metricName: "HeapObjects",
+			method:     http.MethodGet,
+			wantErr:    true,
+			url:        "http://localhost:8080/value/counter/HeapObjects/",
+			expected: expected{
+				statusCode: http.StatusNotFound,
 			},
 		},
 	}
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			if test.wantErr {
-				switch test.metricsType {
-				case constants.GaugeMetricType:
-					service.On("SaveWhenParams", services.Gauge, test.metricsName, test.metricsValue).Return(constants.ErrInvalidGaugeMetricValue)
-				case constants.CounterMetricType:
-					service.On("SaveWhenParams", services.Counter, test.metricsName, test.metricsValue).Return(constants.ErrInvalidCounterMetricValue)
-				}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if tt.wantErr {
+				service.On("GetMetricValue", tt.metricType, tt.metricName).Return("89", constants.ErrMetricNotFound)
 			} else {
-				switch test.metricsType {
-				case constants.GaugeMetricType:
-					service.On("SaveWhenParams", services.Gauge, test.metricsName, test.metricsValue).Return(nil)
-				case constants.CounterMetricType:
-					service.On("SaveWhenParams", services.Counter, test.metricsName, test.metricsValue).Return(nil)
-				}
+				service.On("GetMetricValue", tt.metricType, tt.metricName).Return("", nil)
 			}
 
-			req := httptest.NewRequest(test.method, test.url, nil)
+			req := httptest.NewRequest(tt.method, tt.url, nil)
 			resp := httptest.NewRecorder()
 			router.ServeHTTP(resp, req)
-			assert.Equal(t, test.expected.statusCode, resp.Code)
+			assert.Equal(t, tt.expected.statusCode, resp.Code)
+		})
+	}
+}
+
+func TestMetricsController_ShowBody(t *testing.T) {
+	someGaugeMetric := float64(203)
+	service := servicemocks.NewMetricsServiceInterface(t)
+	router := setupRoutes(service)
+	tests := []struct {
+		name       string
+		url        string
+		metricType string
+		metricName string
+		body       string
+		wantBody   string
+		want       map[string]interface{}
+		wantValue  *float64
+		wantErr    bool
+	}{
+		{
+			name:       "first",
+			url:        "http://localhost:8080/value/",
+			metricType: constants.GaugeMetricType,
+			metricName: "HeapIdle",
+			body: `{
+				"id" : "HeapIdle",
+				"type": "gauge"
+			}`,
+			wantBody: `{
+    "success": false,
+    "status": 404,
+    "message": "metric not found",
+    "data": null
+}`,
+			want: map[string]interface{}{
+				"success": false,
+				"status":  float64(404),
+				"message": "metric not found",
+				"data":    nil,
+			},
+			wantValue: nil,
+			wantErr:   true,
+		},
+		{
+			name:       "second",
+			url:        "http://localhost:8080/value/",
+			metricType: constants.GaugeMetricType,
+			metricName: "Alloc",
+			body: `{
+				"id" : "Alloc",
+				"type" : "gauge"
+			}`,
+			wantBody: `{
+	"id": "Alloc",
+	"type": "gauge"
+	"value": 0
+}`,
+			want: map[string]interface{}{
+				"id":    "Alloc",
+				"type":  "gauge",
+				"value": someGaugeMetric,
+			},
+			wantValue: &someGaugeMetric,
+			wantErr:   false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if tt.wantErr {
+				service.On("Show", tt.metricName).Return(nil, constants.ErrMetricNotFound)
+			} else {
+				service.On("Show", tt.metricName).Return(&models.Metrics{
+					ID:    tt.metricName,
+					MType: tt.metricType,
+					Value: tt.wantValue,
+				}, nil)
+			}
+			body := strings.NewReader(tt.body)
+			req := httptest.NewRequest(http.MethodPost, tt.url, body)
+			resp := httptest.NewRecorder()
+
+			router.ServeHTTP(resp, req)
+			var got map[string]interface{}
+			err := json.Unmarshal(resp.Body.Bytes(), &got)
+			assert.NoError(t, err)
+
+			assert.Equal(t, tt.want, got)
+			service.AssertExpectations(t)
 		})
 	}
 }
