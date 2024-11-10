@@ -101,7 +101,7 @@ func TestArchiveService_Load(t *testing.T) {
 
 			a := NewArchiveService(tt.fields.path)
 			got, err := a.Load()
-			if !tt.wantErr(t, err, fmt.Sprintf("Load()")) {
+			if !tt.wantErr(t, err, fmt.Sprintf("Load() %v %v", got, err)) {
 				return
 			}
 			assert.Equalf(t, tt.want, got, "Load()")
