@@ -10,20 +10,29 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"log"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strings"
 	"testing"
 )
 
+func callOnceToChangeDir() {
+	err := os.Chdir("../../../../")
+	if err != nil {
+		log.Fatalf("Failed to set working directory: %v", err)
+	}
+}
+
 func setupRoutes(service *servicemocks.MetricsServiceInterface) *gin.Engine {
+	gin.SetMode(gin.TestMode)
+	r := gin.Default()
+	r.LoadHTMLFiles("cmd/server/public/templates/metrics-all.html")
 	utils.Logger = utils.NewLogger(gin.TestMode)
 	logging := middlewares.NewLoggingMiddleware()
 	controller := NewMetricsController(service)
 
-	gin.SetMode(gin.TestMode)
-	r := gin.Default()
-	r.LoadHTMLFiles("../../public/templates/metrics-all.html")
 	r.GET("/", logging.Handle(controller.List))
 	r.POST("/update/:type/:name/:value", logging.Handle(controller.Save))
 	r.POST("/update/", logging.Handle(controller.SaveBody))
@@ -33,8 +42,10 @@ func setupRoutes(service *servicemocks.MetricsServiceInterface) *gin.Engine {
 }
 
 func TestMetricsController_List(t *testing.T) {
+	callOnceToChangeDir()
 	service := servicemocks.NewMetricsServiceInterface(t)
 	router := setupRoutes(service)
+
 	type expected struct {
 		statusCode int
 	}
@@ -304,10 +315,10 @@ func TestMetricsController_ShowBody(t *testing.T) {
 				"type": "gauge"
 			}`,
 			wantBody: `{
-    "success": false,
-    "status": 404,
-    "message": "metric not found",
-    "data": null
+   "success": false,
+   "status": 404,
+   "message": "metric not found",
+   "data": null
 }`,
 			want: map[string]interface{}{
 				"success": false,

@@ -47,7 +47,7 @@ func (a ArchiveService) Load() (map[string]*models.Metrics, error) {
 		}
 	}(reader)
 
-	loadedMetrics, err := reader.LoadMetrics()
+	loadedMetrics, err := reader.Load()
 	if err != nil {
 		return nil, err
 	}
@@ -55,10 +55,10 @@ func (a ArchiveService) Load() (map[string]*models.Metrics, error) {
 	return loadedMetrics, nil
 }
 
-func NewArchiveService(path string) (interfaces.ArchiveServiceInterface, error) {
+func NewArchiveService(path string) interfaces.ArchiveServiceInterface {
 	lastSavedMetrics := make(map[string]*models.Metrics)
 	return &ArchiveService{
 		path:             path,
 		lastSavedMetrics: lastSavedMetrics,
-	}, nil
+	}
 }

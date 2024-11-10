@@ -1,1 +1,1 @@
-{"Alloc":{"id":"Alloc","type":"gauge","value":784552},"GetSet23":{"id":"GetSet23","type":"counter","delta":580},"PollCount":{"id":"PollCount","type":"counter","delta":0}}
+{"Alloc":{"id":"Alloc","type":"gauge","value":966680},"PollCount":{"id":"PollCount","type":"counter","delta":0}}

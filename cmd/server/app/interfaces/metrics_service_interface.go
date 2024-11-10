@@ -1,9 +1,9 @@
 package interfaces
 
 import (
+	"context"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/http/requests"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
-	"github.com/gin-gonic/gin"
 )
 
 type MetricsServiceInterface interface {
@@ -12,5 +12,5 @@ type MetricsServiceInterface interface {
 	Show(metricName string) (entry *models.Metrics, err error)
 	SaveWhenParams(metricType, metricName, metricValue string) error
 	SaveWhenBody(metricRequest requests.MetricsSaveRequest) (entry *models.Metrics, err error)
-	Ping(ctx *gin.Context) error
+	Ping(ctx context.Context) error
 }

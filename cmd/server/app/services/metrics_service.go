@@ -1,21 +1,21 @@
 package services
 
 import (
+	"context"
 	"errors"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/http/requests"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
-	"github.com/gin-gonic/gin"
 	"strconv"
 )
 
 type MetricsService struct {
-	sw         interfaces.Switch
+	sw         interfaces.Switcher
 	repository interfaces.MetricsRepositoryInterface
 }
 
-func NewMetricsService(repository interfaces.MetricsRepositoryInterface, switcher interfaces.Switch) *MetricsService {
+func NewMetricsService(repository interfaces.MetricsRepositoryInterface, switcher interfaces.Switcher) *MetricsService {
 	return &MetricsService{
 		repository: repository,
 		sw:         switcher,
@@ -101,7 +101,7 @@ func (s *MetricsService) Show(metricName string) (metric *models.Metrics, err er
 	return s.repository.FindByName(metricName)
 }
 
-func (s *MetricsService) Ping(ctx *gin.Context) error {
+func (s *MetricsService) Ping(ctx context.Context) error {
 	return s.repository.Ping(ctx)
 }
 

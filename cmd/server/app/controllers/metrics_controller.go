@@ -108,7 +108,7 @@ func (c *MetricsController) ShowBody(ctx *gin.Context) {
 }
 
 func (c *MetricsController) Ping(ctx *gin.Context) {
-	err := c.service.Ping(ctx)
+	err := c.service.Ping(ctx.Request.Context())
 	if err != nil {
 		utils.JSONInternalServerError(ctx, err)
 		return

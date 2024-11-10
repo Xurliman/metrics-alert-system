@@ -29,7 +29,7 @@ func (ar *ArchiveReader) Close() error {
 	return ar.file.Close()
 }
 
-func (ar *ArchiveReader) LoadMetrics() (map[string]*models.Metrics, error) {
+func (ar *ArchiveReader) Load() (map[string]*models.Metrics, error) {
 	metrics := make(map[string]*models.Metrics)
 	err := ar.decoder.Decode(&metrics)
 	if err != nil {

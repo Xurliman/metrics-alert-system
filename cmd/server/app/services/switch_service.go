@@ -8,7 +8,7 @@ import (
 
 type SwitchService struct{}
 
-func NewSwitchService() interfaces.Switch {
+func NewSwitchService() interfaces.Switcher {
 	return &SwitchService{}
 }
 

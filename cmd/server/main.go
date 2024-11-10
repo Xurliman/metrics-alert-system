@@ -2,8 +2,11 @@ package main
 
 import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/repositories"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/services"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/config"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/database"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/routes"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
 	"github.com/joho/godotenv"
@@ -16,11 +19,10 @@ func main() {
 
 	err := godotenv.Load(constants.EnvFilePath)
 	if err != nil {
-		utils.Logger.Error("", zap.Error(constants.ErrLoadingEnv))
+		utils.Logger.Error("error when loading env", zap.Error(constants.ErrLoadingEnv))
 	}
 
 	flagOptions := utils.NewOptions()
-
 	port, err := flagOptions.GetPort()
 	if err != nil {
 		port, _ = config.GetPort()
@@ -37,34 +39,39 @@ func main() {
 	}
 
 	shouldRestore := flagOptions.GetShouldRestore() && config.GetShouldRestore()
-	archiveService, err := services.NewArchiveService(fileStoragePath)
-	if err != nil {
-		utils.Logger.Error("error related to archiving", zap.Error(err))
-	}
+	archiveService := services.NewArchiveService(fileStoragePath)
 
 	dsn, err := flagOptions.GetDatabaseDSN()
 	if err != nil {
 		dsn = config.GetDatabaseDSN()
 	}
-	config.Open(dsn)
 
-	r, repo := routes.SetupRoutes(shouldRestore, archiveService)
-	utils.Logger.Error("Starting server on port ",
-		zap.String("port", port),
-	)
-
-	go func() {
-		storeTicker := time.NewTicker(storeInterval)
-		defer storeTicker.Stop()
-		for range storeTicker.C {
-			err = archiveService.Archive(repo.List())
-			if err != nil {
-				utils.Logger.Error("archiving data went wrong", zap.Error(err))
+	var repo interfaces.MetricsRepositoryInterface
+	if err = database.OpenDB(dsn); err != nil {
+		utils.Logger.Error("error connecting to database", zap.Error(err))
+		repo = repositories.NewMetricsRepository(shouldRestore, archiveService)
+		go func() {
+			storeTicker := time.NewTicker(storeInterval)
+			defer storeTicker.Stop()
+			for range storeTicker.C {
+				err = archiveService.Archive(repo.List())
+				if err != nil {
+					utils.Logger.Error("archiving data went wrong", zap.Error(err))
+				}
 			}
-		}
-	}()
+		}()
+	} else {
+		repo = repositories.NewDBMetricsRepository()
+	}
+
+	r := routes.SetupRoutes(repo)
+
 	err = r.Run(port)
 	if err != nil {
 		return
 	}
+
+	utils.Logger.Error("Starting server on port ",
+		zap.String("port", port),
+	)
 }
