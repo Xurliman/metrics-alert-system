@@ -19,6 +19,7 @@ cmd/server/server
 cmd/server/tmp
 devopstest-darwin-arm64
 metricstest-darwin-arm64
+statictest-darwin-arm64
 
 # Dependency directories (remove the comment below to include it)
 vendor/
@@ -32,4 +33,4 @@ cmd/server/.env
 cmd/agent/.env
 
 #logs
-storage/logs/server.log
+storage/logs/*
