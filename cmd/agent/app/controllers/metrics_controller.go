@@ -122,6 +122,7 @@ func (c *MetricsController) SendManyMetrics() {
 	if err != nil {
 		return
 	}
+	
 	url := fmt.Sprintf("http://%s/updates/", c.address)
 	req, err := http.NewRequest("POST", url, bytes.NewReader(requestToSend))
 	if err != nil {
