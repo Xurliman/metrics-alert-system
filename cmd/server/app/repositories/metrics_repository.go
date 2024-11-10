@@ -68,6 +68,13 @@ func (r *MetricsRepository) Ping(ctx context.Context) error {
 	return r.db.PingContext(ctx)
 }
 
+func (r *MetricsRepository) InsertMany(ctx context.Context, metrics []*models.Metrics) error {
+	for _, metric := range metrics {
+		_ = r.Save(metric)
+	}
+	return nil
+}
+
 func defaultMetrics() map[string]*models.Metrics {
 	var memStats runtime.MemStats
 	runtime.ReadMemStats(&memStats)

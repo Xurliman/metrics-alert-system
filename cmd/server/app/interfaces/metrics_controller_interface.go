@@ -9,4 +9,5 @@ type MetricsControllerInterface interface {
 	SaveBody(ctx *gin.Context)
 	ShowBody(ctx *gin.Context)
 	Ping(ctx *gin.Context)
+	SaveMany(ctx *gin.Context)
 }

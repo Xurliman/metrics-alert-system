@@ -1,9 +1,11 @@
 package services
 
 import (
+	"encoding/json"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/models"
+	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/requests"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/utils"
 	"math/rand"
 	"runtime"
@@ -116,6 +118,26 @@ func (s *MetricsService) GetCompressedRequestBodies() ([][]byte, error) {
 		requestsToSend = append(requestsToSend, compressedRequest)
 	}
 	return requestsToSend, nil
+}
+
+func (s *MetricsService) GetCompressedRequestBody() ([]byte, error) {
+	var requestsToSend []requests.MetricsRequest
+
+	for _, metric := range s.metricsCollection {
+		requestsToSend = append(requestsToSend, s.repository.GetPlainRequest(metric))
+	}
+
+	marshalledRequest, err := json.Marshal(requestsToSend)
+	if err != nil {
+		return nil, err
+	}
+
+	compressedRequest, err := utils.Compress(marshalledRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	return compressedRequest, nil
 }
 
 func (s *MetricsService) GetRequestURLs(address string) ([]string, error) {

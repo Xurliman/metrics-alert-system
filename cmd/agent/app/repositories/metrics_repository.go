@@ -6,6 +6,7 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/models"
+	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/requests"
 )
 
 type MetricsRepository struct{}
@@ -52,4 +53,17 @@ func (r *MetricsRepository) GetRequestURL(metric *models.Metrics, address string
 	default:
 		return "", constants.ErrInvalidMetricType
 	}
+}
+
+func (r *MetricsRepository) GetPlainRequest(metric *models.Metrics) requests.MetricsRequest {
+	var request requests.MetricsRequest
+
+	switch metric.MType {
+	case constants.GaugeMetricType:
+		request = metric.ToGaugeRequest()
+	case constants.CounterMetricType:
+		request = metric.ToCounterRequest()
+	}
+
+	return request
 }

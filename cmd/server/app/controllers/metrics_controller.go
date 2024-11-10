@@ -9,6 +9,7 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+	"go.uber.org/zap"
 	"io"
 	"net/http"
 )
@@ -67,6 +68,30 @@ func (c *MetricsController) SaveBody(ctx *gin.Context) {
 	}
 
 	utils.JSONSuccess(ctx, metric)
+}
+
+func (c *MetricsController) SaveMany(ctx *gin.Context) {
+	var request []requests.MetricsSaveRequest
+	err := ctx.ShouldBindWith(&request, binding.JSON)
+	if err != nil && err != io.EOF {
+		utils.JSONValidationError(ctx, err)
+		return
+	}
+
+	for _, req := range request {
+		if err = req.Validate(); err != nil {
+			utils.JSONValidationError(ctx, err)
+			return
+		}
+	}
+	utils.Logger.Error("REQUEST", zap.Any("error", request))
+
+	err = c.service.SaveMany(ctx.Request.Context(), request)
+	if err != nil {
+		utils.JSONInternalServerError(ctx, err)
+		return
+	}
+	utils.JSONSuccess(ctx, "Success")
 }
 
 func (c *MetricsController) Show(ctx *gin.Context) {

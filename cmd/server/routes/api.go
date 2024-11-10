@@ -24,5 +24,6 @@ func SetupRoutes(metricsRepository interfaces.MetricsRepositoryInterface) *gin.E
 	r.POST("/value/", decompression.Handle(logging.Handle(compression.Handle(metricsController.ShowBody))))
 	r.POST("/update/:type/:name/:value", decompression.Handle(logging.Handle(compression.Handle(metricsController.Save))))
 	r.POST("/update/", decompression.Handle(logging.Handle(compression.Handle(metricsController.SaveBody))))
+	r.POST("/updates/", decompression.Handle(logging.Handle(compression.Handle(metricsController.SaveMany))))
 	return r
 }

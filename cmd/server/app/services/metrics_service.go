@@ -105,6 +105,42 @@ func (s *MetricsService) Ping(ctx context.Context) error {
 	return s.repository.Ping(ctx)
 }
 
+func (s *MetricsService) SaveMany(ctx context.Context, request []requests.MetricsSaveRequest) (err error) {
+	metrics := make(map[string]*models.Metrics)
+	for _, metricRequest := range request {
+		var metric *models.Metrics
+
+		switch metricRequest.MType {
+		case constants.GaugeMetricType:
+			metric, err = s.sw.ConvertRequest(GaugeConverter, nil, metricRequest)
+		case constants.CounterMetricType:
+			if existingMetric, ok := metrics[metricRequest.ID]; ok {
+				metric, err = s.sw.ConvertRequest(CounterConverter, existingMetric, metricRequest)
+			} else {
+				metric, err = s.sw.ConvertRequest(CounterConverter, nil, metricRequest)
+			}
+		default:
+			return constants.ErrInvalidMetricType
+		}
+
+		if err != nil {
+			return err
+		}
+		metrics[metricRequest.ID] = metric
+	}
+
+	var metricsArr []*models.Metrics
+	for _, metric := range metrics {
+		metricsArr = append(metricsArr, metric)
+	}
+	err = s.repository.InsertMany(ctx, metricsArr)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func gaugeStrVal(metric *models.Metrics) (val string) {
 	return strconv.FormatFloat(*metric.Value, 'f', -1, 64)
 }

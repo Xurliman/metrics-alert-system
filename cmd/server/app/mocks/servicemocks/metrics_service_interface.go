@@ -83,6 +83,24 @@ func (_m *MetricsServiceInterface) Ping(ctx context.Context) error {
 	return r0
 }
 
+// SaveMany provides a mock function with given fields: ctx, request
+func (_m *MetricsServiceInterface) SaveMany(ctx context.Context, request []requests.MetricsSaveRequest) error {
+	ret := _m.Called(ctx, request)
+
+	if len(ret) == 0 {
+		panic("no return value specified for SaveMany")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, []requests.MetricsSaveRequest) error); ok {
+		r0 = rf(ctx, request)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // SaveWhenBody provides a mock function with given fields: metricRequest
 func (_m *MetricsServiceInterface) SaveWhenBody(metricRequest requests.MetricsSaveRequest) (*models.Metrics, error) {
 	ret := _m.Called(metricRequest)

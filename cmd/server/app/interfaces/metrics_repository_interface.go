@@ -10,4 +10,5 @@ type MetricsRepositoryInterface interface {
 	Save(metric *models.Metrics) *models.Metrics
 	FindByName(metricName string) (*models.Metrics, error)
 	List() map[string]*models.Metrics
+	InsertMany(ctx context.Context, metrics []*models.Metrics) error
 }

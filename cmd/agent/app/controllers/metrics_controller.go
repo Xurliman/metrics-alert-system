@@ -116,3 +116,25 @@ func (c *MetricsController) SendCompressedMetricsWithParams() {
 		}
 	}
 }
+
+func (c *MetricsController) SendManyMetrics() {
+	requestToSend, err := c.service.GetCompressedRequestBody()
+
+	url := fmt.Sprintf("http://%s/updates/", c.address)
+	req, err := http.NewRequest("POST", url, bytes.NewReader(requestToSend))
+	if err != nil {
+		return
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Content-Encoding", "gzip")
+
+	response, err := c.client.Do(req)
+	if err != nil {
+		return
+	}
+	err = response.Body.Close()
+	if err != nil {
+		return
+	}
+}

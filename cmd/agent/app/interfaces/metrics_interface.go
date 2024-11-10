@@ -1,12 +1,16 @@
 package interfaces
 
-import "github.com/Xurliman/metrics-alert-system/cmd/agent/app/models"
+import (
+	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/models"
+	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/requests"
+)
 
 type MetricsController interface {
 	SendMetrics()
 	SendCompressedMetrics()
 	SendMetricsWithParams()
 	SendCompressedMetricsWithParams()
+	SendManyMetrics()
 	CollectMetrics()
 }
 
@@ -15,9 +19,11 @@ type MetricsService interface {
 	GetRequestURLs(address string) ([]string, error)
 	GetRequestBodies() ([][]byte, error)
 	GetCompressedRequestBodies() ([][]byte, error)
+	GetCompressedRequestBody() ([]byte, error)
 }
 
 type MetricsRepository interface {
 	GetRequestBody(metric *models.Metrics) ([]byte, error)
 	GetRequestURL(metric *models.Metrics, address string) (string, error)
+	GetPlainRequest(metric *models.Metrics) requests.MetricsRequest
 }

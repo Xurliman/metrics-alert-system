@@ -13,4 +13,5 @@ type MetricsServiceInterface interface {
 	SaveWhenParams(metricType, metricName, metricValue string) error
 	SaveWhenBody(metricRequest requests.MetricsSaveRequest) (entry *models.Metrics, err error)
 	Ping(ctx context.Context) error
+	SaveMany(ctx context.Context, request []requests.MetricsSaveRequest) error
 }

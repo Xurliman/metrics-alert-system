@@ -45,6 +45,24 @@ func (_m *MetricsRepositoryInterface) FindByName(metricName string) (*models.Met
 	return r0, r1
 }
 
+// InsertMany provides a mock function with given fields: ctx, metrics
+func (_m *MetricsRepositoryInterface) InsertMany(ctx context.Context, metrics []*models.Metrics) error {
+	ret := _m.Called(ctx, metrics)
+
+	if len(ret) == 0 {
+		panic("no return value specified for InsertMany")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, []*models.Metrics) error); ok {
+		r0 = rf(ctx, metrics)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // List provides a mock function with given fields:
 func (_m *MetricsRepositoryInterface) List() map[string]*models.Metrics {
 	ret := _m.Called()

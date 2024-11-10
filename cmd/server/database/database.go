@@ -39,10 +39,10 @@ func OpenDB(ps string) error {
 		CREATE TABLE IF NOT EXISTS metrics
 		(
 			id                  uuid primary key unique not null default uuid_generate_v4(),
-			name                text             unique not null,
+			name                text             	    not null,
 			metric_type         metric_type             not null,
 			value               double precision            null,
-			delta               int                         null,
+			delta               bigint                      null,
 			created_at          timestamp                        default now(),
 			updated_at          timestamp,
 			deleted_at          timestamp
