@@ -33,7 +33,7 @@ func (r *DBMetricsRepository) Save(metric *models.Metrics) *models.Metrics {
 	}
 
 	if dbMetric != nil {
-		err = r.Update(ctx, dbMetric.Id, metric)
+		err = r.Update(ctx, dbMetric.ID, metric)
 	} else {
 		err = r.Insert(ctx, metric)
 	}
@@ -85,7 +85,7 @@ func (r *DBMetricsRepository) Find(ctx context.Context, metricName string) (*mod
 	}
 
 	var dbMetric models.DBMetrics
-	err := row.Scan(&dbMetric.Id, &dbMetric.Name, &dbMetric.MetricType, &dbMetric.Value, &dbMetric.Delta)
+	err := row.Scan(&dbMetric.ID, &dbMetric.Name, &dbMetric.MetricType, &dbMetric.Value, &dbMetric.Delta)
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +108,7 @@ func (r *DBMetricsRepository) FindAll(ctx context.Context) []*models.DBMetrics {
 
 	for rows.Next() {
 		var dbMetric models.DBMetrics
-		err = rows.Scan(&dbMetric.Id, &dbMetric.Name, &dbMetric.MetricType, &dbMetric.Value, &dbMetric.Delta)
+		err = rows.Scan(&dbMetric.ID, &dbMetric.Name, &dbMetric.MetricType, &dbMetric.Value, &dbMetric.Delta)
 		if err != nil {
 			return nil
 		}
@@ -136,13 +136,13 @@ func (r *DBMetricsRepository) Insert(ctx context.Context, metric *models.Metrics
 	return nil
 }
 
-func (r *DBMetricsRepository) Update(ctx context.Context, metricId uuid.UUID, metric *models.Metrics) error {
+func (r *DBMetricsRepository) Update(ctx context.Context, metricID uuid.UUID, metric *models.Metrics) error {
 	_, err := r.db.ExecContext(ctx, `UPDATE metrics SET name = $1, metric_type = $2, value = $3, delta = $4 WHERE id = $5`,
 		metric.ID,
 		metric.MType,
 		metric.Value,
 		metric.Delta,
-		metricId.String(),
+		metricID.String(),
 	)
 	if err != nil {
 		return err

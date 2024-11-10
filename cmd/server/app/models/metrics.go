@@ -13,7 +13,7 @@ type Metrics struct {
 }
 
 type DBMetrics struct {
-	Id         uuid.UUID       `json:"id"`
+	ID         uuid.UUID       `json:"id"`
 	Name       string          `json:"name"`
 	MetricType string          `json:"type"`
 	Value      sql.NullFloat64 `json:"value,omitempty"`
