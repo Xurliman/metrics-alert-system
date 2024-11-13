@@ -134,7 +134,7 @@ func (c *MetricsController) ShowBody(ctx *gin.Context) {
 		utils.JSONInternalServerError(ctx, err)
 		return
 	}
-	
+
 	utils.JSONSuccess(ctx, *response)
 }
 

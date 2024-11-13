@@ -30,11 +30,7 @@ func (r *DBMetricsRepository) Save(metric *models.Metrics) (*models.Metrics, err
 	defer cancel()
 
 	dbMetric, err := r.Find(ctx, metric.ID)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, constants.ErrMetricNotFound
-		}
-
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return nil, err
 	}
 

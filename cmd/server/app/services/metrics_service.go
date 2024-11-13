@@ -92,7 +92,6 @@ func (s *MetricsService) SaveWhenBody(metricRequest requests.MetricsSaveRequest)
 	if err != nil && !errors.Is(err, constants.ErrMetricNotFound) {
 		return nil, err
 	}
-
 	var metric *models.Metrics
 
 	switch metricRequest.MType {
