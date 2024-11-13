@@ -25,13 +25,17 @@ func NewDBMetricsRepository() interfaces.MetricsRepositoryInterface {
 	}
 }
 
-func (r *DBMetricsRepository) Save(metric *models.Metrics) *models.Metrics {
+func (r *DBMetricsRepository) Save(metric *models.Metrics) (*models.Metrics, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
 
 	dbMetric, err := r.Find(ctx, metric.ID)
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		return nil
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, constants.ErrMetricNotFound
+		}
+
+		return nil, err
 	}
 
 	if dbMetric != nil {
@@ -40,10 +44,10 @@ func (r *DBMetricsRepository) Save(metric *models.Metrics) *models.Metrics {
 		err = r.Insert(ctx, metric)
 	}
 	if err != nil {
-		return nil
+		return nil, err
 	}
 
-	return metric
+	return metric, nil
 }
 
 func (r *DBMetricsRepository) FindByName(metricName string) (*models.Metrics, error) {
@@ -55,25 +59,30 @@ func (r *DBMetricsRepository) FindByName(metricName string) (*models.Metrics, er
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, constants.ErrMetricNotFound
 		}
+
 		return nil, err
 	}
 
 	return dbMetric.ToModel(), nil
 }
 
-func (r *DBMetricsRepository) List() map[string]*models.Metrics {
+func (r *DBMetricsRepository) List() (map[string]*models.Metrics, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
 	metrics := make(map[string]*models.Metrics)
 
-	dbMetrics := r.FindAll(ctx)
+	dbMetrics, err := r.FindAll(ctx)
+	if err != nil {
+		return nil, err
+	}
+
 	for _, dbMetric := range dbMetrics {
 		if dbMetric != nil {
 			metrics[dbMetric.Name] = dbMetric.ToModel()
 		}
 	}
 
-	return metrics
+	return metrics, nil
 }
 
 func (r *DBMetricsRepository) Ping(ctx context.Context) error {
@@ -95,12 +104,14 @@ func (r *DBMetricsRepository) Find(ctx context.Context, metricName string) (*mod
 	return &dbMetric, nil
 }
 
-func (r *DBMetricsRepository) FindAll(ctx context.Context) []*models.DBMetrics {
+func (r *DBMetricsRepository) FindAll(ctx context.Context) ([]*models.DBMetrics, error) {
 	var dbMetrics []*models.DBMetrics
+
 	rows, err := r.db.QueryContext(ctx, "SELECT id, name, metric_type, value, delta FROM metrics")
 	if err != nil {
-		return nil
+		return nil, err
 	}
+
 	defer func(rows *sql.Rows) {
 		err = rows.Close()
 		if err != nil {
@@ -110,19 +121,20 @@ func (r *DBMetricsRepository) FindAll(ctx context.Context) []*models.DBMetrics {
 
 	for rows.Next() {
 		var dbMetric models.DBMetrics
+
 		err = rows.Scan(&dbMetric.ID, &dbMetric.Name, &dbMetric.MetricType, &dbMetric.Value, &dbMetric.Delta)
 		if err != nil {
-			return nil
+			return nil, err
 		}
 
 		dbMetrics = append(dbMetrics, &dbMetric)
 	}
 
 	if err = rows.Err(); err != nil {
-		return nil
+		return nil, err
 	}
 
-	return dbMetrics
+	return dbMetrics, nil
 }
 
 func (r *DBMetricsRepository) Insert(ctx context.Context, metric *models.Metrics) error {
@@ -161,7 +173,7 @@ func (r *DBMetricsRepository) InsertMany(ctx context.Context, metrics []*models.
 		if err != nil {
 			return err
 		}
-		return err
+		return nil
 	}
 
 	if err = tx.Commit(); err != nil {

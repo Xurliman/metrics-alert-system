@@ -6,11 +6,11 @@ import (
 )
 
 type MetricsController interface {
-	SendMetrics()
-	SendCompressedMetrics()
-	SendMetricsWithParams()
-	SendCompressedMetricsWithParams()
-	SendManyMetrics()
+	SendMetrics() (err error)
+	SendCompressedMetrics() (err error)
+	SendMetricsWithParams() (err error)
+	SendCompressedMetricsWithParams() (err error)
+	SendBatchMetrics() (err error)
 	CollectMetrics()
 }
 
@@ -25,5 +25,5 @@ type MetricsService interface {
 type MetricsRepository interface {
 	GetRequestBody(metric *models.Metrics) ([]byte, error)
 	GetRequestURL(metric *models.Metrics, address string) (string, error)
-	GetPlainRequest(metric *models.Metrics) requests.MetricsRequest
+	GetPlainRequest(metric *models.Metrics) (*requests.MetricsRequest, error)
 }

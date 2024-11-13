@@ -24,13 +24,15 @@ func NewMetricsService(repository interfaces.MetricsRepositoryInterface, switche
 
 func (s *MetricsService) List() map[string]string {
 	data := make(map[string]string)
-	metricsCollection := s.repository.List()
+	metricsCollection, _ := s.repository.List()
 	for metricName, metric := range metricsCollection {
 		switch metric.MType {
 		case constants.GaugeMetricType:
 			data[metricName] = gaugeStrVal(metric)
 		case constants.CounterMetricType:
 			data[metricName] = counterStrVal(metric)
+		default:
+			continue
 		}
 	}
 	return data
@@ -61,18 +63,27 @@ func (s *MetricsService) SaveWhenParams(metricType, metricName, metricValue stri
 	}
 
 	var metric *models.Metrics
+
 	switch metricType {
 	case constants.GaugeMetricType:
 		metric, err = s.sw.ConvertParams(GaugeConverter, existingMetric, metricName, metricValue)
+		if err != nil {
+			return err
+		}
 	case constants.CounterMetricType:
 		metric, err = s.sw.ConvertParams(CounterConverter, existingMetric, metricName, metricValue)
+		if err != nil {
+			return err
+		}
 	default:
 		return constants.ErrInvalidMetricType
 	}
+
+	_, err = s.repository.Save(metric)
 	if err != nil {
 		return err
 	}
-	_ = s.repository.Save(metric)
+
 	return nil
 }
 
@@ -83,18 +94,28 @@ func (s *MetricsService) SaveWhenBody(metricRequest requests.MetricsSaveRequest)
 	}
 
 	var metric *models.Metrics
+
 	switch metricRequest.MType {
 	case constants.GaugeMetricType:
 		metric, err = s.sw.ConvertRequest(GaugeConverter, existingMetric, metricRequest)
+		if err != nil {
+			return nil, err
+		}
 	case constants.CounterMetricType:
 		metric, err = s.sw.ConvertRequest(CounterConverter, existingMetric, metricRequest)
+		if err != nil {
+			return nil, err
+		}
 	default:
 		return nil, constants.ErrInvalidMetricType
 	}
+
+	result, err := s.repository.Save(metric)
 	if err != nil {
 		return nil, err
 	}
-	return s.repository.Save(metric), nil
+
+	return result, nil
 }
 
 func (s *MetricsService) Show(metricName string) (metric *models.Metrics, err error) {
@@ -113,19 +134,25 @@ func (s *MetricsService) SaveMany(ctx context.Context, request []requests.Metric
 		switch metricRequest.MType {
 		case constants.GaugeMetricType:
 			metric, err = s.sw.ConvertRequest(GaugeConverter, nil, metricRequest)
+			if err != nil {
+				return err
+			}
 		case constants.CounterMetricType:
 			if existingMetric, ok := metrics[metricRequest.ID]; ok {
 				metric, err = s.sw.ConvertRequest(CounterConverter, existingMetric, metricRequest)
+				if err != nil {
+					return err
+				}
 			} else {
 				metric, err = s.sw.ConvertRequest(CounterConverter, nil, metricRequest)
+				if err != nil {
+					return err
+				}
 			}
 		default:
 			return constants.ErrInvalidMetricType
 		}
 
-		if err != nil {
-			return err
-		}
 		metrics[metricRequest.ID] = metric
 	}
 

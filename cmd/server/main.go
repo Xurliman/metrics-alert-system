@@ -54,7 +54,12 @@ func main() {
 			storeTicker := time.NewTicker(storeInterval)
 			defer storeTicker.Stop()
 			for range storeTicker.C {
-				err = archiveService.Archive(repo.List())
+				metrics, err := repo.List()
+				if err != nil {
+					utils.Logger.Error("error getting list of metrics", zap.Error(err))
+				}
+
+				err = archiveService.Archive(metrics)
 				if err != nil {
 					utils.Logger.Error("archiving data went wrong", zap.Error(err))
 				}

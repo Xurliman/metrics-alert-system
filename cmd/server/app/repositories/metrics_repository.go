@@ -43,11 +43,12 @@ func NewMetricsRepository(shouldRestore bool, archiveService interfaces.ArchiveS
 	}
 }
 
-func (r *MetricsRepository) Save(metric *models.Metrics) *models.Metrics {
+func (r *MetricsRepository) Save(metric *models.Metrics) (*models.Metrics, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
+
 	r.metricsCollection[metric.ID] = metric
-	return metric
+	return metric, nil
 }
 
 func (r *MetricsRepository) FindByName(metricName string) (*models.Metrics, error) {
@@ -60,17 +61,23 @@ func (r *MetricsRepository) FindByName(metricName string) (*models.Metrics, erro
 	return nil, constants.ErrMetricNotFound
 }
 
-func (r *MetricsRepository) List() map[string]*models.Metrics {
-	return r.metricsCollection
+func (r *MetricsRepository) List() (map[string]*models.Metrics, error) {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	return r.metricsCollection, nil
 }
 
 func (r *MetricsRepository) Ping(ctx context.Context) error {
 	return r.db.PingContext(ctx)
 }
 
-func (r *MetricsRepository) InsertMany(ctx context.Context, metrics []*models.Metrics) error {
+func (r *MetricsRepository) InsertMany(ctx context.Context, metrics []*models.Metrics) (err error) {
 	for _, metric := range metrics {
-		_ = r.Save(metric)
+		_, err = r.Save(metric)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

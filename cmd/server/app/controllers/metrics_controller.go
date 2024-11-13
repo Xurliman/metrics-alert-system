@@ -38,14 +38,14 @@ func (c *MetricsController) Save(ctx *gin.Context) {
 
 	if err := c.service.SaveWhenParams(metricType, metricName, metricValue); err != nil {
 		if errors.Is(err, constants.ErrEmptyMetricName) {
-			ctx.Status(http.StatusNotFound)
+			utils.JSONNotFound(ctx, err)
 			return
 		}
-		ctx.Status(http.StatusBadRequest)
+		utils.JSONError(ctx, err)
 		return
 	}
 
-	ctx.Status(http.StatusOK)
+	utils.JSONSuccess(ctx, nil)
 }
 
 func (c *MetricsController) SaveBody(ctx *gin.Context) {
@@ -129,7 +129,13 @@ func (c *MetricsController) ShowBody(ctx *gin.Context) {
 		return
 	}
 
-	utils.JSONSuccess(ctx, resources.ToResponse(metric))
+	response, err := resources.ToResponse(metric)
+	if err != nil {
+		utils.JSONInternalServerError(ctx, err)
+		return
+	}
+	
+	utils.JSONSuccess(ctx, *response)
 }
 
 func (c *MetricsController) Ping(ctx *gin.Context) {

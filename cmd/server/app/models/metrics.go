@@ -21,20 +21,23 @@ type DBMetrics struct {
 }
 
 func (m *Metrics) Equals(someMetric *Metrics) bool {
-	flag := false
-	if m.ID == someMetric.ID {
-		flag = true
+	if m == nil || someMetric == nil {
+		return false
 	}
-	if m.MType == someMetric.MType {
-		flag = true
+
+	if m.ID != someMetric.ID || m.MType != someMetric.MType {
+		return false
 	}
-	if m.Value == someMetric.Value {
-		flag = true
+
+	if (m.Value == nil && someMetric.Value != nil) || (m.Value != nil && someMetric.Value == nil) || (m.Value != nil && someMetric.Value != nil && *m.Value != *someMetric.Value) {
+		return false
 	}
-	if m.Delta == someMetric.Delta {
-		flag = true
+
+	if (m.Delta == nil && someMetric.Delta != nil) || (m.Delta != nil && someMetric.Delta == nil) || (m.Delta != nil && someMetric.Delta != nil && *m.Delta != *someMetric.Delta) {
+		return false
 	}
-	return flag
+
+	return true
 }
 
 func (dm *DBMetrics) ToModel() *Metrics {

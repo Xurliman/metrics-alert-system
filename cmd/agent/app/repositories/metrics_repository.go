@@ -35,27 +35,35 @@ func (r *MetricsRepository) GetRequestBody(metric *models.Metrics) ([]byte, erro
 }
 
 func (r *MetricsRepository) GetRequestURL(metric *models.Metrics, address string) (string, error) {
+	var (
+		value string
+		err   error
+	)
+
 	switch metric.MType {
 	case constants.GaugeMetricType:
-		return fmt.Sprintf("http://%s/update/%s/%s/%f",
-			address,
-			constants.GaugeMetricType,
-			metric.ID,
-			*metric.Value,
-		), nil
+		value, err = metric.GetValue()
+		if err != nil {
+			return "", err
+		}
 	case constants.CounterMetricType:
-		return fmt.Sprintf("http://%s/update/%s/%s/%v",
-			address,
-			constants.CounterMetricType,
-			metric.ID,
-			*metric.Delta,
-		), nil
+		value, err = metric.GetDelta()
+		if err != nil {
+			return "", err
+		}
 	default:
 		return "", constants.ErrInvalidMetricType
 	}
+
+	return fmt.Sprintf("http://%s/update/%s/%s/%v",
+		address,
+		metric.MType,
+		metric.ID,
+		value,
+	), nil
 }
 
-func (r *MetricsRepository) GetPlainRequest(metric *models.Metrics) requests.MetricsRequest {
+func (r *MetricsRepository) GetPlainRequest(metric *models.Metrics) (*requests.MetricsRequest, error) {
 	var request requests.MetricsRequest
 
 	switch metric.MType {
@@ -63,7 +71,9 @@ func (r *MetricsRepository) GetPlainRequest(metric *models.Metrics) requests.Met
 		request = metric.ToGaugeRequest()
 	case constants.CounterMetricType:
 		request = metric.ToCounterRequest()
+	default:
+		return nil, constants.ErrInvalidMetricType
 	}
 
-	return request
+	return &request, nil
 }

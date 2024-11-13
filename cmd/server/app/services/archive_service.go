@@ -32,7 +32,13 @@ func (a ArchiveService) Archive(metrics map[string]*models.Metrics) error {
 		}
 	}(writer)
 
-	return writer.Archive(toSave)
+	err = writer.Archive(toSave)
+	if err != nil {
+		utils.Logger.Error("error archiving metrics", zap.Error(err))
+		return err
+	}
+	a.lastSavedMetrics = toSave
+	return nil
 }
 
 func (a ArchiveService) Load() (map[string]*models.Metrics, error) {

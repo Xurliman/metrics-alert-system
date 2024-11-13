@@ -22,6 +22,10 @@ func NewMetricsService(repository interfaces.MetricsRepository) *MetricsService 
 	return &MetricsService{
 		repository:        repository,
 		metricsCollection: make(map[string]*models.Metrics),
+		oldMetricsCollection: models.OldMetrics{
+			Gauge:   make(map[string]float64),
+			Counter: make(map[string]int64),
+		},
 	}
 }
 
@@ -102,8 +106,7 @@ func (s *MetricsService) GetRequestBodies() ([][]byte, error) {
 	return requestsToSend, nil
 }
 
-func (s *MetricsService) GetCompressedRequestBodies() ([][]byte, error) {
-	var requestsToSend [][]byte
+func (s *MetricsService) GetCompressedRequestBodies() (requestsToSend [][]byte, err error) {
 	for _, metric := range s.metricsCollection {
 		request, err := s.repository.GetRequestBody(metric)
 		if err != nil {
@@ -124,7 +127,11 @@ func (s *MetricsService) GetCompressedRequestBody() ([]byte, error) {
 	var requestsToSend []requests.MetricsRequest
 
 	for _, metric := range s.metricsCollection {
-		requestsToSend = append(requestsToSend, s.repository.GetPlainRequest(metric))
+		request, err := s.repository.GetPlainRequest(metric)
+		if err != nil {
+			return nil, err
+		}
+		requestsToSend = append(requestsToSend, *request)
 	}
 
 	marshalledRequest, err := json.Marshal(requestsToSend)
@@ -147,6 +154,7 @@ func (s *MetricsService) GetRequestURLs(address string) ([]string, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		urls = append(urls, url)
 	}
 	return urls, nil

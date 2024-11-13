@@ -17,15 +17,16 @@ func (s counterConverterService) ParamsToMetric(existingMetric *models.Metrics, 
 
 	switch existingMetric {
 	case nil:
-		return &models.Metrics{
-			ID:    metricName,
-			MType: constants.CounterMetricType,
-			Delta: &metricVal,
-		}, nil
+		return defaultCounterMetric(metricName, &metricVal)
 	default:
 		if existingMetric.MType != constants.CounterMetricType {
 			return nil, constants.ErrMetricExists
 		}
+
+		if existingMetric.Delta == nil {
+			return defaultCounterMetric(metricName, &metricVal)
+		}
+
 		*existingMetric.Delta += metricVal
 		return existingMetric, nil
 	}
@@ -38,16 +39,25 @@ func (s counterConverterService) RequestToMetric(existingMetric *models.Metrics,
 
 	switch existingMetric {
 	case nil:
-		return &models.Metrics{
-			ID:    metricRequest.ID,
-			MType: constants.CounterMetricType,
-			Delta: metricRequest.Delta,
-		}, nil
+		return defaultCounterMetric(metricRequest.ID, metricRequest.Delta)
 	default:
 		if existingMetric.MType != constants.CounterMetricType {
 			return nil, constants.ErrMetricExists
 		}
+
+		if existingMetric.Delta == nil {
+			return defaultCounterMetric(metricRequest.ID, metricRequest.Delta)
+		}
+
 		*existingMetric.Delta += *metricRequest.Delta
 		return existingMetric, nil
 	}
+}
+
+func defaultCounterMetric(name string, delta *int64) (*models.Metrics, error) {
+	return &models.Metrics{
+		ID:    name,
+		MType: constants.CounterMetricType,
+		Delta: delta,
+	}, nil
 }

@@ -17,15 +17,16 @@ func (s gaugeConverterService) ParamsToMetric(existingMetric *models.Metrics, me
 
 	switch existingMetric {
 	case nil:
-		return &models.Metrics{
-			ID:    metricName,
-			MType: constants.GaugeMetricType,
-			Value: &metricVal,
-		}, nil
+		return defaultGaugeMetric(metricName, &metricVal)
 	default:
 		if existingMetric.MType != constants.GaugeMetricType {
 			return nil, constants.ErrMetricExists
 		}
+
+		if existingMetric.Value == nil {
+			return defaultGaugeMetric(metricName, &metricVal)
+		}
+
 		*existingMetric.Value = metricVal
 		return existingMetric, nil
 	}
@@ -37,16 +38,25 @@ func (s gaugeConverterService) RequestToMetric(existingMetric *models.Metrics, m
 	}
 	switch existingMetric {
 	case nil:
-		return &models.Metrics{
-			ID:    metricRequest.ID,
-			MType: constants.GaugeMetricType,
-			Value: metricRequest.Value,
-		}, nil
+		return defaultGaugeMetric(metricRequest.ID, metricRequest.Value)
 	default:
 		if existingMetric.MType != constants.GaugeMetricType {
 			return nil, constants.ErrMetricExists
 		}
+
+		if existingMetric.Value == nil {
+			return defaultGaugeMetric(metricRequest.ID, metricRequest.Value)
+		}
+
 		*existingMetric.Value = *metricRequest.Value
 		return existingMetric, nil
 	}
+}
+
+func defaultGaugeMetric(name string, value *float64) (metric *models.Metrics, err error) {
+	return &models.Metrics{
+		ID:    name,
+		MType: constants.GaugeMetricType,
+		Value: value,
+	}, nil
 }

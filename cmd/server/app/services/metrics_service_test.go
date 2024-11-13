@@ -43,7 +43,7 @@ func TestMetricsService_List(t *testing.T) {
 					MType: constants.CounterMetricType,
 					Delta: &counterMetricExample,
 				},
-			})
+			}, nil)
 			s := NewMetricsService(repo, sw)
 			s.List()
 			assert.Equal(t, len(s.List()), 2)
@@ -120,6 +120,7 @@ func TestMetricsService_GetMetricValue(t *testing.T) {
 
 func TestMetricsService_SaveWhenParams(t *testing.T) {
 	someGaugeMetric := float64(232039203)
+	someCounterMetric := int64(54854954)
 	type args struct {
 		metricType  string
 		metricName  string
@@ -147,6 +148,21 @@ func TestMetricsService_SaveWhenParams(t *testing.T) {
 			conv:    GaugeConverter,
 			wantErr: assert.NoError,
 		},
+		{
+			name: "second",
+			args: args{
+				metricType:  constants.CounterMetricType,
+				metricName:  "Bar",
+				metricValue: strconv.FormatInt(someCounterMetric, 10),
+			},
+			metric: &models.Metrics{
+				ID:    "Bar",
+				MType: constants.CounterMetricType,
+				Delta: &someCounterMetric,
+			},
+			conv:    CounterConverter,
+			wantErr: assert.NoError,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -156,7 +172,7 @@ func TestMetricsService_SaveWhenParams(t *testing.T) {
 			var existingMetric *models.Metrics
 			repo.On("FindByName", tt.args.metricName).Return(existingMetric, constants.ErrMetricNotFound)
 			sw.On("ConvertParams", tt.conv, existingMetric, tt.args.metricName, tt.args.metricValue).Return(tt.metric, nil)
-			repo.On("Save", tt.metric).Return(tt.metric)
+			repo.On("Save", tt.metric).Return(tt.metric, nil)
 			tt.wantErr(t, s.SaveWhenParams(tt.args.metricType, tt.args.metricName, tt.args.metricValue), fmt.Sprintf("SaveWhenParams(%v, %v, %v)", tt.args.metricType, tt.args.metricName, tt.args.metricValue))
 		})
 	}
@@ -164,7 +180,7 @@ func TestMetricsService_SaveWhenParams(t *testing.T) {
 
 func TestMetricsService_SaveWhenBody(t *testing.T) {
 	someGaugeMetric := float64(290)
-
+	someCounterMetric := int64(54854954)
 	type args struct {
 		metricRequest requests.MetricsSaveRequest
 	}
@@ -181,21 +197,43 @@ func TestMetricsService_SaveWhenBody(t *testing.T) {
 			name: "first",
 			args: args{
 				metricRequest: requests.MetricsSaveRequest{
-					ID:    "SomeMetric",
+					ID:    "SomeGaugeMetric",
 					MType: constants.GaugeMetricType,
 					Value: &someGaugeMetric,
 				},
 			},
 			conv: GaugeConverter,
 			wantEntry: &models.Metrics{
-				ID:    "SomeMetric",
+				ID:    "SomeGaugeMetric",
 				MType: constants.GaugeMetricType,
 				Value: &someGaugeMetric,
 			},
 			metric: &models.Metrics{
-				ID:    "SomeMetric",
+				ID:    "SomeGaugeMetric",
 				MType: constants.GaugeMetricType,
 				Value: &someGaugeMetric,
+			},
+			wantErr: assert.NoError,
+		},
+		{
+			name: "second",
+			args: args{
+				metricRequest: requests.MetricsSaveRequest{
+					ID:    "SomeCounterMetric",
+					MType: constants.CounterMetricType,
+					Delta: &someCounterMetric,
+				},
+			},
+			conv: CounterConverter,
+			wantEntry: &models.Metrics{
+				ID:    "SomeCounterMetric",
+				MType: constants.CounterMetricType,
+				Delta: &someCounterMetric,
+			},
+			metric: &models.Metrics{
+				ID:    "SomeCounterMetric",
+				MType: constants.CounterMetricType,
+				Delta: &someCounterMetric,
 			},
 			wantErr: assert.NoError,
 		},
@@ -208,7 +246,7 @@ func TestMetricsService_SaveWhenBody(t *testing.T) {
 			var existingMetric *models.Metrics
 			repo.On("FindByName", tt.args.metricRequest.ID).Return(nil, constants.ErrMetricNotFound)
 			sw.On("ConvertRequest", tt.conv, existingMetric, tt.args.metricRequest).Return(tt.metric, nil)
-			repo.On("Save", tt.metric).Return(tt.metric)
+			repo.On("Save", tt.metric).Return(tt.metric, nil)
 			gotEntry, err := s.SaveWhenBody(tt.args.metricRequest)
 			if !tt.wantErr(t, err, fmt.Sprintf("SaveWhenBody(%v)", tt.args.metricRequest)) {
 				return

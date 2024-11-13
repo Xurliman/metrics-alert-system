@@ -64,7 +64,7 @@ func (_m *MetricsRepositoryInterface) InsertMany(ctx context.Context, metrics []
 }
 
 // List provides a mock function with given fields:
-func (_m *MetricsRepositoryInterface) List() map[string]*models.Metrics {
+func (_m *MetricsRepositoryInterface) List() (map[string]*models.Metrics, error) {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
@@ -72,6 +72,10 @@ func (_m *MetricsRepositoryInterface) List() map[string]*models.Metrics {
 	}
 
 	var r0 map[string]*models.Metrics
+	var r1 error
+	if rf, ok := ret.Get(0).(func() (map[string]*models.Metrics, error)); ok {
+		return rf()
+	}
 	if rf, ok := ret.Get(0).(func() map[string]*models.Metrics); ok {
 		r0 = rf()
 	} else {
@@ -80,7 +84,13 @@ func (_m *MetricsRepositoryInterface) List() map[string]*models.Metrics {
 		}
 	}
 
-	return r0
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // Ping provides a mock function with given fields: ctx
@@ -102,7 +112,7 @@ func (_m *MetricsRepositoryInterface) Ping(ctx context.Context) error {
 }
 
 // Save provides a mock function with given fields: metric
-func (_m *MetricsRepositoryInterface) Save(metric *models.Metrics) *models.Metrics {
+func (_m *MetricsRepositoryInterface) Save(metric *models.Metrics) (*models.Metrics, error) {
 	ret := _m.Called(metric)
 
 	if len(ret) == 0 {
@@ -110,6 +120,10 @@ func (_m *MetricsRepositoryInterface) Save(metric *models.Metrics) *models.Metri
 	}
 
 	var r0 *models.Metrics
+	var r1 error
+	if rf, ok := ret.Get(0).(func(*models.Metrics) (*models.Metrics, error)); ok {
+		return rf(metric)
+	}
 	if rf, ok := ret.Get(0).(func(*models.Metrics) *models.Metrics); ok {
 		r0 = rf(metric)
 	} else {
@@ -118,7 +132,13 @@ func (_m *MetricsRepositoryInterface) Save(metric *models.Metrics) *models.Metri
 		}
 	}
 
-	return r0
+	if rf, ok := ret.Get(1).(func(*models.Metrics) error); ok {
+		r1 = rf(metric)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // NewMetricsRepositoryInterface creates a new instance of MetricsRepositoryInterface. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.

@@ -8,12 +8,15 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/config"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/utils"
 	"github.com/joho/godotenv"
+	"go.uber.org/zap"
 	"log"
 	"net/http"
 	"time"
 )
 
 func main() {
+	utils.Logger = utils.NewLogger()
+
 	err := godotenv.Load(constants.EnvFilePath)
 	if err != nil {
 		log.Println(constants.ErrLoadingEnv)
@@ -52,10 +55,17 @@ func main() {
 		case <-pollTicker.C:
 			metricController.CollectMetrics()
 		case <-reportTicker.C:
-			metricController.SendMetricsWithParams()
-			metricController.SendMetrics()
-			metricController.SendCompressedMetrics()
-			//metricController.SendCompressedMetricsWithParams()
+			handleError(metricController.SendMetricsWithParams())
+			handleError(metricController.SendMetrics())
+			handleError(metricController.SendCompressedMetrics())
+			handleError(metricController.SendCompressedMetricsWithParams())
+			handleError(metricController.SendBatchMetrics())
 		}
+	}
+}
+
+func handleError(err error) {
+	if err != nil {
+		utils.Logger.Error("send metrics with params error", zap.Error(err))
 	}
 }

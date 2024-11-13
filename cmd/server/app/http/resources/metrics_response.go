@@ -12,20 +12,21 @@ type MetricsResponse struct {
 	Value *float64 `json:"value,omitempty"`
 }
 
-func ToResponse(metric *models.Metrics) MetricsResponse {
+func ToResponse(metric *models.Metrics) (*MetricsResponse, error) {
 	switch metric.MType {
 	case constants.GaugeMetricType:
-		return MetricsResponse{
+		return &MetricsResponse{
 			ID:    metric.ID,
 			MType: metric.MType,
 			Value: metric.Value,
-		}
+		}, nil
 	case constants.CounterMetricType:
-		return MetricsResponse{
+		return &MetricsResponse{
 			ID:    metric.ID,
 			MType: metric.MType,
 			Delta: metric.Delta,
-		}
+		}, nil
+	default:
+		return nil, constants.ErrInvalidMetricType
 	}
-	return MetricsResponse{}
 }

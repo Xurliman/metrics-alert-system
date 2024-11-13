@@ -3,6 +3,7 @@ package models
 import (
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/requests"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
+	"strconv"
 )
 
 type OldMetrics struct {
@@ -31,4 +32,18 @@ func (m *Metrics) ToCounterRequest() requests.MetricsRequest {
 		MType: constants.CounterMetricType,
 		Delta: m.Delta,
 	}
+}
+
+func (m *Metrics) GetValue() (string, error) {
+	if m.Value == nil {
+		return "", constants.ErrInvalidGaugeMetricValue
+	}
+	return strconv.FormatFloat(*m.Value, 'f', -1, 64), nil
+}
+
+func (m *Metrics) GetDelta() (string, error) {
+	if m.Delta == nil {
+		return "", constants.ErrInvalidCounterMetricValue
+	}
+	return strconv.FormatInt(*m.Delta, 10), nil
 }
