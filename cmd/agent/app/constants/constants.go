@@ -6,4 +6,6 @@ const (
 	DefaultServerAddress = "localhost:8080"
 	GaugeMetricType      = "gauge"
 	CounterMetricType    = "counter"
+	LogFilePath          = "storage/logs/agent.log"
+	TimeKey              = "timestamp"
 )
