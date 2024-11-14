@@ -68,7 +68,7 @@ func TestMetricsController_List(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			myMap := make(map[string]string)
-			service.On("List").Return(myMap)
+			service.On("List").Return(myMap, nil)
 			req := httptest.NewRequest(tt.method, tt.url, nil)
 			resp := httptest.NewRecorder()
 			router.ServeHTTP(resp, req)

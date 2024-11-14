@@ -46,7 +46,7 @@ func (_m *MetricsServiceInterface) GetMetricValue(metricType string, metricName 
 }
 
 // List provides a mock function with given fields:
-func (_m *MetricsServiceInterface) List() map[string]string {
+func (_m *MetricsServiceInterface) List() (map[string]string, error) {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
@@ -62,7 +62,7 @@ func (_m *MetricsServiceInterface) List() map[string]string {
 		}
 	}
 
-	return r0
+	return r0, nil
 }
 
 // Ping provides a mock function with given fields: ctx

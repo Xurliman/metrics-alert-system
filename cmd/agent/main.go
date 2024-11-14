@@ -66,6 +66,6 @@ func main() {
 
 func handleError(err error) {
 	if err != nil {
-		utils.Logger.Error("send metrics with params error", zap.Error(err))
+		utils.Logger.Error("error while sending metrics", zap.Error(err))
 	}
 }

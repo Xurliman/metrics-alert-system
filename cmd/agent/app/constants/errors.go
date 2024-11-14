@@ -11,4 +11,5 @@ var (
 	ErrEnvValueMissing           = errors.New("environment variable is missing")
 	ErrInvalidCounterMetricValue = errors.New("invalid metrics value for counter type")
 	ErrInvalidGaugeMetricValue   = errors.New("invalid metrics value for gauge type")
+	ErrStatusNotOK               = errors.New("status not OK")
 )

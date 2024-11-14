@@ -18,17 +18,28 @@ func NewMetricsRepository() interfaces.MetricsRepository {
 func (r *MetricsRepository) GetRequestBody(metric *models.Metrics) ([]byte, error) {
 	switch metric.MType {
 	case constants.GaugeMetricType:
-		request, err := json.Marshal(metric.ToGaugeRequest())
+		request, err := metric.ToGaugeRequest()
 		if err != nil {
 			return nil, err
 		}
-		return request, err
+		requestBytes, err := json.Marshal(request)
+		if err != nil {
+			return nil, err
+		}
+		
+		return requestBytes, nil
 	case constants.CounterMetricType:
-		request, err := json.Marshal(metric.ToCounterRequest())
+		request, err := metric.ToCounterRequest()
 		if err != nil {
 			return nil, err
 		}
-		return request, nil
+
+		requestBytes, err := json.Marshal(request)
+		if err != nil {
+			return nil, err
+		}
+
+		return requestBytes, nil
 	default:
 		return nil, constants.ErrInvalidMetricType
 	}
@@ -63,17 +74,21 @@ func (r *MetricsRepository) GetRequestURL(metric *models.Metrics, address string
 	), nil
 }
 
-func (r *MetricsRepository) GetPlainRequest(metric *models.Metrics) (*requests.MetricsRequest, error) {
-	var request requests.MetricsRequest
-
+func (r *MetricsRepository) GetPlainRequest(metric *models.Metrics) (request *requests.MetricsRequest, err error) {
 	switch metric.MType {
 	case constants.GaugeMetricType:
-		request = metric.ToGaugeRequest()
+		request, err = metric.ToGaugeRequest()
+		if err != nil {
+			return nil, err
+		}
 	case constants.CounterMetricType:
-		request = metric.ToCounterRequest()
+		request, err = metric.ToCounterRequest()
+		if err != nil {
+			return nil, err
+		}
 	default:
 		return nil, constants.ErrInvalidMetricType
 	}
 
-	return &request, nil
+	return request, nil
 }

@@ -25,7 +25,10 @@ func NewMetricsController(service interfaces.MetricsServiceInterface) interfaces
 }
 
 func (c *MetricsController) List(ctx *gin.Context) {
-	data := c.service.List()
+	data, err := c.service.List()
+	if err != nil {
+		utils.JSONInternalServerError(ctx, err)
+	}
 	ctx.HTML(http.StatusOK, "metrics-all.html", data)
 }
 

@@ -45,8 +45,9 @@ func TestMetricsService_List(t *testing.T) {
 				},
 			}, nil)
 			s := NewMetricsService(repo, sw)
-			s.List()
-			assert.Equal(t, len(s.List()), 2)
+			metrics, err := s.List()
+			assert.NoError(t, err)
+			assert.Equal(t, len(metrics), 2)
 		})
 	}
 }

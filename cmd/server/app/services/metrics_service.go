@@ -22,9 +22,12 @@ func NewMetricsService(repository interfaces.MetricsRepositoryInterface, switche
 	}
 }
 
-func (s *MetricsService) List() map[string]string {
+func (s *MetricsService) List() (map[string]string, error) {
 	data := make(map[string]string)
-	metricsCollection, _ := s.repository.List()
+	metricsCollection, err := s.repository.List()
+	if err != nil {
+		return nil, err
+	}
 	for metricName, metric := range metricsCollection {
 		switch metric.MType {
 		case constants.GaugeMetricType:
@@ -35,7 +38,7 @@ func (s *MetricsService) List() map[string]string {
 			continue
 		}
 	}
-	return data
+	return data, nil
 }
 
 func (s *MetricsService) GetMetricValue(metricType, metricName string) (metricValue string, err error) {
@@ -52,9 +55,13 @@ func (s *MetricsService) GetMetricValue(metricType, metricName string) (metricVa
 	return metricValue, nil
 }
 
-func (s *MetricsService) SaveWhenParams(metricType, metricName, metricValue string) error {
+func (s *MetricsService) SaveWhenParams(metricType, metricName, metricValue string) (err error) {
 	if metricName == "" {
 		return constants.ErrEmptyMetricName
+	}
+
+	if metricType != constants.GaugeMetricType && metricType != constants.CounterMetricType {
+		return constants.ErrInvalidMetricType
 	}
 
 	existingMetric, err := s.repository.FindByName(metricName)
@@ -63,20 +70,18 @@ func (s *MetricsService) SaveWhenParams(metricType, metricName, metricValue stri
 	}
 
 	var metric *models.Metrics
-
-	switch metricType {
-	case constants.GaugeMetricType:
+	if metricType == constants.GaugeMetricType {
 		metric, err = s.sw.ConvertParams(GaugeConverter, existingMetric, metricName, metricValue)
 		if err != nil {
 			return err
 		}
-	case constants.CounterMetricType:
+	}
+
+	if metricType == constants.CounterMetricType {
 		metric, err = s.sw.ConvertParams(CounterConverter, existingMetric, metricName, metricValue)
 		if err != nil {
 			return err
 		}
-	default:
-		return constants.ErrInvalidMetricType
 	}
 
 	_, err = s.repository.Save(metric)

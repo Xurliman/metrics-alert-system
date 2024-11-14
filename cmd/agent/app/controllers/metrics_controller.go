@@ -3,6 +3,7 @@ package controllers
 import (
 	"bytes"
 	"fmt"
+	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/interfaces"
 	"net/http"
 )
@@ -42,6 +43,10 @@ func (c *MetricsController) SendMetrics() (err error) {
 		if err != nil {
 			return err
 		}
+
+		if response.StatusCode != http.StatusOK {
+			return constants.ErrStatusNotOK
+		}
 	}
 	return nil
 }
@@ -57,9 +62,14 @@ func (c *MetricsController) SendMetricsWithParams() (err error) {
 		if err != nil {
 			return err
 		}
+
 		err = response.Body.Close()
 		if err != nil {
 			return err
+		}
+
+		if response.StatusCode != http.StatusOK {
+			return constants.ErrStatusNotOK
 		}
 	}
 	return nil
@@ -90,6 +100,10 @@ func (c *MetricsController) SendCompressedMetrics() (err error) {
 		if err != nil {
 			return err
 		}
+
+		if response.StatusCode != http.StatusOK {
+			return constants.ErrStatusNotOK
+		}
 	}
 	return nil
 }
@@ -118,6 +132,10 @@ func (c *MetricsController) SendCompressedMetricsWithParams() (err error) {
 		if err != nil {
 			return err
 		}
+
+		if response.StatusCode != http.StatusOK {
+			return constants.ErrStatusNotOK
+		}
 	}
 	return nil
 }
@@ -145,6 +163,10 @@ func (c *MetricsController) SendBatchMetrics() (err error) {
 	err = response.Body.Close()
 	if err != nil {
 		return err
+	}
+
+	if response.StatusCode != http.StatusOK {
+		return constants.ErrStatusNotOK
 	}
 
 	return nil

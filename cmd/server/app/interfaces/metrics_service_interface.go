@@ -7,7 +7,7 @@ import (
 )
 
 type MetricsServiceInterface interface {
-	List() map[string]string
+	List() (map[string]string, error)
 	GetMetricValue(metricType, metricName string) (metricValue string, err error)
 	Show(metricName string) (entry *models.Metrics, err error)
 	SaveWhenParams(metricType, metricName, metricValue string) error
