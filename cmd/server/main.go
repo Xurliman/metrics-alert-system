@@ -46,6 +46,11 @@ func main() {
 		dsn = config.GetDatabaseDSN()
 	}
 
+	key, err := flagOptions.GetKey()
+	if err != nil {
+		key = config.GetKey()
+	}
+
 	var repo interfaces.MetricsRepositoryInterface
 	if err = database.OpenDB(dsn); err != nil {
 		utils.Logger.Error("error connecting to database", zap.Error(err))
@@ -69,7 +74,7 @@ func main() {
 		repo = repositories.NewDBMetricsRepository()
 	}
 
-	r := routes.SetupRoutes(repo)
+	r := routes.SetupRoutes(repo, key)
 
 	err = r.Run(port)
 	if err != nil {

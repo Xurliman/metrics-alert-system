@@ -17,4 +17,5 @@ var (
 	ErrDatabaseDSNEmpty          = errors.New("database DSN is empty")
 	ErrMetricNotFound            = errors.New("metric not found")
 	ErrDSNEmpty                  = errors.New("database DSN is empty, using file storage")
+	ErrKeyMissing                = errors.New("key is missing")
 )

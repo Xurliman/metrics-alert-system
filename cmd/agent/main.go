@@ -40,10 +40,15 @@ func main() {
 		reportInterval, _ = envCfg.GetReportInterval()
 	}
 
+	key, err := flagCfg.GetKey()
+	if err != nil {
+		key, _ = envCfg.GetKey()
+	}
+
 	client := http.Client{Timeout: 10 * time.Second}
 	metricRepository := repositories.NewMetricsRepository()
 	metricsService := services.NewMetricsService(metricRepository)
-	metricController := controllers.NewMetricsController(client, metricsService, address)
+	metricController := controllers.NewMetricsController(client, metricsService, address, key)
 
 	pollTicker := time.NewTicker(pollInterval)
 	reportTicker := time.NewTicker(reportInterval)

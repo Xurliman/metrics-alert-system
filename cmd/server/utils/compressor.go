@@ -9,27 +9,6 @@ import (
 	"io"
 )
 
-func Compress(data []byte) ([]byte, error) {
-	var buf bytes.Buffer
-
-	w, err := gzip.NewWriterLevel(&buf, flate.BestSpeed)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = w.Write(data)
-	if err != nil {
-		return nil, err
-	}
-
-	err = w.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	return buf.Bytes(), nil
-}
-
 type GzipResponseWriter struct {
 	gin.ResponseWriter
 	Writer *gzip.Writer

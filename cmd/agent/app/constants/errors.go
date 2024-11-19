@@ -12,4 +12,5 @@ var (
 	ErrInvalidCounterMetricValue = errors.New("invalid metrics value for counter type")
 	ErrInvalidGaugeMetricValue   = errors.New("invalid metrics value for gauge type")
 	ErrStatusNotOK               = errors.New("status not OK")
+	ErrKeyMissing                = errors.New("key is missing")
 )

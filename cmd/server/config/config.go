@@ -74,3 +74,11 @@ func GetShouldRestore() bool {
 	}
 	return shouldRestore == "true"
 }
+
+func GetKey() string {
+	key, err := GetEnvironmentValue("KEY")
+	if err != nil {
+		return ""
+	}
+	return key
+}
