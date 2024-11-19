@@ -9,31 +9,31 @@ import (
 	"time"
 )
 
-type EnvConfig struct {
+type FlagConfig struct {
 	host           string
 	port           int
 	reportInterval int
 	pollInterval   int
-	appEnv         string
+	key            string
 }
 
-func (cfg *EnvConfig) SetHost(host string) {
+func (cfg *FlagConfig) SetHost(host string) {
 	cfg.host = host
 }
 
-func (cfg *EnvConfig) SetPort(port int) {
+func (cfg *FlagConfig) SetPort(port int) {
 	cfg.port = port
 }
 
-func (cfg *EnvConfig) SetReportInterval(reportInterval int) {
+func (cfg *FlagConfig) SetReportInterval(reportInterval int) {
 	cfg.reportInterval = reportInterval
 }
 
-func (cfg *EnvConfig) SetPollInterval(pollInterval int) {
+func (cfg *FlagConfig) SetPollInterval(pollInterval int) {
 	cfg.pollInterval = pollInterval
 }
 
-func (cfg *EnvConfig) GetHost() (string, error) {
+func (cfg *FlagConfig) GetHost() (string, error) {
 	host := cfg.String()
 	if host == ":0" {
 		return "", constants.ErrHostNotPassedAsFlag
@@ -41,27 +41,35 @@ func (cfg *EnvConfig) GetHost() (string, error) {
 	return host, nil
 }
 
-func (cfg *EnvConfig) GetPollInterval() (time.Duration, error) {
+func (cfg *FlagConfig) GetPollInterval() (time.Duration, error) {
 	return time.Duration(cfg.pollInterval) * time.Second, nil
 }
 
-func (cfg *EnvConfig) GetReportInterval() (time.Duration, error) {
+func (cfg *FlagConfig) GetReportInterval() (time.Duration, error) {
 	return time.Duration(cfg.reportInterval) * time.Second, nil
 }
 
+func (cfg *FlagConfig) GetKey() (string, error) {
+	if cfg.key == "" {
+		return "", constants.ErrKeyMissing
+	}
+	return cfg.key, nil
+}
+
 func NewOptions() config.ConfInterface {
-	options := &EnvConfig{
+	options := &FlagConfig{
 		host: "",
 		port: 0,
 	}
 	flag.IntVar(&options.reportInterval, "r", 10, "set report interval")
 	flag.IntVar(&options.pollInterval, "p", 2, "set poll interval")
+	flag.StringVar(&options.key, "k", "", "set key to hash")
 	flag.Var(options, "a", "give server host:port (default: localhost:8080)")
 	flag.Parse()
 	return options
 }
 
-func (cfg *EnvConfig) Set(flagValue string) (err error) {
+func (cfg *FlagConfig) Set(flagValue string) (err error) {
 	options := strings.Split(flagValue, ":")
 	if len(options) != 2 {
 		return constants.ErrWrongAddress
@@ -75,6 +83,6 @@ func (cfg *EnvConfig) Set(flagValue string) (err error) {
 	return nil
 }
 
-func (cfg *EnvConfig) String() string {
+func (cfg *FlagConfig) String() string {
 	return cfg.host + ":" + strconv.Itoa(cfg.port)
 }

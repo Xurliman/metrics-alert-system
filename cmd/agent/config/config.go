@@ -12,9 +12,10 @@ type ConfInterface interface {
 	GetHost() (string, error)
 	GetPollInterval() (time.Duration, error)
 	GetReportInterval() (time.Duration, error)
+	GetKey() (string, error)
 }
 
-type Config struct{}
+type EnvConfig struct{}
 
 func GetEnvironmentValue(key string) (string, error) {
 	if os.Getenv(key) == "" {
@@ -23,7 +24,7 @@ func GetEnvironmentValue(key string) (string, error) {
 	return os.Getenv(key), nil
 }
 
-func (c *Config) GetHost() (string, error) {
+func (c *EnvConfig) GetHost() (string, error) {
 	address, err := GetEnvironmentValue("ADDRESS")
 	if err != nil {
 		return constants.DefaultServerAddress, err
@@ -43,7 +44,7 @@ func (c *Config) GetHost() (string, error) {
 	return host + ":" + strconv.Itoa(port), nil
 }
 
-func (c *Config) GetPollInterval() (time.Duration, error) {
+func (c *EnvConfig) GetPollInterval() (time.Duration, error) {
 	pollInterval, err := GetEnvironmentValue("POLL_INTERVAL")
 	if err != nil {
 		return time.Duration(2), err
@@ -57,7 +58,7 @@ func (c *Config) GetPollInterval() (time.Duration, error) {
 	return time.Duration(pollIntervalInt) * time.Second, nil
 }
 
-func (c *Config) GetReportInterval() (time.Duration, error) {
+func (c *EnvConfig) GetReportInterval() (time.Duration, error) {
 	reportInterval, err := GetEnvironmentValue("REPORT_INTERVAL")
 	if err != nil {
 		return time.Duration(10), err
@@ -71,6 +72,14 @@ func (c *Config) GetReportInterval() (time.Duration, error) {
 	return time.Duration(reportIntervalInt) * time.Second, nil
 }
 
+func (c *EnvConfig) GetKey() (string, error) {
+	key, err := GetEnvironmentValue("KEY")
+	if err != nil {
+		return "", constants.ErrKeyMissing
+	}
+	return key, nil
+}
+
 func NewConfig() ConfInterface {
-	return &Config{}
+	return &EnvConfig{}
 }

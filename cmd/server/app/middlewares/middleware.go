@@ -6,6 +6,7 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"io"
+	"net/http"
 	"time"
 )
 
@@ -18,6 +19,7 @@ type Request struct {
 	Method   string
 	Duration time.Duration
 	Body     map[string]interface{}
+	Header   http.Header
 	Error    error
 }
 
@@ -29,6 +31,7 @@ func (request *Request) Handle(ctx *gin.Context) (size int64) {
 
 	request.URI = ctx.Request.RequestURI
 	request.Method = ctx.Request.Method
+	request.Header = ctx.Request.Header
 
 	_, err = io.Copy(&buf, ctx.Request.Body)
 	if err != nil {

@@ -15,6 +15,7 @@ type Options struct {
 	fileStoragePath string
 	databaseDSN     string
 	restore         bool
+	key             string
 }
 
 func NewOptions() *Options {
@@ -24,12 +25,14 @@ func NewOptions() *Options {
 		storeInterval:   -1,
 		fileStoragePath: "",
 		restore:         true,
+		key:             "",
 	}
 	flag.Var(options, constants.AddressFlag, constants.AddressFlagDescription)
 	flag.IntVar(&options.storeInterval, constants.StoreIntervalFlag, -1, constants.StoreIntervalFlagDescription)
 	flag.StringVar(&options.fileStoragePath, constants.FileStoragePathFlag, constants.DefaultFileStoragePath, constants.FileStoragePathFlagDescription)
 	flag.BoolVar(&options.restore, constants.RestoreFlag, constants.DefaultRestore, constants.RestoreFlagDescription)
 	flag.StringVar(&options.databaseDSN, constants.DatabaseDSNFlag, "", constants.DatabaseDSNFlagDescription)
+	flag.StringVar(&options.key, constants.KeyFlag, "", constants.KeyFlagDescription)
 	flag.Parse()
 	return options
 }
@@ -91,4 +94,11 @@ func (o *Options) GetDatabaseDSN() (string, error) {
 		return "", constants.ErrDatabaseDSNEmpty
 	}
 	return o.databaseDSN, nil
+}
+
+func (o *Options) GetKey() (string, error) {
+	if o.key == "" {
+		return "", constants.ErrKeyMissing
+	}
+	return o.key, nil
 }
