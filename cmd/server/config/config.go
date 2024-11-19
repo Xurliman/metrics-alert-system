@@ -45,12 +45,12 @@ func GetAppEnv() string {
 func GetStoreInterval() time.Duration {
 	storeIntervalStr, err := GetEnvironmentValue("STORE_INTERVAL")
 	if err != nil {
-		return time.Second * constants.StoreInterval
+		return time.Second * constants.DefaultStoreInterval
 	}
 
 	storeInterval, err := strconv.Atoi(storeIntervalStr)
 	if err != nil {
-		return time.Second * constants.StoreInterval
+		return time.Second * constants.DefaultStoreInterval
 	}
 
 	if storeInterval == 0 {
@@ -62,7 +62,7 @@ func GetStoreInterval() time.Duration {
 func GetFileStoragePath() string {
 	fileStoragePath, err := GetEnvironmentValue("FILE_STORAGE_PATH")
 	if err != nil {
-		return constants.FileStoragePath
+		return constants.DefaultFileStoragePath
 	}
 	return fileStoragePath
 }
@@ -70,7 +70,7 @@ func GetFileStoragePath() string {
 func GetShouldRestore() bool {
 	shouldRestore, err := GetEnvironmentValue("RESTORE")
 	if err != nil {
-		return constants.Restore
+		return constants.DefaultRestore
 	}
 	return shouldRestore == "true"
 }

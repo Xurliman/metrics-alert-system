@@ -27,7 +27,7 @@ func JSONSuccess(ctx *gin.Context, data interface{}) {
 }
 
 func JSONError(ctx *gin.Context, err error) {
-	Logger.Info(logErrorFormat(err))
+	Logger.Debug(logErrorFormat(err))
 	ctx.Header("Content-Type", "application/json; charset=utf-8")
 	ctx.JSON(http.StatusBadRequest, DefaultResponse{
 		Success: false,
@@ -39,7 +39,7 @@ func JSONError(ctx *gin.Context, err error) {
 }
 
 func JSONInternalServerError(ctx *gin.Context, err error) {
-	Logger.Info(logErrorFormat(err))
+	Logger.Debug(logErrorFormat(err))
 	ctx.Header("Content-Type", "application/json; charset=utf-8")
 	ctx.JSON(http.StatusInternalServerError, DefaultResponse{
 		Success: false,
@@ -51,7 +51,7 @@ func JSONInternalServerError(ctx *gin.Context, err error) {
 }
 
 func JSONValidationError(ctx *gin.Context, err error) {
-	Logger.Info(logErrorFormat(err))
+	Logger.Debug(logErrorFormat(err))
 	ctx.Header("Content-Type", "application/json; charset=utf-8")
 	ctx.JSON(http.StatusUnprocessableEntity, DefaultResponse{
 		Success: false,
@@ -63,7 +63,7 @@ func JSONValidationError(ctx *gin.Context, err error) {
 }
 
 func JSONNotFound(ctx *gin.Context, err error) {
-	Logger.Info(logErrorFormat(err))
+	Logger.Debug(logErrorFormat(err))
 	ctx.Header("Content-Type", "application/json; charset=utf-8")
 	ctx.JSON(http.StatusNotFound, DefaultResponse{
 		Success: false,

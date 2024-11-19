@@ -1,24 +1,41 @@
 package services
 
 import (
-	"bytes"
 	"encoding/json"
-	"fmt"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
+	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/models"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/requests"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/utils"
 	"math/rand"
-	"net/http"
 	"runtime"
 )
 
+type MetricsService struct {
+	repository           interfaces.MetricsRepository
+	metricsCollection    map[string]*models.Metrics
+	oldMetricsCollection models.OldMetrics
+}
+
+func NewMetricsService(repository interfaces.MetricsRepository) *MetricsService {
+
+	return &MetricsService{
+		repository:        repository,
+		metricsCollection: make(map[string]*models.Metrics),
+		oldMetricsCollection: models.OldMetrics{
+			Gauge:   make(map[string]float64),
+			Counter: make(map[string]int64),
+		},
+	}
+}
+
 var pollCount int64
 
-func CollectMetrics() models.Metrics {
+func (s *MetricsService) CollectMetricValues() {
 	var memStats runtime.MemStats
 	runtime.ReadMemStats(&memStats)
-	metrics := models.Metrics{
+
+	oldCollection := models.OldMetrics{
 		Gauge: map[string]float64{
 			"Alloc":         float64(memStats.Alloc),
 			"BuckHashSys":   float64(memStats.BuckHashSys),
@@ -54,193 +71,91 @@ func CollectMetrics() models.Metrics {
 		},
 	}
 	pollCount++
-	return metrics
+	s.oldMetricsCollection = oldCollection
+	s.ConvertToMetrics()
 }
 
-func SendMetrics(client http.Client, metrics models.Metrics, address string) {
-	for metric, value := range metrics.Gauge {
-		url := fmt.Sprintf("http://%s/update/", address)
-		request, err := json.Marshal(requests.MetricsRequest{
+func (s *MetricsService) ConvertToMetrics() {
+	metrics := make(map[string]*models.Metrics)
+	for metric, value := range s.oldMetricsCollection.Gauge {
+		metrics[metric] = &models.Metrics{
 			ID:    metric,
 			MType: constants.GaugeMetricType,
 			Value: &value,
-		})
-		if err != nil {
-			return
-		}
-
-		response, err := client.Post(url, "application/json", bytes.NewReader(request))
-		if err != nil {
-			return
-		}
-
-		err = response.Body.Close()
-		if err != nil {
-			return
 		}
 	}
-
-	for metric, value := range metrics.Counter {
-		url := fmt.Sprintf("http://%s/update/", address)
-		request, err := json.Marshal(requests.MetricsRequest{
+	for metric, value := range s.oldMetricsCollection.Counter {
+		metrics[metric] = &models.Metrics{
 			ID:    metric,
 			MType: constants.CounterMetricType,
 			Delta: &value,
-		})
-		if err != nil {
-			return
-		}
-
-		response, err := client.Post(url, "application/json", bytes.NewReader(request))
-		if err != nil {
-			return
-		}
-
-		err = response.Body.Close()
-		if err != nil {
-			return
 		}
 	}
+	s.metricsCollection = metrics
 }
 
-func SendMetricsWithParam(client http.Client, metrics models.Metrics, address string) {
-	for metric, value := range metrics.Gauge {
-		url := fmt.Sprintf("http://%s/update/%s/%s/%f", address, constants.GaugeMetricType, metric, value)
-		response, err := client.Post(url, "text/plain", nil)
+func (s *MetricsService) GetRequestBodies() ([][]byte, error) {
+	var requestsToSend [][]byte
+	for _, metric := range s.metricsCollection {
+		request, err := s.repository.GetRequestBody(metric)
 		if err != nil {
-			return
+			return nil, err
 		}
-		err = response.Body.Close()
-		if err != nil {
-			return
-		}
+		requestsToSend = append(requestsToSend, request)
 	}
-
-	for metric, value := range metrics.Counter {
-		url := fmt.Sprintf("http://%s/update/%s/%s/%v", address, constants.CounterMetricType, metric, value)
-		response, err := client.Post(url, "text/plain", nil)
-		if err != nil {
-			return
-		}
-		err = response.Body.Close()
-		if err != nil {
-			return
-		}
-	}
+	return requestsToSend, nil
 }
 
-func SendCompressedMetrics(client http.Client, metrics models.Metrics, address string) {
-	for metric, value := range metrics.Gauge {
-		url := fmt.Sprintf("http://%s/update/", address)
-		body, err := json.Marshal(requests.MetricsRequest{
-			ID:    metric,
-			MType: constants.GaugeMetricType,
-			Value: &value,
-		})
+func (s *MetricsService) GetCompressedRequestBodies() (requestsToSend [][]byte, err error) {
+	for _, metric := range s.metricsCollection {
+		request, err := s.repository.GetRequestBody(metric)
 		if err != nil {
-			return
+			return nil, err
 		}
 
-		request, err := compress(body, url)
+		compressedRequest, err := utils.Compress(request)
 		if err != nil {
-			return
+			return nil, err
 		}
 
-		response, err := client.Do(request)
-		if err != nil {
-			return
-		}
-
-		err = response.Body.Close()
-		if err != nil {
-			return
-		}
+		requestsToSend = append(requestsToSend, compressedRequest)
 	}
-
-	for metric, value := range metrics.Counter {
-		url := fmt.Sprintf("http://%s/update/", address)
-		body, err := json.Marshal(requests.MetricsRequest{
-			ID:    metric,
-			MType: constants.CounterMetricType,
-			Delta: &value,
-		})
-		if err != nil {
-			return
-		}
-
-		request, err := compress(body, url)
-		if err != nil {
-			return
-		}
-
-		response, err := client.Do(request)
-		if err != nil {
-			return
-		}
-
-		err = response.Body.Close()
-		if err != nil {
-			return
-		}
-	}
+	return requestsToSend, nil
 }
 
-func SendCompressedMetricsWithParam(client http.Client, metrics models.Metrics, address string) {
-	for metric, value := range metrics.Gauge {
-		url := fmt.Sprintf("http://%s/update/%s/%s/%f", address, constants.GaugeMetricType, metric, value)
-		req, err := http.NewRequest("POST", url, nil)
-		if err != nil {
-			return
-		}
+func (s *MetricsService) GetCompressedRequestBody() ([]byte, error) {
+	var requestsToSend []requests.MetricsRequest
 
-		req.Header.Set("Content-Type", "application/json")
-		req.Header.Set("Content-Encoding", "gzip")
-
-		response, err := client.Do(req)
+	for _, metric := range s.metricsCollection {
+		request, err := s.repository.GetPlainRequest(metric)
 		if err != nil {
-			return
+			return nil, err
 		}
-		err = response.Body.Close()
-		if err != nil {
-			return
-		}
+		requestsToSend = append(requestsToSend, *request)
 	}
 
-	for metric, value := range metrics.Counter {
-		url := fmt.Sprintf("http://%s/update/%s/%s/%v", address, constants.CounterMetricType, metric, value)
-		req, err := http.NewRequest("POST", url, nil)
-		if err != nil {
-			return
-		}
-
-		req.Header.Set("Content-Type", "application/json")
-		req.Header.Set("Content-Encoding", "gzip")
-
-		response, err := client.Do(req)
-		if err != nil {
-			return
-		}
-
-		err = response.Body.Close()
-		if err != nil {
-			return
-		}
-	}
-}
-
-func compress(body []byte, url string) (*http.Request, error) {
-	compressedRequest, err := utils.Compress(body)
+	marshalledRequest, err := json.Marshal(requestsToSend)
 	if err != nil {
 		return nil, err
 	}
 
-	request, err := http.NewRequest("POST", url, bytes.NewReader(compressedRequest))
+	compressedRequest, err := utils.Compress(marshalledRequest)
 	if err != nil {
 		return nil, err
 	}
 
-	request.Header.Set("Content-Type", "application/json")
-	request.Header.Set("Content-Encoding", "gzip")
+	return compressedRequest, nil
+}
 
-	return request, nil
+func (s *MetricsService) GetRequestURLs(address string) ([]string, error) {
+	var urls []string
+	for _, metric := range s.metricsCollection {
+		url, err := s.repository.GetRequestURL(metric, address)
+		if err != nil {
+			return nil, err
+		}
+
+		urls = append(urls, url)
+	}
+	return urls, nil
 }

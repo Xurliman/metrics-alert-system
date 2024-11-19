@@ -1,5 +1,0 @@
-2024-10-28 09:14:32	[31mERROR[0m		{"error": "open .env: no such file or directory"}
-2024-10-28 09:14:32	[34mINFO[0m	Starting server on port %v	{"port": ":8080"}
-2024-10-28 09:14:42	[31mERROR[0m		{"error": "open .env: no such file or directory"}
-2024-10-28 09:14:42	[34mINFO[0m	Starting server on port %v	{"port": ":8088"}
-2024-10-28 09:14:50	[34mINFO[0m	info	{"uri": "/update/gauge/HeapIdle/3317760.000000", "method": "POST", "duration": "500ns", "status": 200, "size": -1}

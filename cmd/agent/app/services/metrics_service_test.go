@@ -2,70 +2,47 @@ package services
 
 import (
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/models"
-	"math/rand"
-	"net/http"
-	"runtime"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	"testing"
 )
 
-func TestSendMetrics(t *testing.T) {
-	var memStats runtime.MemStats
-	runtime.ReadMemStats(&memStats)
-	type args struct {
-		client  http.Client
-		metrics models.Metrics
-	}
-	tests := []struct {
-		name string
-		addr string
-		args args
-	}{
-		{
-			name: "first",
-			addr: "localhost:8080",
-			args: args{
-				client: http.Client{},
-				metrics: models.Metrics{
-					Gauge: map[string]float64{
-						"Alloc":         float64(memStats.Alloc),
-						"BuckHashSys":   float64(memStats.BuckHashSys),
-						"Frees":         float64(memStats.Frees),
-						"GCCPUFraction": memStats.GCCPUFraction,
-						"GCSys":         float64(memStats.GCSys),
-						"HeapAlloc":     float64(memStats.HeapAlloc),
-						"HeapIdle":      float64(memStats.HeapIdle),
-						"HeapInuse":     float64(memStats.HeapInuse),
-						"HeapObjects":   float64(memStats.HeapObjects),
-						"HeapReleased":  float64(memStats.HeapReleased),
-						"HeapSys":       float64(memStats.HeapSys),
-						"LastGC":        float64(memStats.LastGC),
-						"Lookups":       float64(memStats.Lookups),
-						"MCacheInuse":   float64(memStats.MCacheInuse),
-						"MCacheSys":     float64(memStats.MCacheSys),
-						"MSpanInuse":    float64(memStats.MSpanInuse),
-						"MSpanSys":      float64(memStats.MSpanSys),
-						"Mallocs":       float64(memStats.Mallocs),
-						"NextGC":        float64(memStats.NextGC),
-						"NumForcedGC":   float64(memStats.NumForcedGC),
-						"NumGC":         float64(memStats.NumGC),
-						"OtherSys":      float64(memStats.OtherSys),
-						"PauseTotalNs":  float64(memStats.PauseTotalNs),
-						"StackInuse":    float64(memStats.StackInuse),
-						"StackSys":      float64(memStats.StackSys),
-						"Sys":           float64(memStats.Sys),
-						"TotalAlloc":    float64(memStats.TotalAlloc),
-						"RandomValue":   rand.Float64(),
-					},
-					Counter: map[string]int64{
-						"PollCount": pollCount,
-					},
-				},
-			},
+func TestMetricsService_CollectMetrics(t *testing.T) {
+	oldMetrics := models.OldMetrics{
+		Gauge: map[string]float64{
+			"gauge1": 100.5,
+			"gauge2": 200.1,
+		},
+		Counter: map[string]int64{
+			"counter1": 10,
+			"counter2": 20,
 		},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			SendMetrics(tt.args.client, tt.args.metrics, tt.addr)
-		})
+
+	// Create service with old metrics
+	service := &MetricsService{
+		oldMetricsCollection: oldMetrics,
+		metricsCollection:    nil,
+	}
+
+	service.ConvertToMetrics()
+
+	if len(service.metricsCollection) != 4 {
+		t.Errorf("Expected 4 metrics, got %d", len(service.metricsCollection))
+	}
+
+	if metric, ok := service.metricsCollection["gauge1"]; ok {
+		if metric.MType != constants.GaugeMetricType || *metric.Value != 100.5 {
+			t.Errorf("Unexpected metric for gauge1: %+v", metric)
+		}
+	} else {
+		t.Error("Metric 'gauge1' not found")
+	}
+
+	if metric, ok := service.metricsCollection["counter1"]; ok {
+		if metric.MType != constants.CounterMetricType || *metric.Delta != 10 {
+			t.Errorf("Unexpected metric for counter1: %+v", metric)
+		}
+	} else {
+		t.Error("Metric 'counter1' not found")
 	}
 }
