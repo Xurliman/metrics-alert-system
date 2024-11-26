@@ -13,15 +13,13 @@ type ConfInterface interface {
 	GetPollInterval() (time.Duration, error)
 	GetReportInterval() (time.Duration, error)
 	GetKey() (string, error)
+	GetRateLimit() (int, error)
 }
 
 type EnvConfig struct{}
 
-func GetEnvironmentValue(key string) (string, error) {
-	if os.Getenv(key) == "" {
-		return "", constants.ErrEnvValueMissing
-	}
-	return os.Getenv(key), nil
+func NewConfig() ConfInterface {
+	return &EnvConfig{}
 }
 
 func (c *EnvConfig) GetHost() (string, error) {
@@ -80,6 +78,22 @@ func (c *EnvConfig) GetKey() (string, error) {
 	return key, nil
 }
 
-func NewConfig() ConfInterface {
-	return &EnvConfig{}
+func (c *EnvConfig) GetRateLimit() (int, error) {
+	rateLimit, err := GetEnvironmentValue("RATE_LIMIT")
+	if err != nil {
+		return 0, err
+	}
+
+	rateLimitInt, err := strconv.Atoi(rateLimit)
+	if err != nil {
+		return 0, err
+	}
+	return rateLimitInt, nil
+}
+
+func GetEnvironmentValue(key string) (string, error) {
+	if os.Getenv(key) == "" {
+		return "", constants.ErrEnvValueMissing
+	}
+	return os.Getenv(key), nil
 }

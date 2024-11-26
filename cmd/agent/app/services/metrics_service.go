@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"encoding/json"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/interfaces"
@@ -158,4 +159,38 @@ func (s *MetricsService) GetRequestURLs(address string) ([]string, error) {
 		urls = append(urls, url)
 	}
 	return urls, nil
+}
+
+func (s *MetricsService) Converter(ctx context.Context, inputCh chan *models.Metrics) chan models.Result {
+	resultCh := make(chan models.Result)
+	go func() {
+		defer close(resultCh)
+
+		for metric := range inputCh {
+			request, err := s.repository.GetRequestBody(metric)
+			select {
+			case <-ctx.Done():
+				return
+			case resultCh <- models.NewResult(request, err):
+			}
+		}
+	}()
+
+	return resultCh
+}
+
+func (s *MetricsService) Generator(ctx context.Context) chan *models.Metrics {
+	inputCh := make(chan *models.Metrics)
+	go func() {
+		defer close(inputCh)
+
+		for _, metric := range s.metricsCollection {
+			select {
+			case <-ctx.Done():
+				return
+			case inputCh <- metric:
+			}
+		}
+	}()
+	return inputCh
 }

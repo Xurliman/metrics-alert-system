@@ -1,0 +1,1 @@
+{"PollCount":{"id":"PollCount","type":"counter","delta":0},"SomeGaugeMetric":{"id":"SomeGaugeMetric","type":"gauge","value":0}}

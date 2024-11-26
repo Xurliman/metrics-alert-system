@@ -26,7 +26,7 @@ func (r *MetricsRepository) GetRequestBody(metric *models.Metrics) ([]byte, erro
 		if err != nil {
 			return nil, err
 		}
-		
+
 		return requestBytes, nil
 	case constants.CounterMetricType:
 		request, err := metric.ToCounterRequest()

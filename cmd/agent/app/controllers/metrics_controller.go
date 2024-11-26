@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"bytes"
+	"context"
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
@@ -10,6 +11,7 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/interfaces"
 	"net/http"
+	"time"
 )
 
 type MetricsController struct {
@@ -42,10 +44,8 @@ func (c *MetricsController) SendMetrics() (errs error) {
 	for _, requestBody := range requestsToSend {
 		request, err := http.NewRequest("POST", url, bytes.NewReader(requestBody))
 		if err != nil {
-			return errors.Join(errs, err)
+			errs = errors.Join(errs, err)
 		}
-
-		request.Header.Set("Content-Type", "application/json")
 
 		dst, err := c.hashRequest(requestBody)
 		if err != nil {
@@ -54,42 +54,27 @@ func (c *MetricsController) SendMetrics() (errs error) {
 			request.Header.Set("HashSHA256", dst)
 		}
 
-		response, err := c.client.Do(request)
-		if err != nil {
-			return errors.Join(errs, err)
-		}
-
-		err = response.Body.Close()
-		if err != nil {
-			return errors.Join(errs, err)
-		}
-
-		if response.StatusCode != http.StatusOK {
-			return errors.Join(errs, constants.ErrStatusNotOK)
-		}
+		errors.Join(errs, c.MakeRequest(request))
 	}
 	return nil
 }
 
-func (c *MetricsController) SendMetricsWithParams() (err error) {
+func (c *MetricsController) SendMetricsWithParams() (errs error) {
 	urls, err := c.service.GetRequestURLs(c.address)
 	if err != nil {
-		return err
+		return errors.Join(errs, err)
 	}
 
 	for _, url := range urls {
-		response, err := c.client.Post(url, "text/plain", nil)
+		request, err := http.NewRequest("POST", url, nil)
 		if err != nil {
-			return err
+			return errors.Join(errs, err)
 		}
 
-		err = response.Body.Close()
-		if err != nil {
-			return err
-		}
+		request.Header.Set("Content-Type", "text/plain")
 
-		if response.StatusCode != http.StatusOK {
-			return constants.ErrStatusNotOK
+		if err = c.MakeRequest(request); err != nil {
+			return errors.Join(errs, err)
 		}
 	}
 	return nil
@@ -115,56 +100,32 @@ func (c *MetricsController) SendCompressedMetrics() (errs error) {
 			request.Header.Set("HashSHA256", dst)
 		}
 
-		request.Header.Set("Content-Type", "application/json")
 		request.Header.Set("Content-Encoding", "gzip")
-
-		response, err := c.client.Do(request)
-		if err != nil {
-			return errors.Join(errs, err)
-		}
-
-		err = response.Body.Close()
-		if err != nil {
-			return errors.Join(errs, err)
-		}
-
-		if response.StatusCode != http.StatusOK {
-			return errors.Join(errs, constants.ErrStatusNotOK)
-		}
+		errors.Join(errs, c.MakeRequest(request))
 	}
 	return errs
 }
 
-func (c *MetricsController) SendCompressedMetricsWithParams() (err error) {
+func (c *MetricsController) SendCompressedMetricsWithParams() (errs error) {
 	urls, err := c.service.GetRequestURLs(c.address)
 	if err != nil {
-		return err
+		errs = errors.Join(errs, err)
 	}
 
 	for _, url := range urls {
 		request, err := http.NewRequest("POST", url, nil)
 		if err != nil {
-			return err
+			errs = errors.Join(errs, err)
+			continue
 		}
 
-		request.Header.Set("Content-Type", "application/json")
 		request.Header.Set("Content-Encoding", "gzip")
 
-		response, err := c.client.Do(request)
-		if err != nil {
-			return err
-		}
-
-		err = response.Body.Close()
-		if err != nil {
-			return err
-		}
-
-		if response.StatusCode != http.StatusOK {
-			return constants.ErrStatusNotOK
+		if err = c.MakeRequest(request); err != nil {
+			errs = errors.Join(errs, err)
 		}
 	}
-	return nil
+	return errs
 }
 
 func (c *MetricsController) SendBatchMetrics() (err error) {
@@ -186,24 +147,59 @@ func (c *MetricsController) SendBatchMetrics() (err error) {
 		request.Header.Set("HashSHA256", dst)
 	}
 
-	request.Header.Set("Content-Type", "application/json")
 	request.Header.Set("Content-Encoding", "gzip")
+	return c.MakeRequest(request)
+}
+
+func (c *MetricsController) SendMetricsChan() (errs error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	url := fmt.Sprintf("http://%s/update/", c.address)
+
+	inputCh := c.service.Generator(ctx)
+	resultCh := c.service.Converter(ctx, inputCh)
+
+	for result := range resultCh {
+		if result.HasError() {
+			errors.Join(errs, result.Error())
+			continue
+		}
+
+		request, err := http.NewRequest("POST", url, bytes.NewReader(result.Bytes()))
+		if err != nil {
+			return errors.Join(errs, err)
+		}
+
+		dst, err := c.hashRequest(result.Bytes())
+		if err != nil {
+			errs = errors.Join(errs, err)
+		} else {
+			request.Header.Set("HashSHA256", dst)
+		}
+
+		errors.Join(errs, c.MakeRequest(request))
+	}
+	return nil
+}
+
+func (c *MetricsController) MakeRequest(request *http.Request) (errs error) {
+	request.Header.Set("Content-Type", "application/json")
 
 	response, err := c.client.Do(request)
 	if err != nil {
-		return err
+		return errors.Join(errs, err)
 	}
 
 	err = response.Body.Close()
 	if err != nil {
-		return err
+		errs = errors.Join(errs, err)
 	}
 
 	if response.StatusCode != http.StatusOK {
-		return constants.ErrStatusNotOK
+		errs = errors.Join(errs, constants.ErrStatusNotOK)
 	}
-
-	return nil
+	return errs
 }
 
 func (c *MetricsController) hashRequest(requestBody []byte) (string, error) {

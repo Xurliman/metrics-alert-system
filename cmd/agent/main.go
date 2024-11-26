@@ -45,6 +45,13 @@ func main() {
 		key, _ = envCfg.GetKey()
 	}
 
+	rateLimit, err := flagCfg.GetRateLimit()
+	if err != nil {
+		rateLimit, _ = envCfg.GetRateLimit()
+	}
+
+	_ = rateLimit
+
 	client := http.Client{Timeout: 10 * time.Second}
 	metricRepository := repositories.NewMetricsRepository()
 	metricsService := services.NewMetricsService(metricRepository)
@@ -65,6 +72,8 @@ func main() {
 			handleError(metricController.SendCompressedMetrics())
 			handleError(metricController.SendCompressedMetricsWithParams())
 			handleError(metricController.SendBatchMetrics())
+
+			go handleError(metricController.SendMetricsChan())
 		}
 	}
 }

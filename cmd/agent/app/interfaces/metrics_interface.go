@@ -1,6 +1,7 @@
 package interfaces
 
 import (
+	"context"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/models"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/requests"
 )
@@ -12,6 +13,8 @@ type MetricsController interface {
 	SendCompressedMetricsWithParams() (err error)
 	SendBatchMetrics() (err error)
 	CollectMetrics()
+
+	SendMetricsChan() (errs error)
 }
 
 type MetricsService interface {
@@ -20,6 +23,9 @@ type MetricsService interface {
 	GetRequestBodies() ([][]byte, error)
 	GetCompressedRequestBodies() ([][]byte, error)
 	GetCompressedRequestBody() ([]byte, error)
+
+	Generator(ctx context.Context) chan *models.Metrics
+	Converter(ctx context.Context, inputCh chan *models.Metrics) chan models.Result
 }
 
 type MetricsRepository interface {

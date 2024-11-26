@@ -15,22 +15,21 @@ type FlagConfig struct {
 	reportInterval int
 	pollInterval   int
 	key            string
+	rateLimit      int
 }
 
-func (cfg *FlagConfig) SetHost(host string) {
-	cfg.host = host
-}
-
-func (cfg *FlagConfig) SetPort(port int) {
-	cfg.port = port
-}
-
-func (cfg *FlagConfig) SetReportInterval(reportInterval int) {
-	cfg.reportInterval = reportInterval
-}
-
-func (cfg *FlagConfig) SetPollInterval(pollInterval int) {
-	cfg.pollInterval = pollInterval
+func NewOptions() config.ConfInterface {
+	options := &FlagConfig{
+		host: "",
+		port: 0,
+	}
+	flag.IntVar(&options.rateLimit, "l", 0, "set rate limit")
+	flag.IntVar(&options.reportInterval, "r", 10, "set report interval")
+	flag.IntVar(&options.pollInterval, "p", 2, "set poll interval")
+	flag.StringVar(&options.key, "k", "", "set key to hash")
+	flag.Var(options, "a", "give server host:port (default: localhost:8080)")
+	flag.Parse()
+	return options
 }
 
 func (cfg *FlagConfig) GetHost() (string, error) {
@@ -56,17 +55,11 @@ func (cfg *FlagConfig) GetKey() (string, error) {
 	return cfg.key, nil
 }
 
-func NewOptions() config.ConfInterface {
-	options := &FlagConfig{
-		host: "",
-		port: 0,
+func (cfg *FlagConfig) GetRateLimit() (int, error) {
+	if cfg.rateLimit == 0 {
+		return 0, constants.ErrInvalidRateLimit
 	}
-	flag.IntVar(&options.reportInterval, "r", 10, "set report interval")
-	flag.IntVar(&options.pollInterval, "p", 2, "set poll interval")
-	flag.StringVar(&options.key, "k", "", "set key to hash")
-	flag.Var(options, "a", "give server host:port (default: localhost:8080)")
-	flag.Parse()
-	return options
+	return cfg.rateLimit, nil
 }
 
 func (cfg *FlagConfig) Set(flagValue string) (err error) {
