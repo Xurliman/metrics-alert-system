@@ -72,7 +72,7 @@ func GetShouldRestore() bool {
 	if err != nil {
 		return constants.DefaultRestore
 	}
-	return shouldRestore == "true"
+	return shouldRestore != "true"
 }
 
 func GetKey() string {

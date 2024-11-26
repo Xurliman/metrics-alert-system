@@ -7,25 +7,23 @@ import (
 )
 
 type MetricsController interface {
-	SendMetrics() (err error)
-	SendCompressedMetrics() (err error)
-	SendMetricsWithParams() (err error)
-	SendCompressedMetricsWithParams() (err error)
+	SendMetrics(ctx context.Context) (err error)
+	SendCompressedMetrics(ctx context.Context) (err error)
+	SendMetricsWithParams(ctx context.Context) (err error)
+	SendCompressedMetricsWithParams(ctx context.Context) (err error)
 	SendBatchMetrics() (err error)
 	CollectMetrics()
-
-	SendMetricsChan() (errs error)
 }
 
 type MetricsService interface {
 	CollectMetricValues()
-	GetRequestURLs(address string) ([]string, error)
-	GetRequestBodies() ([][]byte, error)
-	GetCompressedRequestBodies() ([][]byte, error)
 	GetCompressedRequestBody() ([]byte, error)
 
 	Generator(ctx context.Context) chan *models.Metrics
-	Converter(ctx context.Context, inputCh chan *models.Metrics) chan models.Result
+	ByteTransformer(ctx context.Context, inputCh chan *models.Metrics) chan models.Result
+	URLConstructor(ctx context.Context, inputCh chan *models.Metrics, address string) chan models.Result
+	RequestConstructor(ctx context.Context, inputCh chan *models.Metrics) chan models.Result
+	RequestCompressor(ctx context.Context, inputCh chan models.Result) chan models.Result
 }
 
 type MetricsRepository interface {

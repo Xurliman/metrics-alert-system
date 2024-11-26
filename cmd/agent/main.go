@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/controllers"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/repositories"
@@ -50,8 +51,6 @@ func main() {
 		rateLimit, _ = envCfg.GetRateLimit()
 	}
 
-	_ = rateLimit
-
 	client := http.Client{Timeout: 10 * time.Second}
 	metricRepository := repositories.NewMetricsRepository()
 	metricsService := services.NewMetricsService(metricRepository)
@@ -60,20 +59,22 @@ func main() {
 	pollTicker := time.NewTicker(pollInterval)
 	reportTicker := time.NewTicker(reportInterval)
 
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
 	defer pollTicker.Stop()
 	defer reportTicker.Stop()
-	for {
+	for i := 0; i < rateLimit; i++ {
 		select {
 		case <-pollTicker.C:
 			metricController.CollectMetrics()
 		case <-reportTicker.C:
-			handleError(metricController.SendMetricsWithParams())
-			handleError(metricController.SendMetrics())
-			handleError(metricController.SendCompressedMetrics())
-			handleError(metricController.SendCompressedMetricsWithParams())
-			handleError(metricController.SendBatchMetrics())
 
-			go handleError(metricController.SendMetricsChan())
+			go handleError(metricController.SendMetricsWithParams(ctx))
+			go handleError(metricController.SendMetrics(ctx))
+			go handleError(metricController.SendCompressedMetrics(ctx))
+			go handleError(metricController.SendCompressedMetricsWithParams(ctx))
+			go handleError(metricController.SendBatchMetrics())
 		}
 	}
 }

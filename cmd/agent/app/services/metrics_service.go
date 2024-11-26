@@ -95,35 +95,6 @@ func (s *MetricsService) ConvertToMetrics() {
 	s.metricsCollection = metrics
 }
 
-func (s *MetricsService) GetRequestBodies() ([][]byte, error) {
-	var requestsToSend [][]byte
-	for _, metric := range s.metricsCollection {
-		request, err := s.repository.GetRequestBody(metric)
-		if err != nil {
-			return nil, err
-		}
-		requestsToSend = append(requestsToSend, request)
-	}
-	return requestsToSend, nil
-}
-
-func (s *MetricsService) GetCompressedRequestBodies() (requestsToSend [][]byte, err error) {
-	for _, metric := range s.metricsCollection {
-		request, err := s.repository.GetRequestBody(metric)
-		if err != nil {
-			return nil, err
-		}
-
-		compressedRequest, err := utils.Compress(request)
-		if err != nil {
-			return nil, err
-		}
-
-		requestsToSend = append(requestsToSend, compressedRequest)
-	}
-	return requestsToSend, nil
-}
-
 func (s *MetricsService) GetCompressedRequestBody() ([]byte, error) {
 	var requestsToSend []requests.MetricsRequest
 
@@ -132,6 +103,7 @@ func (s *MetricsService) GetCompressedRequestBody() ([]byte, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		requestsToSend = append(requestsToSend, *request)
 	}
 
@@ -148,26 +120,76 @@ func (s *MetricsService) GetCompressedRequestBody() ([]byte, error) {
 	return compressedRequest, nil
 }
 
-func (s *MetricsService) GetRequestURLs(address string) ([]string, error) {
-	var urls []string
-	for _, metric := range s.metricsCollection {
-		url, err := s.repository.GetRequestURL(metric, address)
-		if err != nil {
-			return nil, err
-		}
+func (s *MetricsService) RequestCompressor(ctx context.Context, inputCh chan models.Result) chan models.Result {
+	resultCh := make(chan models.Result)
+	go func() {
+		defer close(resultCh)
 
-		urls = append(urls, url)
-	}
-	return urls, nil
+		for input := range inputCh {
+			if err := input.Error(); err != nil {
+				resultCh <- models.NewResult(nil, err)
+				continue
+			}
+
+			request, err := utils.Compress(input.Bytes())
+
+			select {
+			case <-ctx.Done():
+				return
+			case resultCh <- models.NewResult(request, err):
+			}
+		}
+	}()
+
+	return resultCh
 }
 
-func (s *MetricsService) Converter(ctx context.Context, inputCh chan *models.Metrics) chan models.Result {
+func (s *MetricsService) URLConstructor(ctx context.Context, inputCh chan *models.Metrics, address string) chan models.Result {
+	resultCh := make(chan models.Result)
+	go func() {
+		defer close(resultCh)
+
+		for metric := range inputCh {
+			request, err := s.repository.GetRequestURL(metric, address)
+
+			select {
+			case <-ctx.Done():
+				return
+			case resultCh <- models.NewURLResult(request, err):
+			}
+		}
+	}()
+
+	return resultCh
+}
+
+func (s *MetricsService) RequestConstructor(ctx context.Context, inputCh chan *models.Metrics) chan models.Result {
+	resultCh := make(chan models.Result)
+	go func() {
+		defer close(resultCh)
+
+		for metric := range inputCh {
+			request, err := s.repository.GetPlainRequest(metric)
+
+			select {
+			case <-ctx.Done():
+				return
+			case resultCh <- models.NewRequestResult(request, err):
+			}
+		}
+	}()
+
+	return resultCh
+}
+
+func (s *MetricsService) ByteTransformer(ctx context.Context, inputCh chan *models.Metrics) chan models.Result {
 	resultCh := make(chan models.Result)
 	go func() {
 		defer close(resultCh)
 
 		for metric := range inputCh {
 			request, err := s.repository.GetRequestBody(metric)
+
 			select {
 			case <-ctx.Done():
 				return

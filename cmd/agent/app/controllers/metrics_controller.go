@@ -11,7 +11,6 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/interfaces"
 	"net/http"
-	"time"
 )
 
 type MetricsController struct {
@@ -34,66 +33,50 @@ func (c *MetricsController) CollectMetrics() {
 	c.service.CollectMetricValues()
 }
 
-func (c *MetricsController) SendMetrics() (errs error) {
-	requestsToSend, err := c.service.GetRequestBodies()
-	if err != nil {
-		errs = errors.Join(errs, err)
-	}
+func (c *MetricsController) SendMetricsWithParams(ctx context.Context) (errs error) {
+	inputCh := c.service.Generator(ctx)
+	resultCh := c.service.URLConstructor(ctx, inputCh, c.address)
 
-	url := fmt.Sprintf("http://%s/update/", c.address)
-	for _, requestBody := range requestsToSend {
-		request, err := http.NewRequest("POST", url, bytes.NewReader(requestBody))
+	for result := range resultCh {
+		if err := result.Error(); err != nil {
+			errs = errors.Join(errs, err)
+			continue
+		}
+
+		request, err := http.NewRequest("POST", result.URL(), nil)
 		if err != nil {
 			errs = errors.Join(errs, err)
+			continue
 		}
 
-		dst, err := c.hashRequest(requestBody)
-		if err != nil {
-			errs = errors.Join(errs, err)
-		} else {
-			request.Header.Set("HashSHA256", dst)
-		}
-
-		errors.Join(errs, c.MakeRequest(request))
-	}
-	return nil
-}
-
-func (c *MetricsController) SendMetricsWithParams() (errs error) {
-	urls, err := c.service.GetRequestURLs(c.address)
-	if err != nil {
-		return errors.Join(errs, err)
-	}
-
-	for _, url := range urls {
-		request, err := http.NewRequest("POST", url, nil)
-		if err != nil {
-			return errors.Join(errs, err)
-		}
-
-		request.Header.Set("Content-Type", "text/plain")
-
+		request.Header.Add("Content-Type", "text/plain")
 		if err = c.MakeRequest(request); err != nil {
-			return errors.Join(errs, err)
+			errs = errors.Join(errs, err)
+			continue
 		}
 	}
 	return nil
 }
 
-func (c *MetricsController) SendCompressedMetrics() (errs error) {
-	requestsToSend, err := c.service.GetCompressedRequestBodies()
-	if err != nil {
-		errors.Join(errs, err)
-	}
+func (c *MetricsController) SendCompressedMetrics(ctx context.Context) (errs error) {
+	inputCh := c.service.Generator(ctx)
+	resultCh := c.service.RequestCompressor(ctx, c.service.ByteTransformer(ctx, inputCh))
+
 	url := fmt.Sprintf("http://%s/update/", c.address)
 
-	for _, compressedRequest := range requestsToSend {
-		request, err := http.NewRequest("POST", url, bytes.NewReader(compressedRequest))
-		if err != nil {
-			return errors.Join(errs, err)
+	for result := range resultCh {
+		if err := result.Error(); err != nil {
+			errs = errors.Join(errs, err)
+			continue
 		}
 
-		dst, err := c.hashRequest(compressedRequest)
+		request, err := http.NewRequest("POST", url, bytes.NewReader(result.Bytes()))
+		if err != nil {
+			errs = errors.Join(errs, err)
+			continue
+		}
+
+		dst, err := c.hashRequest(result.Bytes())
 		if err != nil {
 			errs = errors.Join(errs, err)
 		} else {
@@ -101,19 +84,24 @@ func (c *MetricsController) SendCompressedMetrics() (errs error) {
 		}
 
 		request.Header.Set("Content-Encoding", "gzip")
-		errors.Join(errs, c.MakeRequest(request))
+		if err = c.MakeRequest(request); err != nil {
+			errs = errors.Join(errs, err)
+		}
 	}
 	return errs
 }
 
-func (c *MetricsController) SendCompressedMetricsWithParams() (errs error) {
-	urls, err := c.service.GetRequestURLs(c.address)
-	if err != nil {
-		errs = errors.Join(errs, err)
-	}
+func (c *MetricsController) SendCompressedMetricsWithParams(ctx context.Context) (errs error) {
+	inputCh := c.service.Generator(ctx)
+	resultCh := c.service.URLConstructor(ctx, inputCh, c.address)
 
-	for _, url := range urls {
-		request, err := http.NewRequest("POST", url, nil)
+	for result := range resultCh {
+		if err := result.Error(); err != nil {
+			errs = errors.Join(errs, err)
+			continue
+		}
+
+		request, err := http.NewRequest("POST", result.URL(), nil)
 		if err != nil {
 			errs = errors.Join(errs, err)
 			continue
@@ -151,18 +139,15 @@ func (c *MetricsController) SendBatchMetrics() (err error) {
 	return c.MakeRequest(request)
 }
 
-func (c *MetricsController) SendMetricsChan() (errs error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
+func (c *MetricsController) SendMetrics(ctx context.Context) (errs error) {
 	url := fmt.Sprintf("http://%s/update/", c.address)
 
 	inputCh := c.service.Generator(ctx)
-	resultCh := c.service.Converter(ctx, inputCh)
+	resultCh := c.service.ByteTransformer(ctx, inputCh)
 
 	for result := range resultCh {
-		if result.HasError() {
-			errors.Join(errs, result.Error())
+		if err := result.Error(); err != nil {
+			errs = errors.Join(errs, err)
 			continue
 		}
 
@@ -178,13 +163,15 @@ func (c *MetricsController) SendMetricsChan() (errs error) {
 			request.Header.Set("HashSHA256", dst)
 		}
 
-		errors.Join(errs, c.MakeRequest(request))
+		if err = c.MakeRequest(request); err != nil {
+			errs = errors.Join(errs, err)
+		}
 	}
 	return nil
 }
 
 func (c *MetricsController) MakeRequest(request *http.Request) (errs error) {
-	request.Header.Set("Content-Type", "application/json")
+	request.Header.Add("Content-Type", "application/json")
 
 	response, err := c.client.Do(request)
 	if err != nil {
