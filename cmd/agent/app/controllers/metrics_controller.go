@@ -10,6 +10,8 @@ import (
 	"fmt"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/interfaces"
+	"github.com/Xurliman/metrics-alert-system/cmd/agent/utils"
+	"go.uber.org/zap"
 	"net/http"
 )
 
@@ -52,7 +54,12 @@ func (c *MetricsController) SendMetricsWithParams(ctx context.Context) (errs err
 		request.Header.Add("Content-Type", "text/plain")
 		if err = c.MakeRequest(request); err != nil {
 			errs = errors.Join(errs, err)
-			continue
+			utils.Logger.Error("error while making request",
+				zap.Error(errs),
+				zap.String("url", result.URL()),
+				zap.String("body", string(result.Bytes())),
+			)
+			errs = nil
 		}
 	}
 	return nil
@@ -77,7 +84,7 @@ func (c *MetricsController) SendCompressedMetrics(ctx context.Context) (errs err
 		}
 
 		dst, err := c.hashRequest(result.Bytes())
-		if err != nil {
+		if err != nil && !errors.Is(err, constants.ErrKeyMissing) {
 			errs = errors.Join(errs, err)
 		} else {
 			request.Header.Set("HashSHA256", dst)
@@ -86,6 +93,12 @@ func (c *MetricsController) SendCompressedMetrics(ctx context.Context) (errs err
 		request.Header.Set("Content-Encoding", "gzip")
 		if err = c.MakeRequest(request); err != nil {
 			errs = errors.Join(errs, err)
+			utils.Logger.Error("error while making request",
+				zap.Error(errs),
+				zap.String("url", result.URL()),
+				zap.String("body", string(result.Bytes())),
+			)
+			errs = nil
 		}
 	}
 	return errs
@@ -111,25 +124,34 @@ func (c *MetricsController) SendCompressedMetricsWithParams(ctx context.Context)
 
 		if err = c.MakeRequest(request); err != nil {
 			errs = errors.Join(errs, err)
+			utils.Logger.Error("error while making request",
+				zap.Error(errs),
+				zap.String("url", result.URL()),
+				zap.String("body", string(result.Bytes())),
+			)
+			errs = nil
 		}
 	}
 	return errs
 }
 
-func (c *MetricsController) SendBatchMetrics() (err error) {
-	requestToSend, err := c.service.GetCompressedRequestBody()
-	if err != nil {
-		return err
-	}
-
+func (c *MetricsController) SendBatchMetrics(ctx context.Context) (err error) {
+	inputCh := c.service.Generator(ctx)
+	reqCh := c.service.RequestConstructor(ctx, inputCh)
+	compCh := c.service.RequestCompressor(ctx, reqCh)
 	url := fmt.Sprintf("http://%s/updates/", c.address)
-	request, err := http.NewRequest("POST", url, bytes.NewReader(requestToSend))
+
+	result := <-compCh
+	if err = result.Error(); err != nil {
+		return err
+	}
+	request, err := http.NewRequest("POST", url, bytes.NewReader(result.Bytes()))
 	if err != nil {
 		return err
 	}
 
-	dst, err := c.hashRequest(requestToSend)
-	if err != nil {
+	dst, err := c.hashRequest(result.Bytes())
+	if err != nil && !errors.Is(err, constants.ErrKeyMissing) {
 		return err
 	} else {
 		request.Header.Set("HashSHA256", dst)
@@ -137,6 +159,7 @@ func (c *MetricsController) SendBatchMetrics() (err error) {
 
 	request.Header.Set("Content-Encoding", "gzip")
 	return c.MakeRequest(request)
+
 }
 
 func (c *MetricsController) SendMetrics(ctx context.Context) (errs error) {
@@ -157,7 +180,7 @@ func (c *MetricsController) SendMetrics(ctx context.Context) (errs error) {
 		}
 
 		dst, err := c.hashRequest(result.Bytes())
-		if err != nil {
+		if err != nil && !errors.Is(err, constants.ErrKeyMissing) {
 			errs = errors.Join(errs, err)
 		} else {
 			request.Header.Set("HashSHA256", dst)
@@ -165,6 +188,12 @@ func (c *MetricsController) SendMetrics(ctx context.Context) (errs error) {
 
 		if err = c.MakeRequest(request); err != nil {
 			errs = errors.Join(errs, err)
+			utils.Logger.Error("error while making request",
+				zap.Error(errs),
+				zap.String("url", url),
+				zap.String("body", string(result.Bytes())),
+			)
+			errs = nil
 		}
 	}
 	return nil
@@ -180,13 +209,13 @@ func (c *MetricsController) MakeRequest(request *http.Request) (errs error) {
 
 	err = response.Body.Close()
 	if err != nil {
-		errs = errors.Join(errs, err)
+		return errors.Join(errs, err)
 	}
 
 	if response.StatusCode != http.StatusOK {
-		errs = errors.Join(errs, constants.ErrStatusNotOK)
+		return errors.Join(errs, constants.ErrStatusNotOK)
 	}
-	return errs
+	return nil
 }
 
 func (c *MetricsController) hashRequest(requestBody []byte) (string, error) {

@@ -2,11 +2,9 @@ package services
 
 import (
 	"context"
-	"encoding/json"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/models"
-	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/requests"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/utils"
 	"math/rand"
 	"runtime"
@@ -93,31 +91,6 @@ func (s *MetricsService) ConvertToMetrics() {
 		}
 	}
 	s.metricsCollection = metrics
-}
-
-func (s *MetricsService) GetCompressedRequestBody() ([]byte, error) {
-	var requestsToSend []requests.MetricsRequest
-
-	for _, metric := range s.metricsCollection {
-		request, err := s.repository.GetPlainRequest(metric)
-		if err != nil {
-			return nil, err
-		}
-
-		requestsToSend = append(requestsToSend, *request)
-	}
-
-	marshalledRequest, err := json.Marshal(requestsToSend)
-	if err != nil {
-		return nil, err
-	}
-
-	compressedRequest, err := utils.Compress(marshalledRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	return compressedRequest, nil
 }
 
 func (s *MetricsService) RequestCompressor(ctx context.Context, inputCh chan models.Result) chan models.Result {

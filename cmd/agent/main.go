@@ -9,7 +9,6 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/config"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/utils"
 	"github.com/joho/godotenv"
-	"go.uber.org/zap"
 	"log"
 	"net/http"
 	"time"
@@ -59,28 +58,23 @@ func main() {
 	pollTicker := time.NewTicker(pollInterval)
 	reportTicker := time.NewTicker(reportInterval)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
+	wp := utils.NewWorkerPool(rateLimit, []func(ctx context.Context) error{
+		metricController.SendBatchMetrics,
+		//metricController.SendMetrics,
+		//metricController.SendCompressedMetrics,
+		//metricController.SendCompressedMetricsWithParams,
+		//metricController.SendMetricsWithParams,
+	})
 
 	defer pollTicker.Stop()
 	defer reportTicker.Stop()
-	for i := 0; i < rateLimit; i++ {
+
+	for {
 		select {
 		case <-pollTicker.C:
 			metricController.CollectMetrics()
 		case <-reportTicker.C:
-
-			go handleError(metricController.SendMetricsWithParams(ctx))
-			go handleError(metricController.SendMetrics(ctx))
-			go handleError(metricController.SendCompressedMetrics(ctx))
-			go handleError(metricController.SendCompressedMetricsWithParams(ctx))
-			go handleError(metricController.SendBatchMetrics())
+			wp.Run()
 		}
-	}
-}
-
-func handleError(err error) {
-	if err != nil {
-		utils.Logger.Error("error while sending metrics", zap.Error(err))
 	}
 }

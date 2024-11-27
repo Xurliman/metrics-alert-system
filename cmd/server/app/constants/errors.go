@@ -18,4 +18,5 @@ var (
 	ErrMetricNotFound            = errors.New("metric not found")
 	ErrDSNEmpty                  = errors.New("database DSN is empty, using file storage")
 	ErrKeyMissing                = errors.New("key is missing")
+	ErrInvalidHash               = errors.New("invalid hash")
 )

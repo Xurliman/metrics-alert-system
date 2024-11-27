@@ -11,13 +11,12 @@ type MetricsController interface {
 	SendCompressedMetrics(ctx context.Context) (err error)
 	SendMetricsWithParams(ctx context.Context) (err error)
 	SendCompressedMetricsWithParams(ctx context.Context) (err error)
-	SendBatchMetrics() (err error)
+	SendBatchMetrics(ctx context.Context) (err error)
 	CollectMetrics()
 }
 
 type MetricsService interface {
 	CollectMetricValues()
-	GetCompressedRequestBody() ([]byte, error)
 
 	Generator(ctx context.Context) chan *models.Metrics
 	ByteTransformer(ctx context.Context, inputCh chan *models.Metrics) chan models.Result

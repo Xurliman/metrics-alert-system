@@ -4,7 +4,7 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
-	"errors"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
 	"github.com/gin-gonic/gin"
 )
@@ -31,7 +31,7 @@ func (h HashingMiddleware) Handle(next gin.HandlerFunc) gin.HandlerFunc {
 		sign := hm.Sum(nil)
 
 		if !hmac.Equal(sign, decodedData) {
-			utils.JSONError(ctx, errors.New("invalid hash"))
+			utils.JSONError(ctx, constants.ErrInvalidHash)
 			return
 		}
 	}
