@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"github.com/DataDog/gopsutil/mem"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/models"
@@ -69,6 +70,12 @@ func (s *MetricsService) CollectMetricValues() {
 		Counter: map[string]int64{
 			"PollCount": pollCount,
 		},
+	}
+
+	if v, err := mem.VirtualMemory(); err == nil {
+		oldCollection.Gauge["TotalMemory"] = float64(v.Total)
+		oldCollection.Gauge["FreeMemory"] = float64(v.Free)
+		oldCollection.Gauge["CPUutilization1"] = float64(v.Used)
 	}
 	pollCount++
 	s.oldMetricsCollection = oldCollection
