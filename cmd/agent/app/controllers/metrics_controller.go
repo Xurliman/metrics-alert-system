@@ -6,12 +6,15 @@ import (
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/interfaces"
+	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/requests"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/utils"
 	"go.uber.org/zap"
+	"log"
 	"net/http"
 )
 
@@ -53,13 +56,7 @@ func (c *MetricsController) SendMetricsWithParams(ctx context.Context) (errs err
 
 		request.Header.Add("Content-Type", "text/plain")
 		if err = c.MakeRequest(request); err != nil {
-			errs = errors.Join(errs, err)
-			utils.Logger.Error("error while making request",
-				zap.Error(errs),
-				zap.String("url", result.URL()),
-				zap.String("body", string(result.Bytes())),
-			)
-			errs = nil
+			errs = c.handleErrors(result.URL(), result.Bytes(), errs)
 		}
 	}
 	return nil
@@ -67,7 +64,9 @@ func (c *MetricsController) SendMetricsWithParams(ctx context.Context) (errs err
 
 func (c *MetricsController) SendCompressedMetrics(ctx context.Context) (errs error) {
 	inputCh := c.service.Generator(ctx)
-	resultCh := c.service.RequestCompressor(ctx, c.service.ByteTransformer(ctx, inputCh))
+	reqCh := c.service.RequestConstructor(ctx, inputCh)
+	bytesCh := c.service.ByteTransformer(ctx, reqCh)
+	resultCh := c.service.RequestCompressor(ctx, bytesCh)
 
 	url := fmt.Sprintf("http://%s/update/", c.address)
 
@@ -92,44 +91,7 @@ func (c *MetricsController) SendCompressedMetrics(ctx context.Context) (errs err
 
 		request.Header.Set("Content-Encoding", "gzip")
 		if err = c.MakeRequest(request); err != nil {
-			errs = errors.Join(errs, err)
-			utils.Logger.Error("error while making request",
-				zap.Error(errs),
-				zap.String("url", result.URL()),
-				zap.String("body", string(result.Bytes())),
-			)
-			errs = nil
-		}
-	}
-	return errs
-}
-
-func (c *MetricsController) SendCompressedMetricsWithParams(ctx context.Context) (errs error) {
-	inputCh := c.service.Generator(ctx)
-	resultCh := c.service.URLConstructor(ctx, inputCh, c.address)
-
-	for result := range resultCh {
-		if err := result.Error(); err != nil {
-			errs = errors.Join(errs, err)
-			continue
-		}
-
-		request, err := http.NewRequest("POST", result.URL(), nil)
-		if err != nil {
-			errs = errors.Join(errs, err)
-			continue
-		}
-
-		request.Header.Set("Content-Encoding", "gzip")
-
-		if err = c.MakeRequest(request); err != nil {
-			errs = errors.Join(errs, err)
-			utils.Logger.Error("error while making request",
-				zap.Error(errs),
-				zap.String("url", result.URL()),
-				zap.String("body", string(result.Bytes())),
-			)
-			errs = nil
+			errs = c.handleErrors(url, result.Bytes(), errs)
 		}
 	}
 	return errs
@@ -138,19 +100,31 @@ func (c *MetricsController) SendCompressedMetricsWithParams(ctx context.Context)
 func (c *MetricsController) SendBatchMetrics(ctx context.Context) (err error) {
 	inputCh := c.service.Generator(ctx)
 	reqCh := c.service.RequestConstructor(ctx, inputCh)
-	compCh := c.service.RequestCompressor(ctx, reqCh)
-	url := fmt.Sprintf("http://%s/updates/", c.address)
 
-	result := <-compCh
-	if err = result.Error(); err != nil {
+	var reqs []*requests.MetricsRequest
+	for result := range reqCh {
+		if err = result.Error(); err != nil {
+			return err
+		}
+		reqs = append(reqs, result.Request())
+	}
+
+	requestBytes, err := json.Marshal(reqs)
+	if err != nil {
 		return err
 	}
-	request, err := http.NewRequest("POST", url, bytes.NewReader(result.Bytes()))
+	compressedRequest, err := utils.Compress(requestBytes)
 	if err != nil {
 		return err
 	}
 
-	dst, err := c.hashRequest(result.Bytes())
+	url := fmt.Sprintf("http://%s/updates/", c.address)
+	request, err := http.NewRequest("POST", url, bytes.NewReader(compressedRequest))
+	if err != nil {
+		return err
+	}
+
+	dst, err := c.hashRequest(compressedRequest)
 	if err != nil && !errors.Is(err, constants.ErrKeyMissing) {
 		return err
 	} else {
@@ -166,7 +140,8 @@ func (c *MetricsController) SendMetrics(ctx context.Context) (errs error) {
 	url := fmt.Sprintf("http://%s/update/", c.address)
 
 	inputCh := c.service.Generator(ctx)
-	resultCh := c.service.ByteTransformer(ctx, inputCh)
+	reqCh := c.service.RequestConstructor(ctx, inputCh)
+	resultCh := c.service.ByteTransformer(ctx, reqCh)
 
 	for result := range resultCh {
 		if err := result.Error(); err != nil {
@@ -174,6 +149,7 @@ func (c *MetricsController) SendMetrics(ctx context.Context) (errs error) {
 			continue
 		}
 
+		log.Println("Before sending a request ", string(result.Bytes()))
 		request, err := http.NewRequest("POST", url, bytes.NewReader(result.Bytes()))
 		if err != nil {
 			return errors.Join(errs, err)
@@ -187,13 +163,7 @@ func (c *MetricsController) SendMetrics(ctx context.Context) (errs error) {
 		}
 
 		if err = c.MakeRequest(request); err != nil {
-			errs = errors.Join(errs, err)
-			utils.Logger.Error("error while making request",
-				zap.Error(errs),
-				zap.String("url", url),
-				zap.String("body", string(result.Bytes())),
-			)
-			errs = nil
+			errs = c.handleErrors(url, result.Bytes(), errs)
 		}
 	}
 	return nil
@@ -226,4 +196,16 @@ func (c *MetricsController) hashRequest(requestBody []byte) (string, error) {
 	h.Write(requestBody)
 	dst := h.Sum(nil)
 	return hex.EncodeToString(dst), nil
+}
+
+func (c *MetricsController) handleErrors(url string, body []byte, err error) (errs error) {
+	errs = errors.Join(errs, err)
+	if errs != nil {
+		utils.Logger.Error("error while making request",
+			zap.Error(errs),
+			zap.String("url", url),
+			zap.String("body", string(body)),
+		)
+	}
+	return nil
 }

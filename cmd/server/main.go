@@ -51,6 +51,12 @@ func main() {
 		key = config.GetKey()
 	}
 
+	utils.Logger.Debug("SERVER: ",
+		zap.String("address", port),
+		zap.String("store_interval", storeInterval.String()),
+		zap.Bool("should_restore", shouldRestore),
+		zap.String("key", key),
+	)
 	var repo interfaces.MetricsRepositoryInterface
 	if err = database.OpenDB(dsn); err != nil {
 		utils.Logger.Error("error connecting to database", zap.Error(err))

@@ -32,3 +32,7 @@ func (r Result) URL() string {
 func (r Result) Error() error {
 	return r.err
 }
+
+func (r Result) Request() *requests.MetricsRequest {
+	return r.request
+}

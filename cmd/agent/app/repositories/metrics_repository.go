@@ -15,34 +15,12 @@ func NewMetricsRepository() interfaces.MetricsRepository {
 	return &MetricsRepository{}
 }
 
-func (r *MetricsRepository) GetRequestBody(metric *models.Metrics) ([]byte, error) {
-	switch metric.MType {
-	case constants.GaugeMetricType:
-		request, err := metric.ToGaugeRequest()
-		if err != nil {
-			return nil, err
-		}
-		requestBytes, err := json.Marshal(request)
-		if err != nil {
-			return nil, err
-		}
-
-		return requestBytes, nil
-	case constants.CounterMetricType:
-		request, err := metric.ToCounterRequest()
-		if err != nil {
-			return nil, err
-		}
-
-		requestBytes, err := json.Marshal(request)
-		if err != nil {
-			return nil, err
-		}
-
-		return requestBytes, nil
-	default:
-		return nil, constants.ErrInvalidMetricType
+func (r *MetricsRepository) GetBytes(metricRequest *requests.MetricsRequest) ([]byte, error) {
+	requestBytes, err := json.Marshal(metricRequest)
+	if err != nil {
+		return nil, err
 	}
+	return requestBytes, nil
 }
 
 func (r *MetricsRepository) GetRequestURL(metric *models.Metrics, address string) (string, error) {

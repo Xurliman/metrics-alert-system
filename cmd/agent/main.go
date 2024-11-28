@@ -9,6 +9,7 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/config"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/utils"
 	"github.com/joho/godotenv"
+	"go.uber.org/zap"
 	"log"
 	"net/http"
 	"time"
@@ -50,6 +51,13 @@ func main() {
 		rateLimit, _ = envCfg.GetRateLimit()
 	}
 
+	utils.Logger.Debug("AGENT: ",
+		zap.String("address", address),
+		zap.String("poll_interval", pollInterval.String()),
+		zap.String("report_interval", reportInterval.String()),
+		zap.String("key", key),
+		zap.Int("rate_limit", rateLimit),
+	)
 	client := http.Client{Timeout: 10 * time.Second}
 	metricRepository := repositories.NewMetricsRepository()
 	metricsService := services.NewMetricsService(metricRepository)
@@ -60,10 +68,9 @@ func main() {
 
 	wp := utils.NewWorkerPool(rateLimit, []func(ctx context.Context) error{
 		metricController.SendBatchMetrics,
-		//metricController.SendMetrics,
-		//metricController.SendCompressedMetrics,
-		//metricController.SendCompressedMetricsWithParams,
-		//metricController.SendMetricsWithParams,
+		metricController.SendMetrics,
+		metricController.SendCompressedMetrics,
+		metricController.SendMetricsWithParams,
 	})
 
 	defer pollTicker.Stop()

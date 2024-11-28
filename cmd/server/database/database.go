@@ -31,22 +31,18 @@ func OpenDB(ps string) error {
 
 	_, err = db.ExecContext(ctx, `
 		CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-		
-		DROP TABLE IF EXISTS metrics;
-		DROP TYPE IF EXISTS metric_type CASCADE;
-		
-		CREATE TYPE metric_type AS ENUM ('gauge', 'counter');
 		CREATE TABLE IF NOT EXISTS metrics
 		(
 			id                  uuid primary key unique not null default uuid_generate_v4(),
 			name                text             	    not null,
-			metric_type         metric_type             not null,
+			metric_type         text             		not null,
 			value               double precision            null,
 			delta               bigint                      null,
 			created_at          timestamp                        default now(),
 			updated_at          timestamp,
 			deleted_at          timestamp
-		);`)
+		);
+	`)
 	if err != nil {
 		return err
 	}

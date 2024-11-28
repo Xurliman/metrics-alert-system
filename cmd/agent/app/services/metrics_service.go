@@ -6,6 +6,7 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/models"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/utils"
+	"log"
 	"math/rand"
 	"runtime"
 )
@@ -93,42 +94,37 @@ func (s *MetricsService) ConvertToMetrics() {
 	s.metricsCollection = metrics
 }
 
-func (s *MetricsService) RequestCompressor(ctx context.Context, inputCh chan models.Result) chan models.Result {
-	resultCh := make(chan models.Result)
+func (s *MetricsService) Generator(ctx context.Context) chan *models.Metrics {
+	inputCh := make(chan *models.Metrics, len(s.metricsCollection))
 	go func() {
-		defer close(resultCh)
+		defer close(inputCh)
 
-		for input := range inputCh {
-			if err := input.Error(); err != nil {
-				resultCh <- models.NewResult(nil, err)
-				continue
-			}
-
-			request, err := utils.Compress(input.Bytes())
-
+		for _, metric := range s.metricsCollection {
+			log.Println("I have a metric: ", metric) // Debug log
 			select {
 			case <-ctx.Done():
+				log.Println("Ctx done in generator", ctx.Err())
 				return
-			case resultCh <- models.NewResult(request, err):
+			case inputCh <- metric:
+				log.Println("Generated metric: ", metric) // Debug log
 			}
 		}
 	}()
-
-	return resultCh
+	return inputCh
 }
 
 func (s *MetricsService) URLConstructor(ctx context.Context, inputCh chan *models.Metrics, address string) chan models.Result {
-	resultCh := make(chan models.Result)
+	resultCh := make(chan models.Result, len(s.metricsCollection))
 	go func() {
 		defer close(resultCh)
 
 		for metric := range inputCh {
 			request, err := s.repository.GetRequestURL(metric, address)
-
+			result := models.NewURLResult(request, err)
 			select {
 			case <-ctx.Done():
 				return
-			case resultCh <- models.NewURLResult(request, err):
+			case resultCh <- result:
 			}
 		}
 	}()
@@ -137,17 +133,17 @@ func (s *MetricsService) URLConstructor(ctx context.Context, inputCh chan *model
 }
 
 func (s *MetricsService) RequestConstructor(ctx context.Context, inputCh chan *models.Metrics) chan models.Result {
-	resultCh := make(chan models.Result)
+	resultCh := make(chan models.Result, len(s.metricsCollection))
 	go func() {
 		defer close(resultCh)
 
 		for metric := range inputCh {
 			request, err := s.repository.GetPlainRequest(metric)
-
+			result := models.NewRequestResult(request, err)
 			select {
 			case <-ctx.Done():
 				return
-			case resultCh <- models.NewRequestResult(request, err):
+			case resultCh <- result:
 			}
 		}
 	}()
@@ -155,18 +151,22 @@ func (s *MetricsService) RequestConstructor(ctx context.Context, inputCh chan *m
 	return resultCh
 }
 
-func (s *MetricsService) ByteTransformer(ctx context.Context, inputCh chan *models.Metrics) chan models.Result {
-	resultCh := make(chan models.Result)
+func (s *MetricsService) ByteTransformer(ctx context.Context, inputCh chan models.Result) chan models.Result {
+	resultCh := make(chan models.Result, len(s.metricsCollection))
 	go func() {
 		defer close(resultCh)
 
-		for metric := range inputCh {
-			request, err := s.repository.GetRequestBody(metric)
-
+		for input := range inputCh {
+			if err := input.Error(); err != nil {
+				resultCh <- models.NewResult(nil, err)
+				return
+			}
+			request, err := s.repository.GetBytes(input.Request())
+			result := models.NewResult(request, err)
 			select {
 			case <-ctx.Done():
 				return
-			case resultCh <- models.NewResult(request, err):
+			case resultCh <- result:
 			}
 		}
 	}()
@@ -174,18 +174,26 @@ func (s *MetricsService) ByteTransformer(ctx context.Context, inputCh chan *mode
 	return resultCh
 }
 
-func (s *MetricsService) Generator(ctx context.Context) chan *models.Metrics {
-	inputCh := make(chan *models.Metrics)
+func (s *MetricsService) RequestCompressor(ctx context.Context, inputCh chan models.Result) chan models.Result {
+	resultCh := make(chan models.Result, len(s.metricsCollection))
 	go func() {
-		defer close(inputCh)
-
-		for _, metric := range s.metricsCollection {
+		defer close(resultCh)
+		for input := range inputCh {
+			if err := input.Error(); err != nil {
+				resultCh <- models.NewResult(nil, err)
+				return
+			}
+			request, err := utils.Compress(input.Bytes())
+			result := models.NewResult(request, err)
 			select {
 			case <-ctx.Done():
+				log.Println("Ctx done in request compressor", ctx.Err())
 				return
-			case inputCh <- metric:
+			case resultCh <- result:
+				log.Println("Request compressor done", result)
 			}
 		}
 	}()
-	return inputCh
+
+	return resultCh
 }

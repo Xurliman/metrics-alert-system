@@ -19,7 +19,7 @@ func SetupRoutes(metricsRepository interfaces.MetricsRepositoryInterface, key st
 	metricsService := services.NewMetricsService(metricsRepository, services.NewSwitchService())
 	metricsController := controllers.NewMetricsController(metricsService)
 
-	r.GET("/", decompression.Handle(logging.Handle(compression.Handle(hashing.Handle(metricsController.List)))))
+	r.GET("/", decompression.Handle(logging.Handle(hashing.Handle(compression.Handle(metricsController.List)))))
 	r.GET("/value/:type/:name", decompression.Handle(logging.Handle(compression.Handle(hashing.Handle(metricsController.Show)))))
 	r.GET("/ping", decompression.Handle(compression.Handle(hashing.Handle(metricsController.Ping))))
 	r.POST("/value/", decompression.Handle(logging.Handle(compression.Handle(hashing.Handle(metricsController.ShowBody)))))
