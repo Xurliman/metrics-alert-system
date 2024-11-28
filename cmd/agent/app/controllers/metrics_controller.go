@@ -14,7 +14,6 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/requests"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/utils"
 	"go.uber.org/zap"
-	"log"
 	"net/http"
 )
 
@@ -38,26 +37,29 @@ func (c *MetricsController) CollectMetrics() {
 	c.service.CollectMetricValues()
 }
 
-func (c *MetricsController) SendMetricsWithParams(ctx context.Context) (errs error) {
+func (c *MetricsController) SendMetricsWithParams(ctx context.Context) (err error) {
 	inputCh := c.service.Generator(ctx)
 	resultCh := c.service.URLConstructor(ctx, inputCh, c.address)
 
 	for result := range resultCh {
-		if err := result.Error(); err != nil {
-			errs = errors.Join(errs, err)
-			continue
-		}
+		func() {
+			defer logError(result.URL(), err)
 
-		request, err := http.NewRequest("POST", result.URL(), nil)
-		if err != nil {
-			errs = errors.Join(errs, err)
-			continue
-		}
+			if err = result.Error(); err != nil {
+				return
+			}
 
-		request.Header.Add("Content-Type", "text/plain")
-		if err = c.MakeRequest(request); err != nil {
-			errs = c.handleErrors(result.URL(), result.Bytes(), errs)
-		}
+			request, err := http.NewRequest("POST", result.URL(), nil)
+			if err != nil {
+				return
+			}
+
+			request.Header.Add("Content-Type", "text/plain")
+			if err = c.MakeRequest(request); err != nil {
+				return
+			}
+
+		}()
 	}
 	return nil
 }
@@ -71,28 +73,30 @@ func (c *MetricsController) SendCompressedMetrics(ctx context.Context) (errs err
 	url := fmt.Sprintf("http://%s/update/", c.address)
 
 	for result := range resultCh {
-		if err := result.Error(); err != nil {
-			errs = errors.Join(errs, err)
-			continue
-		}
+		func() {
+			defer logError(result.URL(), nil)
 
-		request, err := http.NewRequest("POST", url, bytes.NewReader(result.Bytes()))
-		if err != nil {
-			errs = errors.Join(errs, err)
-			continue
-		}
+			if err := result.Error(); err != nil {
+				return
+			}
 
-		dst, err := c.hashRequest(result.Bytes())
-		if err != nil && !errors.Is(err, constants.ErrKeyMissing) {
-			errs = errors.Join(errs, err)
-		} else {
-			request.Header.Set("HashSHA256", dst)
-		}
+			request, err := http.NewRequest("POST", url, bytes.NewReader(result.Bytes()))
+			if err != nil {
+				return
+			}
 
-		request.Header.Set("Content-Encoding", "gzip")
-		if err = c.MakeRequest(request); err != nil {
-			errs = c.handleErrors(url, result.Bytes(), errs)
-		}
+			dst, err := c.hashRequest(result.Bytes())
+			if err != nil && !errors.Is(err, constants.ErrKeyMissing) {
+				return
+			} else {
+				request.Header.Set("HashSHA256", dst)
+			}
+
+			request.Header.Set("Content-Encoding", "gzip")
+			if err = c.MakeRequest(request); err != nil {
+				return
+			}
+		}()
 	}
 	return errs
 }
@@ -132,6 +136,7 @@ func (c *MetricsController) SendBatchMetrics(ctx context.Context) (err error) {
 	}
 
 	request.Header.Set("Content-Encoding", "gzip")
+	defer logError(url, err)
 	return c.MakeRequest(request)
 
 }
@@ -144,46 +149,49 @@ func (c *MetricsController) SendMetrics(ctx context.Context) (errs error) {
 	resultCh := c.service.ByteTransformer(ctx, reqCh)
 
 	for result := range resultCh {
-		if err := result.Error(); err != nil {
-			errs = errors.Join(errs, err)
-			continue
-		}
+		func() {
+			defer logError(result.URL(), nil)
 
-		log.Println("Before sending a request ", string(result.Bytes()))
-		request, err := http.NewRequest("POST", url, bytes.NewReader(result.Bytes()))
-		if err != nil {
-			return errors.Join(errs, err)
-		}
+			if err := result.Error(); err != nil {
+				return
+			}
 
-		dst, err := c.hashRequest(result.Bytes())
-		if err != nil && !errors.Is(err, constants.ErrKeyMissing) {
-			errs = errors.Join(errs, err)
-		} else {
-			request.Header.Set("HashSHA256", dst)
-		}
+			request, err := http.NewRequest("POST", url, bytes.NewReader(result.Bytes()))
+			if err != nil {
+				return
+			}
 
-		if err = c.MakeRequest(request); err != nil {
-			errs = c.handleErrors(url, result.Bytes(), errs)
-		}
+			dst, err := c.hashRequest(result.Bytes())
+			if err != nil && !errors.Is(err, constants.ErrKeyMissing) {
+				return
+			} else {
+				request.Header.Set("HashSHA256", dst)
+			}
+
+			if err = c.MakeRequest(request); err != nil {
+				return
+			}
+		}()
 	}
 	return nil
 }
 
-func (c *MetricsController) MakeRequest(request *http.Request) (errs error) {
+func (c *MetricsController) MakeRequest(request *http.Request) (err error) {
+	defer logError(request.URL.String(), err)
 	request.Header.Add("Content-Type", "application/json")
 
 	response, err := c.client.Do(request)
 	if err != nil {
-		return errors.Join(errs, err)
+		return err
 	}
 
 	err = response.Body.Close()
 	if err != nil {
-		return errors.Join(errs, err)
+		return err
 	}
 
 	if response.StatusCode != http.StatusOK {
-		return errors.Join(errs, constants.ErrStatusNotOK)
+		return constants.ErrStatusNotOK
 	}
 	return nil
 }
@@ -198,14 +206,11 @@ func (c *MetricsController) hashRequest(requestBody []byte) (string, error) {
 	return hex.EncodeToString(dst), nil
 }
 
-func (c *MetricsController) handleErrors(url string, body []byte, err error) (errs error) {
-	errs = errors.Join(errs, err)
-	if errs != nil {
+func logError(url string, err error) {
+	if err != nil {
 		utils.Logger.Error("error while making request",
-			zap.Error(errs),
+			zap.Error(err),
 			zap.String("url", url),
-			zap.String("body", string(body)),
 		)
 	}
-	return nil
 }

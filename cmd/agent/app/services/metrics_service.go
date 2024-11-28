@@ -7,7 +7,6 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/models"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/utils"
-	"log"
 	"math/rand"
 	"runtime"
 )
@@ -107,13 +106,10 @@ func (s *MetricsService) Generator(ctx context.Context) chan *models.Metrics {
 		defer close(inputCh)
 
 		for _, metric := range s.metricsCollection {
-			log.Println("I have a metric: ", metric) // Debug log
 			select {
 			case <-ctx.Done():
-				log.Println("Ctx done in generator", ctx.Err())
 				return
 			case inputCh <- metric:
-				log.Println("Generated metric: ", metric) // Debug log
 			}
 		}
 	}()
@@ -194,10 +190,8 @@ func (s *MetricsService) RequestCompressor(ctx context.Context, inputCh chan mod
 			result := models.NewResult(request, err)
 			select {
 			case <-ctx.Done():
-				log.Println("Ctx done in request compressor", ctx.Err())
 				return
 			case resultCh <- result:
-				log.Println("Request compressor done", result)
 			}
 		}
 	}()

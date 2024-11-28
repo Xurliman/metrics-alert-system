@@ -10,7 +10,6 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/utils"
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
-	"log"
 	"net/http"
 	"time"
 )
@@ -20,7 +19,7 @@ func main() {
 
 	err := godotenv.Load(constants.EnvFilePath)
 	if err != nil {
-		log.Println(constants.ErrLoadingEnv)
+		utils.Logger.Error("error when loading env", zap.Error(constants.ErrLoadingEnv))
 	}
 
 	flagCfg := utils.NewOptions()
