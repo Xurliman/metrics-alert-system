@@ -1,56 +1,15 @@
 package repositories
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/models"
+	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/requests"
 	"github.com/stretchr/testify/assert"
 	"runtime"
 	"strconv"
 	"testing"
 )
-
-func TestMetricsRepository_GetRequestBody(t *testing.T) {
-	var memStats runtime.MemStats
-	runtime.ReadMemStats(&memStats)
-	allocValue := float64(memStats.Alloc)
-
-	tests := []struct {
-		name    string
-		metric  *models.Metrics
-		wantMap map[string]interface{}
-		wantErr bool
-	}{
-		{
-			name: "first",
-			metric: &models.Metrics{
-				ID:    "Alloc",
-				MType: constants.GaugeMetricType,
-				Value: &allocValue,
-			},
-			wantMap: map[string]interface{}{
-				"id":    "Alloc",
-				"type":  "gauge",
-				"value": &allocValue,
-			},
-			wantErr: false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			r := NewMetricsRepository()
-			got, err := r.GetRequestBody(tt.metric)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("GetRequestBody() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			wantBody, err := json.Marshal(tt.wantMap)
-			assert.NoError(t, err)
-			assert.Equal(t, string(wantBody), string(got))
-		})
-	}
-}
 
 func TestMetricsRepository_GetRequestURL(t *testing.T) {
 	var memStats runtime.MemStats
@@ -70,19 +29,60 @@ func TestMetricsRepository_GetRequestURL(t *testing.T) {
 				MType: constants.GaugeMetricType,
 				Value: &allocValue,
 			},
-			want:    "http://localhost:8080/update/gauge/Alloc/" + strconv.FormatFloat(allocValue, 'f', -1, 64),
+			want:    "/gauge/Alloc/" + strconv.FormatFloat(allocValue, 'f', -1, 64),
 			wantErr: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := &MetricsRepository{}
-			address := "localhost:8080"
-			got, err := r.GetRequestURL(tt.metric, address)
-			if !tt.wantErr(t, err, fmt.Sprintf("GetRequestURL(%v, %v)", tt.metric, address)) {
+			got, err := r.GetRequestURL(tt.metric)
+			if !tt.wantErr(t, err, fmt.Sprintf("GetRequestURL(%v)", tt.metric)) {
 				return
 			}
-			assert.Equalf(t, tt.want, got, "GetRequestURL(%v, %v)", tt.metric, address)
+			assert.Equalf(t, tt.want, got, "GetRequestURL(%v)", tt.metric)
+		})
+	}
+}
+
+func TestMetricsRepository_GetPlainRequest(t *testing.T) {
+	var memStats runtime.MemStats
+	runtime.ReadMemStats(&memStats)
+	allocValue := float64(memStats.Alloc)
+	type args struct {
+		metric *models.Metrics
+	}
+	tests := []struct {
+		name        string
+		args        args
+		wantRequest *requests.MetricsRequest
+		wantErr     assert.ErrorAssertionFunc
+	}{
+		{
+			name: "first",
+			args: args{
+				metric: &models.Metrics{
+					ID:    "Alloc",
+					MType: constants.GaugeMetricType,
+					Value: &allocValue,
+				},
+			},
+			wantRequest: &requests.MetricsRequest{
+				ID:    "Alloc",
+				MType: constants.GaugeMetricType,
+				Value: &allocValue,
+			},
+			wantErr: assert.NoError,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			r := &MetricsRepository{}
+			gotRequest, err := r.GetPlainRequest(tt.args.metric)
+			if !tt.wantErr(t, err, fmt.Sprintf("GetPlainRequest(%v)", tt.args.metric)) {
+				return
+			}
+			assert.Equalf(t, tt.wantRequest, gotRequest, "GetPlainRequest(%v)", tt.args.metric)
 		})
 	}
 }

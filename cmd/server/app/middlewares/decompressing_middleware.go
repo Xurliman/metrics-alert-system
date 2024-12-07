@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
+	"github.com/Xurliman/metrics-alert-system/internal/compressor"
 	"github.com/gin-gonic/gin"
 	"io"
 	"strings"
@@ -30,7 +31,7 @@ func (d DecompressingMiddleware) Handle(next gin.HandlerFunc) gin.HandlerFunc {
 			return
 		}
 
-		decompressedBody, err := utils.Decompress(buf.Bytes())
+		decompressedBody, err := compressor.Decompress(buf.Bytes())
 		if err != nil {
 			utils.JSONInternalServerError(ctx, fmt.Errorf("error decompressing request body: %v", err))
 			return

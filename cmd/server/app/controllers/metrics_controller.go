@@ -9,7 +9,6 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
-	"go.uber.org/zap"
 	"io"
 	"net/http"
 )
@@ -87,7 +86,6 @@ func (c *MetricsController) SaveMany(ctx *gin.Context) {
 			return
 		}
 	}
-	utils.Logger.Error("REQUEST", zap.Any("error", request))
 
 	err = c.service.SaveMany(ctx.Request.Context(), request)
 	if err != nil {

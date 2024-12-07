@@ -7,5 +7,4 @@ const (
 	GaugeMetricType      = "gauge"
 	CounterMetricType    = "counter"
 	LogFilePath          = "storage/logs/agent.log"
-	TimeKey              = "timestamp"
 )

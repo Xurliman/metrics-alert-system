@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/json"
+	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -14,20 +15,14 @@ type DefaultResponse struct {
 }
 
 func JSONSuccess(ctx *gin.Context, data interface{}) {
-	Logger.Info(logSuccessFormat(data))
+	log.Info(logSuccessFormat(data))
 	ctx.Header("Content-Type", "application/json; charset=utf-8")
-	//ctx.JSON(http.StatusOK, &DefaultResponse{
-	//	Success: true,
-	//	Status:  http.StatusOK,
-	//	Message: "OK",
-	//	Data:    data,
-	//})
 	ctx.JSON(http.StatusOK, data)
 	ctx.Abort()
 }
 
 func JSONError(ctx *gin.Context, err error) {
-	Logger.Debug(logErrorFormat(err))
+	log.Warn(logErrorFormat(err))
 	ctx.Header("Content-Type", "application/json; charset=utf-8")
 	ctx.JSON(http.StatusBadRequest, DefaultResponse{
 		Success: false,
@@ -39,7 +34,7 @@ func JSONError(ctx *gin.Context, err error) {
 }
 
 func JSONInternalServerError(ctx *gin.Context, err error) {
-	Logger.Debug(logErrorFormat(err))
+	log.Warn(logErrorFormat(err))
 	ctx.Header("Content-Type", "application/json; charset=utf-8")
 	ctx.JSON(http.StatusInternalServerError, DefaultResponse{
 		Success: false,
@@ -51,7 +46,7 @@ func JSONInternalServerError(ctx *gin.Context, err error) {
 }
 
 func JSONValidationError(ctx *gin.Context, err error) {
-	Logger.Debug(logErrorFormat(err))
+	log.Warn(logErrorFormat(err))
 	ctx.Header("Content-Type", "application/json; charset=utf-8")
 	ctx.JSON(http.StatusUnprocessableEntity, DefaultResponse{
 		Success: false,
@@ -63,7 +58,7 @@ func JSONValidationError(ctx *gin.Context, err error) {
 }
 
 func JSONNotFound(ctx *gin.Context, err error) {
-	Logger.Debug(logErrorFormat(err))
+	log.Warn(logErrorFormat(err))
 	ctx.Header("Content-Type", "application/json; charset=utf-8")
 	ctx.JSON(http.StatusNotFound, DefaultResponse{
 		Success: false,

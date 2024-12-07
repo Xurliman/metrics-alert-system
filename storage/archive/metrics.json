@@ -1,1 +1,1 @@
-{"Alloc":{"id":"Alloc","type":"gauge","value":964544},"PollCount":{"id":"PollCount","type":"counter","delta":0}}
+{"PollCount":{"id":"PollCount","type":"counter","delta":0},"SomeGaugeMetric":{"id":"SomeGaugeMetric","type":"gauge","value":0}}
