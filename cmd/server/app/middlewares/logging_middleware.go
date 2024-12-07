@@ -3,8 +3,7 @@ package middlewares
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
-	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
+	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"time"
@@ -39,10 +38,10 @@ func (l LoggingMiddleware) Handle(next gin.HandlerFunc) gin.HandlerFunc {
 
 		err := json.Unmarshal(respCapture.Body.Bytes(), &l.Response.Body)
 		if err != nil {
-			l.Response.Error = errors.Join(l.Response.Error, err)
+			l.Response.Body = nil
 		}
 
-		utils.Logger.Info(
+		log.Info(
 			"info",
 			zap.String("uri", l.Request.URI),
 			zap.String("method", l.Request.Method),
@@ -53,7 +52,6 @@ func (l LoggingMiddleware) Handle(next gin.HandlerFunc) gin.HandlerFunc {
 			zap.Int("status", l.Response.StatusCode),
 			zap.Int64("size", l.Response.Size),
 			zap.Reflect("response_body", l.Response.Body),
-			zap.NamedError("response_err", l.Response.Error),
 		)
 	}
 }

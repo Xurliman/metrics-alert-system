@@ -6,7 +6,7 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
-	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
+	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"go.uber.org/zap"
 	"runtime"
 	"sync"
@@ -29,7 +29,7 @@ func NewMetricsRepository(shouldRestore bool, archiveService interfaces.ArchiveS
 
 	metrics, err := archiveService.Load()
 	if err != nil {
-		utils.Logger.Error("error loading metrics from file", zap.Error(err))
+		log.Error("error loading metrics from file", zap.Error(err))
 		return &MetricsRepository{
 			metricsCollection: defaultMetrics(),
 			db:                DB,

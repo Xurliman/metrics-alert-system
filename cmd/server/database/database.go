@@ -6,15 +6,16 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/repositories"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/config"
+	"os"
 	"time"
 )
 
-func OpenDB(ps string) error {
-	if ps == "" {
+func OpenDB(dsn string) error {
+	if dsn == "" {
 		return constants.ErrDSNEmpty
 	}
 
-	db, err := sql.Open(config.GetDBConnection(), ps)
+	db, err := sql.Open(os.Getenv("DB_CONNECTION"), dsn)
 	if err != nil {
 		return err
 	}
@@ -48,38 +49,3 @@ func OpenDB(ps string) error {
 	}
 	return nil
 }
-
-//
-//func GetDSN() (connection, ps string) {
-//	var (
-//		host     = config.GetDBHost()
-//		port     = config.GetDBPort()
-//		username = config.GetDBUsername()
-//		password = config.GetDBPassword()
-//		dbname   = config.GetDBName()
-//		sslmode  = config.GetDBSSLMode()
-//	)
-//
-//	connection = config.GetDBConnection()
-//	switch connection {
-//	case constants.PostgresConnection:
-//		ps = fmt.Sprintf("host=%s port=%v user=%s password=%s dbname=%s sslmode=%s",
-//			host,
-//			port,
-//			username,
-//			password,
-//			dbname,
-//			sslmode)
-//	case constants.MysqlConnection:
-//		ps = fmt.Sprintf("%s:%s@tcp(%s:%v)/%s",
-//			username,
-//			password,
-//			host,
-//			port,
-//			dbname,
-//		)
-//	case constants.SqliteConnection:
-//		ps = fmt.Sprintf("%v.db", dbname)
-//	}
-//	return connection, ps
-//}

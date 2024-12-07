@@ -7,80 +7,36 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/repositories"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/services"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/config"
-	"github.com/Xurliman/metrics-alert-system/cmd/agent/utils"
+	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
-	"net/http"
-	"time"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
-	utils.Logger = utils.NewLogger()
-
+	log.InitLogger(os.Getenv("APP_ENV"), constants.LogFilePath)
 	err := godotenv.Load(constants.EnvFilePath)
 	if err != nil {
-		utils.Logger.Error("error when loading env", zap.Error(constants.ErrLoadingEnv))
+		log.Error("error when loading env", zap.Error(constants.ErrLoadingEnv))
 	}
 
-	flagCfg := utils.NewOptions()
-	envCfg := config.NewConfig()
-
-	address, err := flagCfg.GetHost()
+	cfg, err := config.Setup()
 	if err != nil {
-		address, _ = envCfg.GetHost()
+		log.Fatal("error parsing config", zap.Error(err))
 	}
 
-	pollInterval, err := flagCfg.GetPollInterval()
-	if err != nil {
-		pollInterval, _ = envCfg.GetPollInterval()
-	}
-
-	reportInterval, err := flagCfg.GetReportInterval()
-	if err != nil {
-		reportInterval, _ = envCfg.GetReportInterval()
-	}
-
-	key, err := flagCfg.GetKey()
-	if err != nil {
-		key, _ = envCfg.GetKey()
-	}
-
-	rateLimit, err := flagCfg.GetRateLimit()
-	if err != nil {
-		rateLimit, _ = envCfg.GetRateLimit()
-	}
-
-	utils.Logger.Debug("AGENT: ",
-		zap.String("address", address),
-		zap.String("poll_interval", pollInterval.String()),
-		zap.String("report_interval", reportInterval.String()),
-		zap.String("key", key),
-		zap.Int("rate_limit", rateLimit),
+	ctx, stop := signal.NotifyContext(context.Background(),
+		os.Interrupt,
+		syscall.SIGINT,
+		syscall.SIGTERM,
+		syscall.SIGQUIT,
 	)
-	client := http.Client{Timeout: 10 * time.Second}
+	defer stop()
+
 	metricRepository := repositories.NewMetricsRepository()
-	metricsService := services.NewMetricsService(metricRepository)
-	metricController := controllers.NewMetricsController(client, metricsService, address, key)
-
-	pollTicker := time.NewTicker(pollInterval)
-	reportTicker := time.NewTicker(reportInterval)
-
-	wp := utils.NewWorkerPool(rateLimit, []func(ctx context.Context) error{
-		metricController.SendBatchMetrics,
-		metricController.SendMetrics,
-		metricController.SendCompressedMetrics,
-		metricController.SendMetricsWithParams,
-	})
-
-	defer pollTicker.Stop()
-	defer reportTicker.Stop()
-
-	for {
-		select {
-		case <-pollTicker.C:
-			metricController.CollectMetrics()
-		case <-reportTicker.C:
-			wp.Run()
-		}
-	}
+	metricsService := services.NewMetricsService(metricRepository, cfg)
+	metricController := controllers.NewMetricsController(metricsService, cfg)
+	metricController.Run(ctx)
 }

@@ -8,71 +8,42 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/config"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/database"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/routes"
-	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
+	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
+	"os"
 	"time"
 )
 
 func main() {
-	utils.Logger = utils.NewLogger(config.GetAppEnv())
-
+	log.InitLogger(os.Getenv("APP_ENV"), constants.LogFilePath)
 	err := godotenv.Load(constants.EnvFilePath)
 	if err != nil {
-		utils.Logger.Error("error when loading env", zap.Error(constants.ErrLoadingEnv))
+		log.Warn("error when loading env", zap.Error(constants.ErrLoadingEnv))
 	}
 
-	flagOptions := utils.NewOptions()
-	port, err := flagOptions.GetPort()
+	cfg, err := config.Setup()
 	if err != nil {
-		port, _ = config.GetPort()
+		log.Error("error when setting up configuration", zap.Error(err))
 	}
 
-	fileStoragePath, err := flagOptions.GetFileStoragePath()
-	if err != nil {
-		fileStoragePath = config.GetFileStoragePath()
-	}
-
-	storeInterval, err := flagOptions.GetStoreInterval()
-	if err != nil {
-		storeInterval = config.GetStoreInterval()
-	}
-
-	shouldRestore := flagOptions.GetShouldRestore() && config.GetShouldRestore()
-	archiveService := services.NewArchiveService(fileStoragePath)
-
-	dsn, err := flagOptions.GetDatabaseDSN()
-	if err != nil {
-		dsn = config.GetDatabaseDSN()
-	}
-
-	key, err := flagOptions.GetKey()
-	if err != nil {
-		key = config.GetKey()
-	}
-
-	utils.Logger.Debug("SERVER: ",
-		zap.String("address", port),
-		zap.String("store_interval", storeInterval.String()),
-		zap.Bool("should_restore", shouldRestore),
-		zap.String("key", key),
-	)
+	archiveService := services.NewArchiveService(cfg.FileStoragePath)
 	var repo interfaces.MetricsRepositoryInterface
-	if err = database.OpenDB(dsn); err != nil {
-		utils.Logger.Error("error connecting to database", zap.Error(err))
-		repo = repositories.NewMetricsRepository(shouldRestore, archiveService)
+	if err = database.OpenDB(cfg.DatabaseDSN); err != nil {
+		log.Warn("error connecting to database", zap.Error(err))
+		repo = repositories.NewMetricsRepository(cfg.Restore, archiveService)
 		go func() {
-			storeTicker := time.NewTicker(storeInterval)
+			storeTicker := time.NewTicker(cfg.GetStoreInterval())
 			defer storeTicker.Stop()
 			for range storeTicker.C {
 				metrics, err := repo.List()
 				if err != nil {
-					utils.Logger.Error("error getting list of metrics", zap.Error(err))
+					log.Error("error getting list of metrics", zap.Error(err))
 				}
 
 				err = archiveService.Archive(metrics)
 				if err != nil {
-					utils.Logger.Error("archiving data went wrong", zap.Error(err))
+					log.Error("archiving data went wrong", zap.Error(err))
 				}
 			}
 		}()
@@ -80,14 +51,12 @@ func main() {
 		repo = repositories.NewDBMetricsRepository()
 	}
 
-	r := routes.SetupRoutes(repo, key)
-
-	err = r.Run(port)
+	r := routes.SetupRoutes(repo, cfg.Key)
+	log.Info("Starting server on port ",
+		zap.String("port", cfg.GetPort()),
+	)
+	err = r.Run(cfg.GetPort())
 	if err != nil {
 		return
 	}
-
-	utils.Logger.Error("Starting server on port ",
-		zap.String("port", port),
-	)
 }

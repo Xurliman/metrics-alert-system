@@ -1,84 +1,76 @@
 package config
 
 import (
+	"flag"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
-	"os"
+	"github.com/caarlos0/env/v11"
 	"strconv"
 	"strings"
 	"time"
 )
 
-func GetEnvironmentValue(key string) (string, error) {
-	if os.Getenv(key) == "" {
-		return "", constants.ErrEnvValueMissing
-	}
-	return os.Getenv(key), nil
+type Config struct {
+	Host            string `env:"ADDRESS" envDefault:"localhost:8080"`
+	Port            int    `env:"PORT" envDefault:"8080"`
+	StoreInterval   int    `env:"STORE_INTERVAL" envDefault:"5"`
+	FileStoragePath string `env:"FILE_STORAGE_PATH" envDefault:"/tmp"`
+	DatabaseDSN     string `env:"DATABASE_DSN"`
+	Restore         bool   `env:"RESTORE" envDefault:"false"`
+	Key             string `env:"KEY" envDefault:""`
 }
 
-func GetPort() (string, error) {
-	address, err := GetEnvironmentValue("ADDRESS")
-	if err != nil {
-		return constants.DefaultPort, err
+func Setup() (*Config, error) {
+	cfg := &Config{
+		Host:            "localhost",
+		Port:            0,
+		StoreInterval:   1,
+		FileStoragePath: "",
+		Restore:         true,
+		Key:             "",
 	}
+	flag.Var(cfg, constants.AddressFlag, constants.AddressFlagDescription)
+	flag.IntVar(&cfg.StoreInterval, constants.StoreIntervalFlag, 1, constants.StoreIntervalFlagDescription)
+	flag.StringVar(&cfg.FileStoragePath, constants.FileStoragePathFlag, constants.DefaultFileStoragePath, constants.FileStoragePathFlagDescription)
+	flag.BoolVar(&cfg.Restore, constants.RestoreFlag, constants.DefaultRestore, constants.RestoreFlagDescription)
+	flag.StringVar(&cfg.DatabaseDSN, constants.DatabaseDSNFlag, "", constants.DatabaseDSNFlagDescription)
+	flag.StringVar(&cfg.Key, constants.KeyFlag, "", constants.KeyFlagDescription)
+	flag.Parse()
 
-	options := strings.Split(address, ":")
-	if len(options) < 2 {
-		return constants.DefaultPort, constants.ErrWrongAddress
+	err := env.Parse(cfg)
+	if err != nil {
+		return nil, err
+	}
+	return cfg, nil
+}
+
+func (o *Config) Set(flagValue string) (err error) {
+	options := strings.Split(flagValue, ":")
+	if len(options) != 2 {
+		return constants.ErrWrongAddress
 	}
 
 	port, err := strconv.Atoi(options[1])
 	if err != nil {
-		return constants.DefaultPort, err
+		return constants.ErrWrongPort
 	}
 
-	return ":" + strconv.Itoa(port), nil
+	o.Host = options[0]
+	o.Port = port
+	return nil
 }
 
-func GetAppEnv() string {
-	appEnv, err := GetEnvironmentValue("APP_ENV")
-	if err != nil {
-		return "development"
-	}
-	return appEnv
+func (o *Config) String() string {
+	return o.Host + ":" + strconv.Itoa(o.Port)
 }
 
-func GetStoreInterval() time.Duration {
-	storeIntervalStr, err := GetEnvironmentValue("STORE_INTERVAL")
-	if err != nil {
-		return time.Second * constants.DefaultStoreInterval
+func (o *Config) GetPort() string {
+	port := ":" + strconv.Itoa(o.Port)
+	if port == ":0" {
+		return constants.DefaultPort
 	}
-
-	storeInterval, err := strconv.Atoi(storeIntervalStr)
-	if err != nil {
-		return time.Second * constants.DefaultStoreInterval
-	}
-
-	if storeInterval == 0 {
-		return time.Second
-	}
-	return time.Second * time.Duration(storeInterval)
+	return port
 }
 
-func GetFileStoragePath() string {
-	fileStoragePath, err := GetEnvironmentValue("FILE_STORAGE_PATH")
-	if err != nil {
-		return constants.DefaultFileStoragePath
-	}
-	return fileStoragePath
-}
-
-func GetShouldRestore() bool {
-	shouldRestore, err := GetEnvironmentValue("RESTORE")
-	if err != nil {
-		return constants.DefaultRestore
-	}
-	return shouldRestore != "true"
-}
-
-func GetKey() string {
-	key, err := GetEnvironmentValue("KEY")
-	if err != nil {
-		return ""
-	}
-	return key
+func (o *Config) GetStoreInterval() time.Duration {
+	return time.Duration(o.StoreInterval) * time.Second
 }

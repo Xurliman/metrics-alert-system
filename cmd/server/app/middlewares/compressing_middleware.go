@@ -3,6 +3,7 @@ package middlewares
 import (
 	"compress/gzip"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
+	"github.com/Xurliman/metrics-alert-system/internal/compressor"
 	"github.com/gin-gonic/gin"
 	"strings"
 )
@@ -31,7 +32,7 @@ func (c CompressingMiddleware) Handle(next gin.HandlerFunc) gin.HandlerFunc {
 			}
 		}(gz)
 
-		gzw := &utils.GzipResponseWriter{ResponseWriter: ctx.Writer, Writer: gz}
+		gzw := &compressor.GzipResponseWriter{ResponseWriter: ctx.Writer, Writer: gz}
 		ctx.Writer = gzw
 		ctx.Writer.Header().Set("Content-Encoding", "gzip")
 

@@ -7,24 +7,18 @@ import (
 )
 
 func TestMetricsService_CollectMetrics(t *testing.T) {
-	oldMetrics := models.OldMetrics{
-		Gauge: map[string]float64{
-			"gauge1": 100.5,
-			"gauge2": 200.1,
-		},
-		Counter: map[string]int64{
-			"counter1": 10,
-			"counter2": 20,
-		},
+	metrics := map[string]*models.Metrics{
+		"gauge1": models.NewGaugeMetric("gauge1", 100.5),
+		"gauge2": models.NewGaugeMetric("gauge2", 200.1),
+
+		"counter1": models.NewCounterMetric("counter1", 10),
+		"counter2": models.NewCounterMetric("counter2", 20),
 	}
 
 	// Create service with old metrics
 	service := &MetricsService{
-		oldMetricsCollection: oldMetrics,
-		metricsCollection:    nil,
+		metricsCollection: metrics,
 	}
-
-	service.ConvertToMetrics()
 
 	if len(service.metricsCollection) != 4 {
 		t.Errorf("Expected 4 metrics, got %d", len(service.metricsCollection))

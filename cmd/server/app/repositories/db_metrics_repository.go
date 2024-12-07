@@ -8,7 +8,7 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
-	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
+	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 	"strings"
@@ -143,7 +143,7 @@ func (r *DBMetricsRepository) FindAll(ctx context.Context) ([]*models.DBMetrics,
 	defer func(rows *sql.Rows) {
 		err = rows.Close()
 		if err != nil {
-			utils.Logger.Error("error closing sql.rows", zap.Error(err))
+			log.Error("error closing sql.rows", zap.Error(err))
 		}
 	}(rows)
 

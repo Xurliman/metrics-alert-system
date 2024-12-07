@@ -4,6 +4,7 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
+	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"go.uber.org/zap"
 )
 
@@ -28,13 +29,13 @@ func (a ArchiveService) Archive(metrics map[string]*models.Metrics) error {
 	defer func(archiveWriter *utils.ArchiveWriter) {
 		err = archiveWriter.Close()
 		if err != nil {
-			utils.Logger.Error("error closing write archive", zap.Error(err))
+			log.Error("error closing write archive", zap.Error(err))
 		}
 	}(writer)
 
 	err = writer.Archive(toSave)
 	if err != nil {
-		utils.Logger.Error("error archiving metrics", zap.Error(err))
+		log.Error("error archiving metrics", zap.Error(err))
 		return err
 	}
 	a.lastSavedMetrics = toSave
@@ -49,7 +50,7 @@ func (a ArchiveService) Load() (map[string]*models.Metrics, error) {
 	defer func(archiveReader *utils.ArchiveReader) {
 		err = archiveReader.Close()
 		if err != nil {
-			utils.Logger.Error("closing read archive error", zap.Error(err))
+			log.Error("closing read archive error", zap.Error(err))
 		}
 	}(reader)
 

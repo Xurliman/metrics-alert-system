@@ -53,7 +53,6 @@ type Response struct {
 	StatusCode int
 	Size       int64
 	Body       map[string]interface{}
-	Error      error
 }
 
 type ResponseCapture struct {

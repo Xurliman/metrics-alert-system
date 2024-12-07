@@ -7,28 +7,61 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/models"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/requests"
+	"sync"
 )
 
-type MetricsRepository struct{}
+type MetricsRepository struct {
+	metricsCollection map[string]*models.Metrics
+	mu                sync.RWMutex
+}
 
 func NewMetricsRepository() interfaces.MetricsRepository {
-	return &MetricsRepository{}
-}
-
-func (r *MetricsRepository) GetBytes(metricRequest *requests.MetricsRequest) ([]byte, error) {
-	requestBytes, err := json.Marshal(metricRequest)
-	if err != nil {
-		return nil, err
+	return &MetricsRepository{
+		metricsCollection: make(map[string]*models.Metrics),
 	}
-	return requestBytes, nil
 }
 
-func (r *MetricsRepository) GetRequestURL(metric *models.Metrics, address string) (string, error) {
-	var (
-		value string
-		err   error
-	)
+func (r *MetricsRepository) GetAll() map[string]*models.Metrics {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	return r.metricsCollection
+}
 
+func (r *MetricsRepository) SaveAll(metrics []models.Metrics) error {
+	for _, m := range metrics {
+		err := r.Save(&m)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (r *MetricsRepository) Save(metric *models.Metrics) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	m, exists := r.metricsCollection[metric.ID]
+	if !exists {
+		r.metricsCollection[metric.ID] = metric
+		return nil
+	}
+
+	switch metric.MType {
+	case constants.GaugeMetricType:
+		newVal := *metric.Value + *m.Value
+		r.metricsCollection[metric.ID] = models.NewGaugeMetric(metric.ID, newVal)
+	case constants.CounterMetricType:
+		newVal := *metric.Delta + *m.Delta
+		r.metricsCollection[metric.ID] = models.NewCounterMetric(metric.ID, newVal)
+	default:
+		return constants.ErrInvalidMetricType
+	}
+
+	return nil
+}
+
+func (r *MetricsRepository) GetRequestURL(metric *models.Metrics) (value string, err error) {
 	switch metric.MType {
 	case constants.GaugeMetricType:
 		value, err = metric.GetValue()
@@ -44,8 +77,7 @@ func (r *MetricsRepository) GetRequestURL(metric *models.Metrics, address string
 		return "", constants.ErrInvalidMetricType
 	}
 
-	return fmt.Sprintf("http://%s/update/%s/%s/%v",
-		address,
+	return fmt.Sprintf("/%s/%s/%v",
 		metric.MType,
 		metric.ID,
 		value,
@@ -69,4 +101,34 @@ func (r *MetricsRepository) GetPlainRequest(metric *models.Metrics) (request *re
 	}
 
 	return request, nil
+}
+
+func (r *MetricsRepository) GetRequestBody(metric *models.Metrics) ([]byte, error) {
+	switch metric.MType {
+	case constants.GaugeMetricType:
+		request, err := metric.ToGaugeRequest()
+		if err != nil {
+			return nil, err
+		}
+		requestBytes, err := json.Marshal(request)
+		if err != nil {
+			return nil, err
+		}
+
+		return requestBytes, nil
+	case constants.CounterMetricType:
+		request, err := metric.ToCounterRequest()
+		if err != nil {
+			return nil, err
+		}
+
+		requestBytes, err := json.Marshal(request)
+		if err != nil {
+			return nil, err
+		}
+
+		return requestBytes, nil
+	default:
+		return nil, constants.ErrInvalidMetricType
+	}
 }

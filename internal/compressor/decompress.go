@@ -1,9 +1,10 @@
-package utils
+package compressor
 
 import (
 	"bytes"
 	"compress/flate"
 	"compress/gzip"
+	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"io"
@@ -23,7 +24,7 @@ func Decompress(data []byte) ([]byte, error) {
 	defer func(r io.ReadCloser) {
 		err := r.Close()
 		if err != nil {
-			Logger.Error("decompressing err", zap.Error(err))
+			log.Error("decompressing err", zap.Error(err))
 		}
 	}(r)
 

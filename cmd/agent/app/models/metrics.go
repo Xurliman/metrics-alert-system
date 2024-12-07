@@ -18,6 +18,22 @@ type Metrics struct {
 	Delta *int64
 }
 
+func NewCounterMetric(name string, delta int64) *Metrics {
+	return &Metrics{
+		ID:    name,
+		MType: constants.CounterMetricType,
+		Delta: &delta,
+	}
+}
+
+func NewGaugeMetric(name string, value float64) *Metrics {
+	return &Metrics{
+		ID:    name,
+		MType: constants.GaugeMetricType,
+		Value: &value,
+	}
+}
+
 func (m *Metrics) ToGaugeRequest() (*requests.MetricsRequest, error) {
 	if m.MType != constants.GaugeMetricType {
 		return nil, constants.ErrInvalidMetricType

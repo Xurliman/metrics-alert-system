@@ -1,99 +1,45 @@
 package config
 
 import (
+	"flag"
+	"fmt"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
-	"os"
-	"strconv"
-	"strings"
+	"github.com/caarlos0/env/v11"
 	"time"
 )
 
-type ConfInterface interface {
-	GetHost() (string, error)
-	GetPollInterval() (time.Duration, error)
-	GetReportInterval() (time.Duration, error)
-	GetKey() (string, error)
-	GetRateLimit() (int, error)
+type Config struct {
+	ServerAddress  string `env:"ADDRESS"`
+	ReportInterval int    `env:"REPORT_INTERVAL"`
+	PollInterval   int    `env:"POLL_INTERVAL"`
+	Key            string `json:"KEY"`
+	RateLimit      int    `env:"RATE_LIMIT"`
 }
 
-type EnvConfig struct{}
+func Setup() (*Config, error) {
+	var conf Config
+	flag.IntVar(&conf.RateLimit, "l", 0, "set rate limit")
+	flag.IntVar(&conf.ReportInterval, "r", 10, "set report interval")
+	flag.IntVar(&conf.PollInterval, "p", 2, "set poll interval")
+	flag.StringVar(&conf.Key, "k", "", "set key to hash")
+	flag.StringVar(&conf.ServerAddress, "a", constants.DefaultServerAddress, "give server host:port (default: localhost:8080)")
+	flag.Parse()
 
-func NewConfig() ConfInterface {
-	return &EnvConfig{}
+	if err := env.Parse(&conf); err != nil {
+		return nil, err
+	}
+
+	return &conf, nil
 }
 
-func (c *EnvConfig) GetHost() (string, error) {
-	address, err := GetEnvironmentValue("ADDRESS")
-	if err != nil {
-		return constants.DefaultServerAddress, err
-	}
-
-	options := strings.Split(address, ":")
-	if len(options) < 2 {
-		return "", constants.ErrWrongAddress
-	}
-
-	port, err := strconv.Atoi(options[1])
-	if err != nil {
-		return "", err
-	}
-
-	host := options[0]
-	return host + ":" + strconv.Itoa(port), nil
+func (cfg *Config) GetHost() string {
+	return fmt.Sprintf("http://%s", cfg.ServerAddress)
 }
 
-func (c *EnvConfig) GetPollInterval() (time.Duration, error) {
-	pollInterval, err := GetEnvironmentValue("POLL_INTERVAL")
-	if err != nil {
-		return time.Duration(2), err
-	}
-
-	pollIntervalInt, err := strconv.Atoi(pollInterval)
-	if err != nil {
-		return time.Duration(2), err
-	}
-
-	return time.Duration(pollIntervalInt) * time.Second, nil
+func (cfg *Config) GetPollInterval() time.Duration {
+	return time.Duration(cfg.PollInterval) * time.Second
 }
 
-func (c *EnvConfig) GetReportInterval() (time.Duration, error) {
-	reportInterval, err := GetEnvironmentValue("REPORT_INTERVAL")
-	if err != nil {
-		return time.Duration(10), err
-	}
-
-	reportIntervalInt, err := strconv.Atoi(reportInterval)
-	if err != nil {
-		return time.Duration(10), err
-	}
-
-	return time.Duration(reportIntervalInt) * time.Second, nil
-}
-
-func (c *EnvConfig) GetKey() (string, error) {
-	key, err := GetEnvironmentValue("KEY")
-	if err != nil {
-		return "", constants.ErrKeyMissing
-	}
-	return key, nil
-}
-
-func (c *EnvConfig) GetRateLimit() (int, error) {
-	rateLimit, err := GetEnvironmentValue("RATE_LIMIT")
-	if err != nil {
-		return 0, err
-	}
-
-	rateLimitInt, err := strconv.Atoi(rateLimit)
-	if err != nil {
-		return 0, err
-	}
-	return rateLimitInt, nil
-}
-
-func GetEnvironmentValue(key string) (string, error) {
-	if os.Getenv(key) == "" {
-		return "", constants.ErrEnvValueMissing
-	}
-	return os.Getenv(key), nil
+func (cfg *Config) GetReportInterval() time.Duration {
+	return time.Duration(cfg.ReportInterval) * time.Second
 }

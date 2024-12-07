@@ -29,19 +29,18 @@ func TestMetricsRepository_GetRequestURL(t *testing.T) {
 				MType: constants.GaugeMetricType,
 				Value: &allocValue,
 			},
-			want:    "http://localhost:8080/update/gauge/Alloc/" + strconv.FormatFloat(allocValue, 'f', -1, 64),
+			want:    "/gauge/Alloc/" + strconv.FormatFloat(allocValue, 'f', -1, 64),
 			wantErr: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := &MetricsRepository{}
-			address := "localhost:8080"
-			got, err := r.GetRequestURL(tt.metric, address)
-			if !tt.wantErr(t, err, fmt.Sprintf("GetRequestURL(%v, %v)", tt.metric, address)) {
+			got, err := r.GetRequestURL(tt.metric)
+			if !tt.wantErr(t, err, fmt.Sprintf("GetRequestURL(%v)", tt.metric)) {
 				return
 			}
-			assert.Equalf(t, tt.want, got, "GetRequestURL(%v, %v)", tt.metric, address)
+			assert.Equalf(t, tt.want, got, "GetRequestURL(%v)", tt.metric)
 		})
 	}
 }
