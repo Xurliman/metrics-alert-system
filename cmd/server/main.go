@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/repositories"
@@ -28,35 +29,60 @@ func main() {
 	}
 
 	archiveService := services.NewArchiveService(cfg.FileStoragePath)
-	var repo interfaces.MetricsRepositoryInterface
-	if err = database.OpenDB(cfg.DatabaseDSN); err != nil {
-		log.Warn("error connecting to database", zap.Error(err))
-		repo = repositories.NewMetricsRepository(cfg.Restore, archiveService)
-		go func() {
-			storeTicker := time.NewTicker(cfg.GetStoreInterval())
-			defer storeTicker.Stop()
-			for range storeTicker.C {
-				metrics, err := repo.List()
-				if err != nil {
-					log.Error("error getting list of metrics", zap.Error(err))
-				}
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
-				err = archiveService.Archive(metrics)
-				if err != nil {
-					log.Error("archiving data went wrong", zap.Error(err))
-				}
-			}
-		}()
-	} else {
-		repo = repositories.NewDBMetricsRepository()
-	}
-
-	r := routes.SetupRoutes(repo, cfg.Key)
-	log.Info("Starting server on port ",
-		zap.String("port", cfg.GetPort()),
-	)
-	err = r.Run(cfg.GetPort())
+	repo, err := initializeRepository(cfg, archiveService)
 	if err != nil {
+		log.Error("error when initializing repository", zap.Error(err))
 		return
 	}
+	go archiveToFile(ctx, cfg, repo, archiveService)
+
+	r := routes.SetupRoutes(repo, cfg.Key)
+	err = r.Run(cfg.GetPort())
+	if err != nil {
+		log.Fatal("error when starting server", zap.Error(err))
+	}
+}
+
+func archiveToFile(ctx context.Context, cfg *config.Config, repository interfaces.MetricsRepositoryInterface, archiveService interfaces.ArchiveServiceInterface) {
+	storeTicker := time.NewTicker(cfg.GetStoreInterval())
+	defer storeTicker.Stop()
+
+	for {
+		select {
+		case <-storeTicker.C:
+			metrics, err := repository.List()
+			if err != nil {
+				log.Error("error getting list of metrics", zap.Error(err))
+			}
+
+			err = archiveService.Archive(metrics)
+			if err != nil {
+				log.Error("archiving data went wrong", zap.Error(err))
+			}
+		case <-ctx.Done():
+			return
+		}
+	}
+}
+
+func initializeRepository(cfg *config.Config, archiveService interfaces.ArchiveServiceInterface) (interfaces.MetricsRepositoryInterface, error) {
+	if cfg.DatabaseDSN == "" {
+		if cfg.Restore {
+			metrics, err := archiveService.Load()
+			if err != nil {
+				return nil, constants.ErrLoadingMetricsFromArchive
+			}
+
+			return repositories.NewMetricsRepository(metrics), nil
+		}
+		return nil, constants.ErrDatabaseDSNEmpty
+	}
+
+	if err := database.OpenDB(cfg.DatabaseDSN); err != nil {
+		return nil, constants.ErrConnectingDatabase
+	}
+	return repositories.NewDBMetricsRepository(), nil
 }

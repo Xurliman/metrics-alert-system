@@ -3,7 +3,6 @@ package constants
 import "errors"
 
 var (
-	ErrEnvValueMissing           = errors.New("environment variable is missing")
 	ErrWrongAddress              = errors.New("need 2 values as host:port")
 	ErrWrongPort                 = errors.New("wrong port value given")
 	ErrLoadingEnv                = errors.New("error loading .env file, using default variables")
@@ -12,11 +11,9 @@ var (
 	ErrInvalidGaugeMetricValue   = errors.New("invalid metrics value for gauge type")
 	ErrEmptyMetricName           = errors.New("metrics name is empty")
 	ErrMetricExists              = errors.New("metric exists with other type")
-	ErrWrongStoreInterval        = errors.New("wrong store interval")
-	ErrWrongFileStoragePath      = errors.New("wrong file storage path")
-	ErrDatabaseDSNEmpty          = errors.New("database DSN is empty")
+	ErrDatabaseDSNEmpty          = errors.New("database DSN is empty, using file storage")
+	ErrConnectingDatabase        = errors.New("error connecting to database")
 	ErrMetricNotFound            = errors.New("metric not found")
-	ErrDSNEmpty                  = errors.New("database DSN is empty, using file storage")
-	ErrKeyMissing                = errors.New("key is missing")
+	ErrLoadingMetricsFromArchive = errors.New("error loading metrics from archive")
 	ErrInvalidHash               = errors.New("invalid hash")
 )

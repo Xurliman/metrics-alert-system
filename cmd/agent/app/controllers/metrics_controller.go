@@ -20,7 +20,7 @@ type MetricsController struct {
 }
 
 func NewMetricsController(service interfaces.MetricsService, cfg *config.Config) interfaces.MetricsController {
-	handlers := []func(metrics *models.Metrics) error{
+	handlers := []func(ctx context.Context, metrics *models.Metrics) error{
 		service.SendMetric,
 		service.SendCompressedMetric,
 		service.SendMetricWithParams,
@@ -38,13 +38,13 @@ func (c *MetricsController) Run(ctx context.Context) {
 	var wg sync.WaitGroup
 	wg.Add(2)
 	go func() {
+		defer wg.Done()
 		c.Poll(ctx)
-		wg.Done()
 	}()
 
 	go func() {
+		defer wg.Done()
 		c.Report(ctx)
-		wg.Done()
 	}()
 
 	wg.Wait()
@@ -77,7 +77,7 @@ func (c *MetricsController) Report(ctx context.Context) {
 		select {
 		case <-reportTicker.C:
 			for _, m := range c.service.GetAll() {
-				c.workerPool.AddJob(m)
+				c.workerPool.AddJob(ctx, m)
 			}
 		case <-ctx.Done():
 			log.Info("stopping reporting metrics")

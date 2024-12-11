@@ -2,6 +2,7 @@ package services
 
 import (
 	"bytes"
+	"context"
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
@@ -42,44 +43,44 @@ func (s *MetricsService) CollectMetricValues() error {
 	var memStats runtime.MemStats
 	runtime.ReadMemStats(&memStats)
 
-	metricsCollection := []models.Metrics{
-		*models.NewGaugeMetric("Alloc", float64(memStats.Alloc)),
-		*models.NewGaugeMetric("BuckHashSys", float64(memStats.BuckHashSys)),
-		*models.NewGaugeMetric("Frees", float64(memStats.Frees)),
-		*models.NewGaugeMetric("GCCPUFraction", memStats.GCCPUFraction),
-		*models.NewGaugeMetric("GCSys", float64(memStats.GCSys)),
-		*models.NewGaugeMetric("HeapAlloc", float64(memStats.HeapAlloc)),
-		*models.NewGaugeMetric("HeapIdle", float64(memStats.HeapIdle)),
-		*models.NewGaugeMetric("HeapInuse", float64(memStats.HeapInuse)),
-		*models.NewGaugeMetric("HeapObjects", float64(memStats.HeapObjects)),
-		*models.NewGaugeMetric("HeapReleased", float64(memStats.HeapReleased)),
-		*models.NewGaugeMetric("HeapSys", float64(memStats.HeapSys)),
-		*models.NewGaugeMetric("LastGC", float64(memStats.LastGC)),
-		*models.NewGaugeMetric("Lookups", float64(memStats.Lookups)),
-		*models.NewGaugeMetric("MCacheInuse", float64(memStats.MCacheInuse)),
-		*models.NewGaugeMetric("MCacheSys", float64(memStats.MCacheSys)),
-		*models.NewGaugeMetric("MSpanInuse", float64(memStats.MSpanInuse)),
-		*models.NewGaugeMetric("MSpanSys", float64(memStats.MSpanSys)),
-		*models.NewGaugeMetric("Mallocs", float64(memStats.Mallocs)),
-		*models.NewGaugeMetric("NextGC", float64(memStats.NextGC)),
-		*models.NewGaugeMetric("NumForcedGC", float64(memStats.NumForcedGC)),
-		*models.NewGaugeMetric("NumGC", float64(memStats.NumGC)),
-		*models.NewGaugeMetric("OtherSys", float64(memStats.OtherSys)),
-		*models.NewGaugeMetric("PauseTotalNs", float64(memStats.PauseTotalNs)),
-		*models.NewGaugeMetric("StackInuse", float64(memStats.StackInuse)),
-		*models.NewGaugeMetric("StackSys", float64(memStats.StackSys)),
-		*models.NewGaugeMetric("Sys", float64(memStats.Sys)),
-		*models.NewGaugeMetric("TotalAlloc", float64(memStats.TotalAlloc)),
-		*models.NewGaugeMetric("RandomValue", rand.Float64()),
+	metricsCollection := []*models.Metrics{
+		models.NewGaugeMetric("Alloc", float64(memStats.Alloc)),
+		models.NewGaugeMetric("BuckHashSys", float64(memStats.BuckHashSys)),
+		models.NewGaugeMetric("Frees", float64(memStats.Frees)),
+		models.NewGaugeMetric("GCCPUFraction", memStats.GCCPUFraction),
+		models.NewGaugeMetric("GCSys", float64(memStats.GCSys)),
+		models.NewGaugeMetric("HeapAlloc", float64(memStats.HeapAlloc)),
+		models.NewGaugeMetric("HeapIdle", float64(memStats.HeapIdle)),
+		models.NewGaugeMetric("HeapInuse", float64(memStats.HeapInuse)),
+		models.NewGaugeMetric("HeapObjects", float64(memStats.HeapObjects)),
+		models.NewGaugeMetric("HeapReleased", float64(memStats.HeapReleased)),
+		models.NewGaugeMetric("HeapSys", float64(memStats.HeapSys)),
+		models.NewGaugeMetric("LastGC", float64(memStats.LastGC)),
+		models.NewGaugeMetric("Lookups", float64(memStats.Lookups)),
+		models.NewGaugeMetric("MCacheInuse", float64(memStats.MCacheInuse)),
+		models.NewGaugeMetric("MCacheSys", float64(memStats.MCacheSys)),
+		models.NewGaugeMetric("MSpanInuse", float64(memStats.MSpanInuse)),
+		models.NewGaugeMetric("MSpanSys", float64(memStats.MSpanSys)),
+		models.NewGaugeMetric("Mallocs", float64(memStats.Mallocs)),
+		models.NewGaugeMetric("NextGC", float64(memStats.NextGC)),
+		models.NewGaugeMetric("NumForcedGC", float64(memStats.NumForcedGC)),
+		models.NewGaugeMetric("NumGC", float64(memStats.NumGC)),
+		models.NewGaugeMetric("OtherSys", float64(memStats.OtherSys)),
+		models.NewGaugeMetric("PauseTotalNs", float64(memStats.PauseTotalNs)),
+		models.NewGaugeMetric("StackInuse", float64(memStats.StackInuse)),
+		models.NewGaugeMetric("StackSys", float64(memStats.StackSys)),
+		models.NewGaugeMetric("Sys", float64(memStats.Sys)),
+		models.NewGaugeMetric("TotalAlloc", float64(memStats.TotalAlloc)),
+		models.NewGaugeMetric("RandomValue", rand.Float64()),
 
-		*models.NewCounterMetric("PollCount", pollCount),
+		models.NewCounterMetric("PollCount", pollCount),
 	}
 
 	if v, err := mem.VirtualMemory(); err == nil {
 		metricsCollection = append(metricsCollection,
-			*models.NewGaugeMetric("TotalMemory", float64(v.Total)),
-			*models.NewGaugeMetric("FreeMemory", float64(v.Free)),
-			*models.NewGaugeMetric("CPUutilization1", float64(v.Used)),
+			models.NewGaugeMetric("TotalMemory", float64(v.Total)),
+			models.NewGaugeMetric("FreeMemory", float64(v.Free)),
+			models.NewGaugeMetric("CPUutilization1", float64(v.Used)),
 		)
 	}
 	pollCount++
@@ -126,13 +127,13 @@ func (s *MetricsService) SendBatchMetrics() (err error) {
 
 }
 
-func (s *MetricsService) SendMetricWithParams(metric *models.Metrics) (err error) {
+func (s *MetricsService) SendMetricWithParams(ctx context.Context, metric *models.Metrics) (err error) {
 	urlParams, err := s.repository.GetRequestURL(metric)
 	if err != nil {
 		return err
 	}
 
-	request, err := http.NewRequest("POST", s.cfg.GetHost()+urlParams, nil)
+	request, err := http.NewRequestWithContext(ctx, "POST", s.cfg.GetHost()+urlParams, nil)
 	if err != nil {
 		return err
 	}
@@ -144,7 +145,7 @@ func (s *MetricsService) SendMetricWithParams(metric *models.Metrics) (err error
 	return nil
 }
 
-func (s *MetricsService) SendCompressedMetric(metric *models.Metrics) (errs error) {
+func (s *MetricsService) SendCompressedMetric(ctx context.Context, metric *models.Metrics) (errs error) {
 	url := fmt.Sprintf("%s/update/", s.cfg.GetHost())
 	requestBody, err := s.repository.GetRequestBody(metric)
 	if err != nil {
@@ -156,7 +157,7 @@ func (s *MetricsService) SendCompressedMetric(metric *models.Metrics) (errs erro
 		return err
 	}
 
-	request, err := http.NewRequest("POST", url, bytes.NewReader(compressedRequest))
+	request, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewReader(compressedRequest))
 	if err != nil {
 		return errors.Join(errs, err)
 	}
@@ -175,14 +176,14 @@ func (s *MetricsService) SendCompressedMetric(metric *models.Metrics) (errs erro
 	return errs
 }
 
-func (s *MetricsService) SendMetric(metric *models.Metrics) (err error) {
+func (s *MetricsService) SendMetric(ctx context.Context, metric *models.Metrics) error {
 	url := fmt.Sprintf("%s/update/", s.cfg.GetHost())
 	requestBody, err := s.repository.GetRequestBody(metric)
 	if err != nil {
 		return err
 	}
 
-	request, err := http.NewRequest("POST", url, bytes.NewReader(requestBody))
+	request, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewReader(requestBody))
 	if err != nil {
 		return err
 	}

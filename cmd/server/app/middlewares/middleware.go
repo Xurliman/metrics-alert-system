@@ -11,7 +11,8 @@ import (
 )
 
 type Middleware interface {
-	Handle(next gin.HandlerFunc) gin.HandlerFunc
+	//Handle(next gin.HandlerFunc) gin.HandlerFunc
+	Handle(ctx *gin.Context)
 }
 
 type Request struct {
