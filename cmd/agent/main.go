@@ -1,71 +1,42 @@
 package main
 
 import (
+	"context"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/controllers"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/repositories"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/services"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/config"
-	"github.com/Xurliman/metrics-alert-system/cmd/agent/utils"
+	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
-	"log"
-	"net/http"
-	"time"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
-	utils.Logger = utils.NewLogger()
-
+	log.InitLogger(os.Getenv("APP_ENV"), constants.LogFilePath)
 	err := godotenv.Load(constants.EnvFilePath)
 	if err != nil {
-		log.Println(constants.ErrLoadingEnv)
+		log.Error("error when loading env", zap.Error(constants.ErrLoadingEnv))
 	}
 
-	flagCfg := utils.NewOptions()
-	envCfg := config.NewConfig()
-
-	address, err := flagCfg.GetHost()
+	cfg, err := config.Setup()
 	if err != nil {
-		address, _ = envCfg.GetHost()
+		log.Fatal("error parsing config", zap.Error(err))
 	}
 
-	pollInterval, err := flagCfg.GetPollInterval()
-	if err != nil {
-		pollInterval, _ = envCfg.GetPollInterval()
-	}
+	ctx, stop := signal.NotifyContext(context.Background(),
+		os.Interrupt,
+		syscall.SIGINT,
+		syscall.SIGTERM,
+		syscall.SIGQUIT,
+	)
+	defer stop()
 
-	reportInterval, err := flagCfg.GetReportInterval()
-	if err != nil {
-		reportInterval, _ = envCfg.GetReportInterval()
-	}
-
-	client := http.Client{Timeout: 10 * time.Second}
 	metricRepository := repositories.NewMetricsRepository()
-	metricsService := services.NewMetricsService(metricRepository)
-	metricController := controllers.NewMetricsController(client, metricsService, address)
-
-	pollTicker := time.NewTicker(pollInterval)
-	reportTicker := time.NewTicker(reportInterval)
-
-	defer pollTicker.Stop()
-	defer reportTicker.Stop()
-	for {
-		select {
-		case <-pollTicker.C:
-			metricController.CollectMetrics()
-		case <-reportTicker.C:
-			handleError(metricController.SendMetricsWithParams())
-			handleError(metricController.SendMetrics())
-			handleError(metricController.SendCompressedMetrics())
-			handleError(metricController.SendCompressedMetricsWithParams())
-			handleError(metricController.SendBatchMetrics())
-		}
-	}
-}
-
-func handleError(err error) {
-	if err != nil {
-		utils.Logger.Error("error while sending metrics", zap.Error(err))
-	}
+	metricsService := services.NewMetricsService(metricRepository, cfg)
+	metricController := controllers.NewMetricsController(metricsService, cfg)
+	metricController.Run(ctx)
 }

@@ -1,34 +1,14 @@
-package utils
+package compressor
 
 import (
 	"bytes"
 	"compress/flate"
 	"compress/gzip"
+	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"io"
 )
-
-func Compress(data []byte) ([]byte, error) {
-	var buf bytes.Buffer
-
-	w, err := gzip.NewWriterLevel(&buf, flate.BestSpeed)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = w.Write(data)
-	if err != nil {
-		return nil, err
-	}
-
-	err = w.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	return buf.Bytes(), nil
-}
 
 type GzipResponseWriter struct {
 	gin.ResponseWriter
@@ -44,7 +24,7 @@ func Decompress(data []byte) ([]byte, error) {
 	defer func(r io.ReadCloser) {
 		err := r.Close()
 		if err != nil {
-			Logger.Error("decompressing err", zap.Error(err))
+			log.Error("decompressing err", zap.Error(err))
 		}
 	}(r)
 

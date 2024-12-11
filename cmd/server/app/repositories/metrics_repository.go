@@ -6,9 +6,6 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
-	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
-	"go.uber.org/zap"
-	"runtime"
 	"sync"
 )
 
@@ -18,24 +15,7 @@ type MetricsRepository struct {
 	mu                sync.RWMutex
 }
 
-func NewMetricsRepository(shouldRestore bool, archiveService interfaces.ArchiveServiceInterface) interfaces.MetricsRepositoryInterface {
-	if !shouldRestore {
-		return &MetricsRepository{
-			metricsCollection: defaultMetrics(),
-			db:                DB,
-			mu:                sync.RWMutex{},
-		}
-	}
-
-	metrics, err := archiveService.Load()
-	if err != nil {
-		utils.Logger.Error("error loading metrics from file", zap.Error(err))
-		return &MetricsRepository{
-			metricsCollection: defaultMetrics(),
-			db:                DB,
-			mu:                sync.RWMutex{},
-		}
-	}
+func NewMetricsRepository(metrics map[string]*models.Metrics) interfaces.MetricsRepositoryInterface {
 	return &MetricsRepository{
 		metricsCollection: metrics,
 		db:                DB,
@@ -80,24 +60,4 @@ func (r *MetricsRepository) InsertMany(ctx context.Context, metrics []*models.Me
 		}
 	}
 	return nil
-}
-
-func defaultMetrics() map[string]*models.Metrics {
-	var memStats runtime.MemStats
-	runtime.ReadMemStats(&memStats)
-
-	gaugeMetricExample := float64(memStats.Alloc)
-	var counterMetricExample int64
-	defaultMap := make(map[string]*models.Metrics)
-	defaultMap["Alloc"] = &models.Metrics{
-		ID:    "Alloc",
-		MType: constants.GaugeMetricType,
-		Value: &gaugeMetricExample,
-	}
-	defaultMap["PollCount"] = &models.Metrics{
-		ID:    "PollCount",
-		MType: constants.CounterMetricType,
-		Delta: &counterMetricExample,
-	}
-	return defaultMap
 }

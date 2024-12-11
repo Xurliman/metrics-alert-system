@@ -8,7 +8,7 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
-	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
+	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 	"strings"
@@ -85,6 +85,38 @@ func (r *DBMetricsRepository) Ping(ctx context.Context) error {
 	return r.db.PingContext(ctx)
 }
 
+func (r *DBMetricsRepository) InsertMany(ctx context.Context, metrics []*models.Metrics) error {
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return fmt.Errorf("failed to begin transaction: %w", err)
+	}
+
+	query := `INSERT INTO metrics (name, metric_type, value, delta) VALUES `
+	var placeholders []string
+	var args []interface{}
+
+	for i, metric := range metrics {
+		placeholders = append(placeholders, fmt.Sprintf("($%d, $%d, $%d, $%d)", i*4+1, i*4+2, i*4+3, i*4+4))
+		args = append(args, metric.ID, metric.MType, metric.Value, metric.Delta)
+	}
+
+	query += strings.Join(placeholders, ", ")
+
+	_, err = tx.ExecContext(ctx, query, args...)
+	if err != nil {
+		err = tx.Rollback()
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+
+	if err = tx.Commit(); err != nil {
+		return fmt.Errorf("failed to commit transaction: %w", err)
+	}
+	return nil
+}
+
 func (r *DBMetricsRepository) Find(ctx context.Context, metricName string) (*models.DBMetrics, error) {
 	row := r.db.QueryRowContext(ctx, `SELECT id, name, metric_type, value, delta FROM metrics WHERE name = $1`, metricName)
 	if row.Err() != nil {
@@ -111,7 +143,7 @@ func (r *DBMetricsRepository) FindAll(ctx context.Context) ([]*models.DBMetrics,
 	defer func(rows *sql.Rows) {
 		err = rows.Close()
 		if err != nil {
-			utils.Logger.Error("error closing sql.rows", zap.Error(err))
+			log.Error("error closing sql.rows", zap.Error(err))
 		}
 	}(rows)
 
@@ -142,38 +174,6 @@ func (r *DBMetricsRepository) Insert(ctx context.Context, metric *models.Metrics
 	)
 	if err != nil {
 		return err
-	}
-	return nil
-}
-
-func (r *DBMetricsRepository) InsertMany(ctx context.Context, metrics []*models.Metrics) error {
-	tx, err := r.db.BeginTx(ctx, nil)
-	if err != nil {
-		return fmt.Errorf("failed to begin transaction: %w", err)
-	}
-
-	query := `INSERT INTO metrics (name, metric_type, value, delta) VALUES `
-	var placeholders []string
-	var args []interface{}
-
-	for i, metric := range metrics {
-		placeholders = append(placeholders, fmt.Sprintf("($%d, $%d, $%d, $%d)", i*4+1, i*4+2, i*4+3, i*4+4))
-		args = append(args, metric.ID, metric.MType, metric.Value, metric.Delta)
-	}
-
-	query += strings.Join(placeholders, ", ")
-
-	_, err = tx.ExecContext(ctx, query, args...)
-	if err != nil {
-		err = tx.Rollback()
-		if err != nil {
-			return err
-		}
-		return nil
-	}
-
-	if err = tx.Commit(); err != nil {
-		return fmt.Errorf("failed to commit transaction: %w", err)
 	}
 	return nil
 }

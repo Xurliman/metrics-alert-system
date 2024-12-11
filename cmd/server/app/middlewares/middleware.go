@@ -6,11 +6,13 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"io"
+	"net/http"
 	"time"
 )
 
 type Middleware interface {
-	Handle(next gin.HandlerFunc) gin.HandlerFunc
+	//Handle(next gin.HandlerFunc) gin.HandlerFunc
+	Handle(ctx *gin.Context)
 }
 
 type Request struct {
@@ -18,6 +20,7 @@ type Request struct {
 	Method   string
 	Duration time.Duration
 	Body     map[string]interface{}
+	Header   http.Header
 	Error    error
 }
 
@@ -29,6 +32,7 @@ func (request *Request) Handle(ctx *gin.Context) (size int64) {
 
 	request.URI = ctx.Request.RequestURI
 	request.Method = ctx.Request.Method
+	request.Header = ctx.Request.Header
 
 	_, err = io.Copy(&buf, ctx.Request.Body)
 	if err != nil {
@@ -50,7 +54,6 @@ type Response struct {
 	StatusCode int
 	Size       int64
 	Body       map[string]interface{}
-	Error      error
 }
 
 type ResponseCapture struct {

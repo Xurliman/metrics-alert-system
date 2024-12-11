@@ -18,6 +18,22 @@ type Metrics struct {
 	Delta *int64
 }
 
+func NewCounterMetric(name string, delta int64) *Metrics {
+	return &Metrics{
+		ID:    name,
+		MType: constants.CounterMetricType,
+		Delta: &delta,
+	}
+}
+
+func NewGaugeMetric(name string, value float64) *Metrics {
+	return &Metrics{
+		ID:    name,
+		MType: constants.GaugeMetricType,
+		Value: &value,
+	}
+}
+
 func (m *Metrics) ToGaugeRequest() (*requests.MetricsRequest, error) {
 	if m.MType != constants.GaugeMetricType {
 		return nil, constants.ErrInvalidMetricType
@@ -40,16 +56,24 @@ func (m *Metrics) ToCounterRequest() (*requests.MetricsRequest, error) {
 	}, nil
 }
 
-func (m *Metrics) GetValue() (string, error) {
-	if m.Value == nil {
-		return "", constants.ErrInvalidGaugeMetricValue
-	}
-	return strconv.FormatFloat(*m.Value, 'f', -1, 64), nil
+func (m *Metrics) GetValueString() string {
+	return strconv.FormatFloat(m.GetValue(), 'f', -1, 64)
 }
 
-func (m *Metrics) GetDelta() (string, error) {
-	if m.Delta == nil {
-		return "", constants.ErrInvalidCounterMetricValue
+func (m *Metrics) GetDeltaString() string {
+	return strconv.FormatInt(m.GetDelta(), 10)
+}
+
+func (m *Metrics) GetValue() float64 {
+	if m.Value == nil {
+		return 0
 	}
-	return strconv.FormatInt(*m.Delta, 10), nil
+	return *m.Value
+}
+
+func (m *Metrics) GetDelta() int64 {
+	if m.Delta == nil {
+		return 0
+	}
+	return *m.Delta
 }

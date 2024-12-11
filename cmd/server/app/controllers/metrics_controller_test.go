@@ -6,11 +6,11 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/middlewares"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/mocks/servicemocks"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
-	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
+	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"log"
+	"go.uber.org/zap"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -21,7 +21,7 @@ import (
 func callOnceToChangeDir() {
 	err := os.Chdir("../../../../")
 	if err != nil {
-		log.Fatalf("Failed to set working directory: %v", err)
+		log.Fatal("Failed to set working directory: %v", zap.Error(err))
 	}
 }
 
@@ -29,15 +29,16 @@ func setupRoutes(service *servicemocks.MetricsServiceInterface) *gin.Engine {
 	gin.SetMode(gin.TestMode)
 	r := gin.Default()
 	r.LoadHTMLFiles("cmd/server/public/templates/metrics-all.html")
-	utils.Logger = utils.NewLogger(gin.TestMode)
+	log.InitLogger(gin.TestMode, constants.LogFilePath)
 	logging := middlewares.NewLoggingMiddleware()
 	controller := NewMetricsController(service)
 
-	r.GET("/", logging.Handle(controller.List))
-	r.POST("/update/:type/:name/:value", logging.Handle(controller.Save))
-	r.POST("/update/", logging.Handle(controller.SaveBody))
-	r.GET("/value/:type/:name/", logging.Handle(controller.Show))
-	r.POST("/value/", logging.Handle(controller.ShowBody))
+	r.Use(logging.Handle)
+	r.GET("/", controller.List)
+	r.POST("/update/:type/:name/:value", controller.Save)
+	r.POST("/update/", controller.SaveBody)
+	r.GET("/value/:type/:name/", controller.Show)
+	r.POST("/value/", controller.ShowBody)
 	return r
 }
 

@@ -29,6 +29,9 @@ const (
 	DatabaseDSNFlag            = "d"
 	DatabaseDSNFlagDescription = "database connection string path"
 
+	KeyFlag            = "k"
+	KeyFlagDescription = "key to hash the request body"
+
 	DefaultDBHost            = "localhost"
 	DefaultDBPort            = 5432
 	DefaultDBName            = "postgres"
