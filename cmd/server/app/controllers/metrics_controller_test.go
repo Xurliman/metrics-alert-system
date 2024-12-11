@@ -33,11 +33,12 @@ func setupRoutes(service *servicemocks.MetricsServiceInterface) *gin.Engine {
 	logging := middlewares.NewLoggingMiddleware()
 	controller := NewMetricsController(service)
 
-	r.GET("/", logging.Handle(controller.List))
-	r.POST("/update/:type/:name/:value", logging.Handle(controller.Save))
-	r.POST("/update/", logging.Handle(controller.SaveBody))
-	r.GET("/value/:type/:name/", logging.Handle(controller.Show))
-	r.POST("/value/", logging.Handle(controller.ShowBody))
+	r.Use(logging.Handle)
+	r.GET("/", controller.List)
+	r.POST("/update/:type/:name/:value", controller.Save)
+	r.POST("/update/", controller.SaveBody)
+	r.GET("/value/:type/:name/", controller.Show)
+	r.POST("/value/", controller.ShowBody)
 	return r
 }
 
