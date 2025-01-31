@@ -3,10 +3,11 @@ package middlewares
 import (
 	"compress/gzip"
 	"fmt"
+	"strings"
+
 	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
 	"github.com/Xurliman/metrics-alert-system/internal/compressor"
 	"github.com/gin-gonic/gin"
-	"strings"
 )
 
 type CompressingMiddleware struct {

@@ -3,11 +3,12 @@ package repositories
 import (
 	"encoding/json"
 	"fmt"
+	"sync"
+
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/models"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/requests"
-	"sync"
 )
 
 type MetricsRepository struct {

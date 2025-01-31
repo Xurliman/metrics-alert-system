@@ -2,10 +2,11 @@ package repositories
 
 import (
 	"context"
+	"testing"
+
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 var (

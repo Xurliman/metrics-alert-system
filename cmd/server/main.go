@@ -2,6 +2,11 @@ package main
 
 import (
 	"context"
+	"net/http"
+	_ "net/http/pprof"
+	"os"
+	"time"
+
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/repositories"
@@ -12,10 +17,6 @@ import (
 	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
-	"net/http"
-	_ "net/http/pprof"
-	"os"
-	"time"
 )
 
 const (

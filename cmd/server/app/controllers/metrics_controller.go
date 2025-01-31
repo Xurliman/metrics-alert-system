@@ -2,6 +2,9 @@ package controllers
 
 import (
 	"errors"
+	"io"
+	"net/http"
+
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/http/requests"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/http/resources"
@@ -9,8 +12,6 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
-	"io"
-	"net/http"
 )
 
 type MetricsController struct {

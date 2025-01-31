@@ -4,10 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 type Middleware interface {

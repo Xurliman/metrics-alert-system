@@ -2,14 +2,15 @@ package controllers
 
 import (
 	"context"
+	"net/http"
+	"sync"
+	"time"
+
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/models"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/config"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/workerpool"
 	"github.com/Xurliman/metrics-alert-system/internal/log"
-	"net/http"
-	"sync"
-	"time"
 )
 
 type MetricsController struct {

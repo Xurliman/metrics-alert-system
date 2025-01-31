@@ -2,12 +2,13 @@ package services
 
 import (
 	"fmt"
-	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
-	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
-	"github.com/stretchr/testify/assert"
 	"log"
 	"os"
 	"testing"
+
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
+	"github.com/stretchr/testify/assert"
 )
 
 func callOnceToChangeDir() {

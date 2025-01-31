@@ -2,11 +2,12 @@ package services
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/http/requests"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func Test_gaugeConverterService_ParamsToMetric(t *testing.T) {

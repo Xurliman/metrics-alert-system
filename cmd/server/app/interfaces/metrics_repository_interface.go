@@ -2,6 +2,7 @@ package interfaces
 
 import (
 	"context"
+
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
 )
 

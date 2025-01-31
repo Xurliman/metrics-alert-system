@@ -3,14 +3,15 @@ package repositories
 import (
 	"context"
 	"database/sql"
-	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
-	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
-	_ "github.com/jackc/pgx/v5/stdlib"
-	"github.com/stretchr/testify/assert"
 	"log"
 	"os"
 	"testing"
 	"time"
+
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
+	_ "github.com/jackc/pgx/v5/stdlib"
+	"github.com/stretchr/testify/assert"
 )
 
 var testDB *sql.DB

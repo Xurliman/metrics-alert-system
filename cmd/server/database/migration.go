@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"embed"
+
 	"github.com/pressly/goose/v3"
 )
 

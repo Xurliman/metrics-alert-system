@@ -3,10 +3,11 @@ package middlewares
 import (
 	"bytes"
 	"encoding/json"
+	"time"
+
 	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"time"
 )
 
 type LoggingMiddleware struct {

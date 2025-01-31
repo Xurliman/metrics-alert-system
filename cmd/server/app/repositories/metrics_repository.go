@@ -3,10 +3,11 @@ package repositories
 import (
 	"context"
 	"database/sql"
+	"sync"
+
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
-	"sync"
 )
 
 type MetricsRepository struct {

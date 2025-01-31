@@ -2,9 +2,10 @@ package utils
 
 import (
 	"encoding/json"
+	"net/http"
+
 	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 type DefaultResponse struct {

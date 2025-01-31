@@ -3,8 +3,9 @@ package utils
 import (
 	"bufio"
 	"encoding/json"
-	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
 	"os"
+
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
 )
 
 type ArchiveWriter struct {

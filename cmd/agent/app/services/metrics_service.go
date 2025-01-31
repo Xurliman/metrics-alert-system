@@ -9,6 +9,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math/rand"
+	"net/http"
+	"runtime"
+
 	"github.com/DataDog/gopsutil/mem"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/interfaces"
@@ -16,9 +20,6 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/requests"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/config"
 	"github.com/Xurliman/metrics-alert-system/internal/compressor"
-	"math/rand"
-	"net/http"
-	"runtime"
 )
 
 type MetricsService struct {

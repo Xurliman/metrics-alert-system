@@ -3,9 +3,10 @@ package config
 import (
 	"flag"
 	"fmt"
+	"time"
+
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/caarlos0/env/v11"
-	"time"
 )
 
 type Config struct {

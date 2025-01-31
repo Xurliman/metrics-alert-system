@@ -2,13 +2,14 @@ package log
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
+	"runtime"
+
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
-	"os"
-	"path/filepath"
-	"runtime"
 )
 
 var (

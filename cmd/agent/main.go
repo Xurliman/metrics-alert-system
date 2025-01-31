@@ -2,6 +2,10 @@ package main
 
 import (
 	"context"
+	"os"
+	"os/signal"
+	"syscall"
+
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/controllers"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/repositories"
@@ -10,9 +14,6 @@ import (
 	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
-	"os"
-	"os/signal"
-	"syscall"
 )
 
 func main() {

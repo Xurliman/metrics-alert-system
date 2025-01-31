@@ -2,10 +2,11 @@ package database
 
 import (
 	"database/sql"
-	"github.com/Xurliman/metrics-alert-system/cmd/server/app/repositories"
-	"github.com/Xurliman/metrics-alert-system/cmd/server/config"
 	"os"
 	"time"
+
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/repositories"
+	"github.com/Xurliman/metrics-alert-system/cmd/server/config"
 )
 
 func OpenDB(dsn string) error {

@@ -4,10 +4,11 @@ import (
 	"bytes"
 	"compress/flate"
 	"compress/gzip"
+	"io"
+
 	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"io"
 )
 
 type GzipResponseWriter struct {

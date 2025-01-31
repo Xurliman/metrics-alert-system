@@ -3,10 +3,11 @@ package utils
 import (
 	"errors"
 	"fmt"
-	"github.com/go-playground/validator/v10"
 	"log"
 	"reflect"
 	"strings"
+
+	"github.com/go-playground/validator/v10"
 )
 
 func ExtractValidationErrors(req interface{}) (err error) {

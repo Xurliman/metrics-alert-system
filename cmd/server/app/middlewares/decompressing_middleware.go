@@ -3,11 +3,12 @@ package middlewares
 import (
 	"bytes"
 	"fmt"
+	"io"
+	"strings"
+
 	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
 	"github.com/Xurliman/metrics-alert-system/internal/compressor"
 	"github.com/gin-gonic/gin"
-	"io"
-	"strings"
 )
 
 type DecompressingMiddleware struct{}

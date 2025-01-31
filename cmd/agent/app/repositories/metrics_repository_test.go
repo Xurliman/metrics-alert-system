@@ -2,13 +2,14 @@ package repositories
 
 import (
 	"fmt"
+	"runtime"
+	"strconv"
+	"testing"
+
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/models"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/requests"
 	"github.com/stretchr/testify/assert"
-	"runtime"
-	"strconv"
-	"testing"
 )
 
 func TestMetricsRepository_GetRequestURL(t *testing.T) {

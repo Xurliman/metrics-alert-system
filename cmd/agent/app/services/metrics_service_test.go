@@ -2,12 +2,13 @@ package services
 
 import (
 	"context"
+	"testing"
+
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/models"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/repositories"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/config"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 var (

@@ -3,11 +3,12 @@ package services
 import (
 	"context"
 	"errors"
+	"strconv"
+
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/http/requests"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
-	"strconv"
 )
 
 type MetricsService struct {

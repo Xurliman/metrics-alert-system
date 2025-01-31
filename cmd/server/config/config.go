@@ -2,11 +2,12 @@ package config
 
 import (
 	"flag"
-	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
-	"github.com/caarlos0/env/v11"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
+	"github.com/caarlos0/env/v11"
 )
 
 type Config struct {

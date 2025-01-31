@@ -2,10 +2,11 @@ package workerpool
 
 import (
 	"context"
+	"sync"
+
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/models"
 	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"go.uber.org/zap"
-	"sync"
 )
 
 type job struct {

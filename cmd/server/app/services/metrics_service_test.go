@@ -2,15 +2,16 @@ package services
 
 import (
 	"fmt"
+	"runtime"
+	"strconv"
+	"testing"
+
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/http/requests"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/mocks/servicemocks"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
 	"github.com/stretchr/testify/assert"
-	"runtime"
-	"strconv"
-	"testing"
 )
 
 func TestMetricsService_List(t *testing.T) {

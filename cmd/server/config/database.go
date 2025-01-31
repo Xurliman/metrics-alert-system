@@ -1,11 +1,12 @@
 package config
 
 import (
+	"os"
+	"strconv"
+
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/jackc/pgx/v5/stdlib"
-	"os"
-	"strconv"
 )
 
 func GetDBConns() (maxIdleConns int, maxOpenConns int, maxConnLifetime int, maxConnIdleTime int) {

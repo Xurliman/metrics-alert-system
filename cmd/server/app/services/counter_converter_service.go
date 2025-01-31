@@ -1,10 +1,11 @@
 package services
 
 import (
+	"strconv"
+
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/http/requests"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
-	"strconv"
 )
 
 type counterConverterService struct{}

@@ -1,9 +1,10 @@
 package models
 
 import (
+	"strconv"
+
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/requests"
-	"strconv"
 )
 
 type OldMetrics struct {

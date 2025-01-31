@@ -5,14 +5,15 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strings"
+	"time"
+
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/interfaces"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/models"
 	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
-	"strings"
-	"time"
 )
 
 type DBMetricsRepository struct {
