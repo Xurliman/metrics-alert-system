@@ -1,9 +1,18 @@
 package services
 
 import (
+	"context"
+	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/models"
-	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
+	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/repositories"
+	"github.com/Xurliman/metrics-alert-system/cmd/agent/config"
+	"github.com/stretchr/testify/assert"
 	"testing"
+)
+
+var (
+	someGaugeMetricVal   = 239.232
+	someCounterMetricVal = int64(3455)
 )
 
 func TestMetricsService_CollectMetrics(t *testing.T) {
@@ -39,4 +48,45 @@ func TestMetricsService_CollectMetrics(t *testing.T) {
 	} else {
 		t.Error("Metric 'counter1' not found")
 	}
+}
+
+func BenchmarkMetricsService_SendBatchMetrics(b *testing.B) {
+	repo := repositories.NewMetricsRepository()
+	cfg, err := config.Setup()
+	assert.NoError(b, err)
+	ctx := context.Background()
+
+	someGaugeMetric := &models.Metrics{
+		ID:    "someGaugeMetric",
+		MType: constants.GaugeMetricType,
+		Value: &someGaugeMetricVal,
+	}
+	someCounterMetric := &models.Metrics{
+		ID:    "someCounterMetric",
+		MType: constants.CounterMetricType,
+		Delta: &someCounterMetricVal,
+	}
+
+	service := NewMetricsService(repo, cfg)
+	b.Run("SendBatchMetrics", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			err = service.SendBatchMetrics()
+			assert.NoError(b, err)
+		}
+	})
+	b.Run("SendMetricWithParams", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			err = service.SendMetricWithParams(ctx, someCounterMetric)
+		}
+	})
+	b.Run("SendCompressedMetric", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			err = service.SendCompressedMetric(ctx, someGaugeMetric)
+		}
+	})
+	b.Run("SendMetric", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			err = service.SendMetric(ctx, someCounterMetric)
+		}
+	})
 }

@@ -10,7 +10,7 @@ import (
 )
 
 func ExtractValidationErrors(req interface{}) (err error) {
-	var message string
+	var builder strings.Builder
 	var v = NewValidator()
 
 	v.RegisterTagNameFunc(func(fld reflect.StructField) string {
@@ -25,12 +25,12 @@ func ExtractValidationErrors(req interface{}) (err error) {
 	if err != nil {
 		for i, err := range err.(validator.ValidationErrors) {
 			if i > 0 {
-				message += " | "
+				builder.WriteString(" | ")
 			}
-			message += err.Field() + ": " + err.Tag()
+			builder.WriteString(err.Field() + ": " + err.Tag())
 		}
 
-		return errors.New(message)
+		return errors.New(builder.String())
 	}
 
 	return nil

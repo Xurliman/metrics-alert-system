@@ -12,8 +12,14 @@ import (
 	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
+	"net/http"
+	_ "net/http/pprof"
 	"os"
 	"time"
+)
+
+const (
+	addr = ":8888" // адрес сервера
 )
 
 func main() {
@@ -38,6 +44,10 @@ func main() {
 		return
 	}
 	go archiveToFile(ctx, cfg, repo, archiveService)
+
+	go func() {
+		_ = http.ListenAndServe(addr, nil)
+	}()
 
 	r := routes.SetupRoutes(repo, cfg.Key)
 	err = r.Run(cfg.GetPort())

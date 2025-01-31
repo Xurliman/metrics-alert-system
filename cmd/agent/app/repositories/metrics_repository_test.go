@@ -86,3 +86,10 @@ func TestMetricsRepository_GetPlainRequest(t *testing.T) {
 		})
 	}
 }
+
+func BenchmarkMetricsRepository_GetAll(b *testing.B) {
+	repo := NewMetricsRepository()
+	for i := 0; i < b.N; i++ {
+		_ = repo.GetAll()
+	}
+}
