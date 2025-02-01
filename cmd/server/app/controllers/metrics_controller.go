@@ -1,3 +1,4 @@
+// Package controllers handles metric related API requests
 package controllers
 
 import (

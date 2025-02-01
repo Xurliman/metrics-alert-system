@@ -1,3 +1,4 @@
+// Package resources define structs used to wrap responses
 package resources
 
 import (

@@ -1,3 +1,4 @@
+// Package repositories define in-memory saving mechanism, file saving as well as saving to the database mechanisms
 package repositories
 
 import (

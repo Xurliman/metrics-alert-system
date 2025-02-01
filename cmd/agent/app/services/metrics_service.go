@@ -1,3 +1,4 @@
+// Package services define business logic for agent to send and collect metrics from the server
 package services
 
 import (

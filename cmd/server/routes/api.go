@@ -1,3 +1,4 @@
+// Package routes define request handlers
 package routes
 
 import (

@@ -1,3 +1,4 @@
+// Package interfaces defines set of methods implemented in agent side
 package interfaces
 
 import (

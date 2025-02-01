@@ -1,3 +1,4 @@
+// Package services define business logic of the server side
 package services
 
 import (

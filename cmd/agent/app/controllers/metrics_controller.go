@@ -1,3 +1,4 @@
+// Package controllers here serves as a worker pool
 package controllers
 
 import (

@@ -1,3 +1,4 @@
+// Package database handles opening a connection with the postgreSQL
 package database
 
 import (

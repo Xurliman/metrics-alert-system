@@ -1,3 +1,4 @@
+// Package interfaces define set of methods to implement in server side logic
 package interfaces
 
 import "github.com/Xurliman/metrics-alert-system/cmd/server/app/models"

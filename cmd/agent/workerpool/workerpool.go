@@ -1,3 +1,4 @@
+// Package workerpool manages sending metrics concurrently
 package workerpool
 
 import (

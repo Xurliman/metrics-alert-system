@@ -1,3 +1,4 @@
+// Package requests define a struct which is used to wrap metrics while sending a request to the server
 package requests
 
 type MetricsRequest struct {

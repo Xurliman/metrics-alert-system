@@ -1,3 +1,4 @@
+// Package repositories define in-memory repository for agent
 package repositories
 
 import (

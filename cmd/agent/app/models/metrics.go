@@ -1,3 +1,4 @@
+// Package models describe metrics structures
 package models
 
 import (

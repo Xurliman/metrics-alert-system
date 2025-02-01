@@ -1,3 +1,4 @@
+// Package middlewares handles requests for compressing, decompressing, hashing, logging etc...
 package middlewares
 
 import (

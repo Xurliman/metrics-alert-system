@@ -1,3 +1,4 @@
+// Package config is used to retrieve both environment and flag configuration options
 package config
 
 import (

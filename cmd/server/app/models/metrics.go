@@ -1,3 +1,4 @@
+// Package models describe domain objects
 package models
 
 import (

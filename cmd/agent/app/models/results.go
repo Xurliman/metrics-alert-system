@@ -9,18 +9,6 @@ type Result struct {
 	err     error
 }
 
-func NewResult(data []byte, err error) Result {
-	return Result{data: data, err: err}
-}
-
-func NewURLResult(url string, err error) Result {
-	return Result{url: url, err: err}
-}
-
-func NewRequestResult(request *requests.MetricsRequest, err error) Result {
-	return Result{request: request, err: err}
-}
-
 func (r Result) Bytes() []byte {
 	return r.data
 }

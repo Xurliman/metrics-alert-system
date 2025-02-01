@@ -1,3 +1,4 @@
+// Package config is used to retrieve configuration options
 package config
 
 import (

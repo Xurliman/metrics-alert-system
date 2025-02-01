@@ -1,3 +1,4 @@
+// Package constants describes constants and errors used in agent side
 package constants
 
 const (

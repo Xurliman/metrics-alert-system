@@ -1,3 +1,4 @@
+// Package requests defines structs to work with requests
 package requests
 
 import (
