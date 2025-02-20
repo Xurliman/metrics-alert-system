@@ -26,19 +26,26 @@ func (a ArchiveService) Archive(metrics map[string]*models.Metrics) error {
 	if err != nil {
 		return err
 	}
-	defer func(archiveWriter *utils.ArchiveWriter) {
-		err = archiveWriter.Close()
-		if err != nil {
-			log.Error("error closing write archive", zap.Error(err))
-		}
-	}(writer)
 
-	err = writer.Archive(toSave)
-	if err != nil {
+	defer func() {
+		if closeErr := writer.Close(); closeErr != nil {
+			log.Error("error closing write archive", zap.Error(closeErr))
+			if err == nil {
+				err = closeErr
+			}
+		}
+	}()
+
+	if err = writer.Archive(toSave); err != nil {
 		log.Error("error archiving metrics", zap.Error(err))
 		return err
 	}
-	a.lastSavedMetrics = toSave
+
+	a.lastSavedMetrics = make(map[string]*models.Metrics, len(toSave))
+	for key, metric := range toSave {
+		a.lastSavedMetrics[key] = metric
+	}
+
 	return nil
 }
 

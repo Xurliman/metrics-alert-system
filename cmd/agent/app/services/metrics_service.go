@@ -95,7 +95,7 @@ func (s *MetricsService) GetAll() map[string]*models.Metrics {
 	return s.repository.GetAll()
 }
 
-func (s *MetricsService) SendBatchMetrics() (err error) {
+func (s *MetricsService) SendBatchMetrics() error {
 	url := fmt.Sprintf("%s/updates/", s.cfg.GetHost())
 	var requestsToSend []requests.MetricsRequest
 
