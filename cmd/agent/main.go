@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/controllers"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/repositories"
@@ -51,9 +50,11 @@ func getValue(val string, fallback func() string) string {
 
 // go build -ldflags "-X 'main.buildVersion=1.0.0' -X 'main.buildDate=2024-04-03' -X 'main.buildCommit=$(git rev-parse HEAD)'"  -o agent cmd/agent/main.go
 func init() {
-	fmt.Printf("Build version: %s\n", getValue(buildVersion, func() string { return "N/A" }))
-	fmt.Printf("Build date: %s\n", getValue(buildDate, getDate))
-	fmt.Printf("Build commit: %s\n", getValue(buildCommit, getGitCommit))
+	log.Info("Build:",
+		zap.String("version", getValue(buildVersion, func() string { return "N/A" })),
+		zap.String("date", getValue(buildDate, getDate)),
+		zap.String("commit", getValue(buildCommit, getGitCommit)),
+	)
 }
 
 func main() {
