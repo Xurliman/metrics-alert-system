@@ -9,25 +9,31 @@ on:
 jobs:
   statictest:
     runs-on: ubuntu-latest
-    container: golang:1.22
+    container: golang:1.23.0  # Explicit version
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Download statictest binary
-        uses: robinraju/release-downloader@v1.8
-        with:
-          repository: Yandex-Practicum/go-autotests
-          latest: true
-          fileName: statictest
-          out-file-path: .tools
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check Go version
+        run: go version  # Debugging
 
-      - name: Setup autotest binary
+      - name: Check Go module version
+        run: cat go.mod | grep "^go "
+
+      - name: Clear Go cache
+        run: go clean -cache -modcache -testcache -fuzzcache
+
+      - name: Build statictest with Go 1.23
         run: |
-          chmod -R +x $GITHUB_WORKSPACE/.tools/statictest
-          mv $GITHUB_WORKSPACE/.tools/statictest /usr/local/bin/statictest
+          git clone https://github.com/Yandex-Practicum/go-autotests.git
+          cd go-autotests
+          go build -o statictest ./cmd/statictest  # ✅ Builds with Go 1.23
+          mv statictest /usr/local/bin/
+
+      - name: Verify statictest Go version
+        run: strings $(which statictest) | grep "go1."
 
       - name: Run statictest
-        run: |
-          go vet -vettool=$(which statictest) ./...
+        run: go vet -vettool=$(which statictest) ./...
+      

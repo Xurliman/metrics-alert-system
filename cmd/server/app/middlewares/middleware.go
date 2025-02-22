@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"io"
 	"net/http"
 	"time"
@@ -44,7 +46,8 @@ func (request *Request) Handle(ctx *gin.Context) (size int64) {
 
 	err = json.Unmarshal(buf.Bytes(), &request.Body)
 	if err != nil {
-		errors.Join(request.Error, err)
+		err = errors.Join(request.Error, err)
+		log.Error("error", zap.Error(err))
 	}
 
 	return size
