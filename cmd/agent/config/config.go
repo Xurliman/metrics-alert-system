@@ -16,7 +16,7 @@ type Config struct {
 	ServerAddress  string `env:"ADDRESS" envDefault:"localhost:8080" json:"address"`
 	ReportInterval int    `env:"REPORT_INTERVAL" envDefault:"10" json:"report_interval"`
 	PollInterval   int    `env:"POLL_INTERVAL" envDefault:"2" json:"poll_interval"`
-	Key            string `json:"KEY" envDefault:"" json:"key"`
+	Key            string `envDefault:"" json:"key"`
 	RateLimit      int    `env:"RATE_LIMIT" envDefault:"0" json:"rate_limit"`
 	CryptoKey      string `env:"CRYPTO_KEY" envDefault:"" json:"crypto_key"`
 	ConfigFile     string `env:"CONFIG" envDefault:""`
