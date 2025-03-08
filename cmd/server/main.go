@@ -9,7 +9,6 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/config"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/database"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/routes"
-	"github.com/Xurliman/metrics-alert-system/internal/cert"
 	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
@@ -81,13 +80,7 @@ func main() {
 		return
 	}
 	go archiveToFile(ctx, cfg, repo, archiveService)
-
-	err = cert.GenerateKeyPair()
-	if err != nil {
-		log.Fatal("failed to generate key pair", zap.Error(err))
-	}
-	log.Info("certificate successfully written")
-
+	
 	r := routes.SetupRoutes(repo, cfg)
 	err = r.Run(cfg.GetPort())
 	if err != nil {

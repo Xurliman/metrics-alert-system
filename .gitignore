@@ -34,6 +34,3 @@ cmd/agent/.env
 
 #logs
 storage/logs/*
-
-#keys
-rsa/private.pem

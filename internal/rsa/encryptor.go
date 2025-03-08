@@ -8,12 +8,10 @@ import (
 	"encoding/pem"
 	"fmt"
 	"os"
-	"sync"
 )
 
 var (
 	rsaPublicKey *rsa.PublicKey // Store the public key
-	once         sync.Once
 )
 
 // LoadPublicKey reads and parses the RSA public key once during startup
