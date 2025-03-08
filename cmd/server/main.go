@@ -14,7 +14,9 @@ import (
 	"go.uber.org/zap"
 	"os"
 	"os/exec"
+	"os/signal"
 	"strings"
+	"syscall"
 	"time"
 )
 
@@ -71,7 +73,12 @@ func main() {
 	}
 
 	archiveService := services.NewArchiveService(cfg.FileStoragePath)
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := signal.NotifyContext(context.Background(),
+		os.Interrupt,
+		syscall.SIGINT,
+		syscall.SIGTERM,
+		syscall.SIGQUIT,
+	)
 	defer cancel()
 
 	repo, err := initializeRepository(cfg, archiveService)
@@ -80,7 +87,7 @@ func main() {
 		return
 	}
 	go archiveToFile(ctx, cfg, repo, archiveService)
-	
+
 	r := routes.SetupRoutes(repo, cfg)
 	err = r.Run(cfg.GetPort())
 	if err != nil {

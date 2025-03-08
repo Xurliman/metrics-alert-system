@@ -70,13 +70,13 @@ func main() {
 		log.Fatal("error parsing config", zap.Error(err))
 	}
 
-	ctx, stop := signal.NotifyContext(context.Background(),
+	ctx, cancel := signal.NotifyContext(context.Background(),
 		os.Interrupt,
 		syscall.SIGINT,
 		syscall.SIGTERM,
 		syscall.SIGQUIT,
 	)
-	defer stop()
+	defer cancel()
 
 	if cfg.CryptoKey != "" {
 		err = rsa.LoadPublicKey(cfg.CryptoKey)
