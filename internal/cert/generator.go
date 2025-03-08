@@ -7,6 +7,8 @@ import (
 	"crypto/x509/pkix"
 	"encoding/pem"
 	"fmt"
+	"github.com/Xurliman/metrics-alert-system/internal/log"
+	"go.uber.org/zap"
 	"math/big"
 	"net"
 	"os"
@@ -56,7 +58,12 @@ func GenerateKeyPair() (err error) {
 	if err != nil {
 		return fmt.Errorf("error creating cert.pem %w", err)
 	}
-	defer certFile.Close()
+	defer func(certFile *os.File) {
+		err = certFile.Close()
+		if err != nil {
+			log.Error("error closing cert file", zap.Error(err))
+		}
+	}(certFile)
 
 	err = pem.Encode(certFile, &pem.Block{
 		Type:  "CERTIFICATE",
@@ -71,7 +78,12 @@ func GenerateKeyPair() (err error) {
 	if err != nil {
 		return fmt.Errorf("error creating private.pem %w", err)
 	}
-	defer privateFile.Close()
+	defer func(privateFile *os.File) {
+		err = privateFile.Close()
+		if err != nil {
+			log.Error("error closing private key file", zap.Error(err))
+		}
+	}(privateFile)
 
 	err = pem.Encode(privateFile, &pem.Block{
 		Type:  "RSA PRIVATE KEY",
@@ -86,7 +98,12 @@ func GenerateKeyPair() (err error) {
 	if err != nil {
 		return fmt.Errorf("error creating public.pem %w", err)
 	}
-	defer publicFile.Close()
+	defer func(publicFile *os.File) {
+		err = publicFile.Close()
+		if err != nil {
+			log.Error("error closing public key file", zap.Error(err))
+		}
+	}(publicFile)
 
 	publicKey := &privateKey.PublicKey
 	pubASN1, err := x509.MarshalPKIXPublicKey(publicKey)
