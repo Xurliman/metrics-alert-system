@@ -48,6 +48,11 @@ func (h DecryptingMiddleware) Handle(ctx *gin.Context) {
 		return
 	}
 
+	if len(encryptedData) == 0 {
+		ctx.Next()
+		return
+	}
+
 	// Decrypt using RSA-OAEP (Optimal Asymmetric Encryption Padding)
 	decryptedData, err := rsa.DecryptOAEP(sha256.New(), rand.Reader, rsaPrivateKey, encryptedData, nil)
 	if err != nil {

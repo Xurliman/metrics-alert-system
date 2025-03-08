@@ -37,6 +37,11 @@ func (d DecompressingMiddleware) Handle(ctx *gin.Context) {
 		utils.JSONInternalServerError(ctx, fmt.Errorf("error decompressing request body: %v", err))
 		return
 	}
+	
+	if len(decompressedBody) == 0 {
+		ctx.Next()
+		return
+	}
 
 	ctx.Request.Body = io.NopCloser(bytes.NewBuffer(decompressedBody))
 

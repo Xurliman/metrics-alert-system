@@ -89,7 +89,7 @@ func (r *MetricsRepository) GetRequestURL(metric *models.Metrics) (value string,
 		return "", constants.ErrInvalidMetricType
 	}
 
-	return fmt.Sprintf("/%s/%s/%v",
+	return fmt.Sprintf("/update/%s/%s/%v",
 		metric.MType,
 		metric.ID,
 		value,

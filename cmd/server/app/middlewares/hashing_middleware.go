@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"bytes"
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
@@ -8,6 +9,7 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/utils"
 	"github.com/gin-gonic/gin"
+	"io"
 )
 
 type HashingMiddleware struct {
@@ -27,11 +29,21 @@ func (h HashingMiddleware) Handle(ctx *gin.Context) {
 		return
 	}
 
-	hm := hmac.New(sha256.New, []byte(h.key))
-	hm.Write(decodedData)
-	sign := hm.Sum(nil)
+	// Read request body
+	body, err := ctx.GetRawData()
+	if err != nil {
+		utils.JSONError(ctx, fmt.Errorf("failed to read request body: %v", err))
+		return
+	}
 
-	if !hmac.Equal(sign, decodedData) {
+	// Restore the request body so Gin can read it again later
+	ctx.Request.Body = io.NopCloser(bytes.NewBuffer(body))
+
+	hm := hmac.New(sha256.New, []byte(h.key))
+	hm.Write(body) // Hash the actual request body
+	computedHash := hm.Sum(nil)
+
+	if !hmac.Equal(computedHash, decodedData) {
 		utils.JSONError(ctx, constants.ErrInvalidHash)
 		return
 	}

@@ -164,7 +164,7 @@ func (s *MetricsService) SendCompressedMetric(ctx context.Context, metric *model
 	if err != nil {
 		return err
 	}
-	
+
 	encryptedRequest, err := rsa.Encrypt(compressedRequest)
 	if err != nil {
 		log.Warn("ERRR", zap.Error(err))
@@ -176,7 +176,7 @@ func (s *MetricsService) SendCompressedMetric(ctx context.Context, metric *model
 		return errors.Join(errs, err)
 	}
 
-	dst, err := s.hashRequest(compressedRequest)
+	dst, err := s.hashRequest(requestBody)
 	if err != nil && !errors.Is(err, constants.ErrKeyMissing) {
 		errs = errors.Join(errs, err)
 	} else {

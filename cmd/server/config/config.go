@@ -20,21 +20,14 @@ type Config struct {
 	FileStoragePath string `env:"FILE_STORAGE_PATH" envDefault:"/tmp" json:"file_storage_path"`
 	DatabaseDSN     string `env:"DATABASE_DSN" envDefault:"" json:"database_dsn"`
 	Restore         bool   `env:"RESTORE" envDefault:"false" json:"restore"`
-	Key             string `env:"KEY" envDefault:"" json:"key"`
+	Key             string `env:"KEY" envDefault:"invalid_key" json:"key"`
 	CryptoKey       string `env:"CRYPTO_KEY" envDefault:"" json:"crypto_key"`
 	ConfigFile      string `env:"CONFIG" envDefault:""`
 }
 
 func Setup() (*Config, error) {
-	cfg := &Config{
-		Host:            "localhost",
-		Port:            0,
-		StoreInterval:   1,
-		FileStoragePath: "",
-		Restore:         true,
-		Key:             "",
-	}
-	flag.Var(cfg, constants.AddressFlag, constants.AddressFlagDescription)
+	var cfg Config
+	flag.Var(&cfg, constants.AddressFlag, constants.AddressFlagDescription)
 	flag.IntVar(&cfg.StoreInterval, constants.StoreIntervalFlag, 1, constants.StoreIntervalFlagDescription)
 	flag.StringVar(&cfg.FileStoragePath, constants.FileStoragePathFlag, constants.DefaultFileStoragePath, constants.FileStoragePathFlagDescription)
 	flag.BoolVar(&cfg.Restore, constants.RestoreFlag, constants.DefaultRestore, constants.RestoreFlagDescription)
@@ -44,18 +37,17 @@ func Setup() (*Config, error) {
 	flag.StringVar(&cfg.ConfigFile, "c", "", "set config file path")
 	flag.Parse()
 
-	err := env.Parse(cfg)
-	if err != nil {
+	if err := env.Parse(&cfg); err != nil {
 		return nil, err
 	}
 
 	if cfg.ConfigFile != "" {
-		if err = cfg.parseConfigFile(); err != nil {
+		if err := cfg.parseConfigFile(); err != nil {
 			return nil, err
 		}
 	}
 
-	return cfg, nil
+	return &cfg, nil
 }
 
 func (o *Config) Set(flagValue string) (err error) {
@@ -71,6 +63,7 @@ func (o *Config) Set(flagValue string) (err error) {
 
 	o.Host = options[0]
 	o.Port = port
+	log.Warn("Set updated config", zap.Any("config", o))
 	return nil
 }
 
@@ -109,30 +102,6 @@ func (o *Config) parseConfigFile() error {
 		return err
 	}
 
-	if fileCfg.Host != "" {
-		o.Host = fileCfg.Host
-	}
-	if fileCfg.Port != 0 {
-		o.Port = fileCfg.Port
-	}
-	if fileCfg.StoreInterval != 0 {
-		o.StoreInterval = fileCfg.StoreInterval
-	}
-	if fileCfg.FileStoragePath != "" {
-		o.FileStoragePath = fileCfg.FileStoragePath
-	}
-	if fileCfg.DatabaseDSN != "" {
-		o.DatabaseDSN = fileCfg.DatabaseDSN
-	}
-	if fileCfg.Restore {
-		o.Restore = fileCfg.Restore
-	}
-	if fileCfg.Key != "" {
-		o.Key = fileCfg.Key
-	}
-	if fileCfg.CryptoKey != "" {
-		o.CryptoKey = fileCfg.CryptoKey
-	}
-
+	*o = fileCfg
 	return nil
 }
