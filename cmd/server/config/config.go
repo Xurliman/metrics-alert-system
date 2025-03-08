@@ -1,23 +1,28 @@
 package config
 
 import (
+	"encoding/json"
 	"flag"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/constants"
+	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"github.com/caarlos0/env/v11"
+	"go.uber.org/zap"
+	"os"
 	"strconv"
 	"strings"
 	"time"
 )
 
 type Config struct {
-	Host            string `env:"ADDRESS" envDefault:"localhost:8080"`
-	Port            int    `env:"PORT" envDefault:"8080"`
-	StoreInterval   int    `env:"STORE_INTERVAL" envDefault:"5"`
-	FileStoragePath string `env:"FILE_STORAGE_PATH" envDefault:"/tmp"`
-	DatabaseDSN     string `env:"DATABASE_DSN"`
-	Restore         bool   `env:"RESTORE" envDefault:"false"`
-	Key             string `env:"KEY" envDefault:""`
-	CryptoKey       string `env:"CRYPTO_KEY"`
+	Host            string `env:"ADDRESS" envDefault:"localhost:8080" json:"address"`
+	Port            int    `env:"PORT" envDefault:"8080" json:"port"`
+	StoreInterval   int    `env:"STORE_INTERVAL" envDefault:"5" json:"store_interval"`
+	FileStoragePath string `env:"FILE_STORAGE_PATH" envDefault:"/tmp" json:"file_storage_path"`
+	DatabaseDSN     string `env:"DATABASE_DSN" envDefault:"" json:"database_dsn"`
+	Restore         bool   `env:"RESTORE" envDefault:"false" json:"restore"`
+	Key             string `env:"KEY" envDefault:"" json:"key"`
+	CryptoKey       string `env:"CRYPTO_KEY" envDefault:"" json:"crypto_key"`
+	ConfigFile      string `env:"CONFIG" envDefault:""`
 }
 
 func Setup() (*Config, error) {
@@ -36,12 +41,20 @@ func Setup() (*Config, error) {
 	flag.StringVar(&cfg.DatabaseDSN, constants.DatabaseDSNFlag, "", constants.DatabaseDSNFlagDescription)
 	flag.StringVar(&cfg.Key, constants.KeyFlag, "", constants.KeyFlagDescription)
 	flag.StringVar(&cfg.CryptoKey, "crypto-key", "", "set private key path")
+	flag.StringVar(&cfg.ConfigFile, "c", "", "set config file path")
 	flag.Parse()
 
 	err := env.Parse(cfg)
 	if err != nil {
 		return nil, err
 	}
+
+	if cfg.ConfigFile != "" {
+		if err = cfg.parseConfigFile(); err != nil {
+			return nil, err
+		}
+	}
+
 	return cfg, nil
 }
 
@@ -75,4 +88,51 @@ func (o *Config) GetPort() string {
 
 func (o *Config) GetStoreInterval() time.Duration {
 	return time.Duration(o.StoreInterval) * time.Second
+}
+
+func (o *Config) parseConfigFile() error {
+	file, err := os.Open(o.ConfigFile)
+	if err != nil {
+		return err
+	}
+
+	defer func(file *os.File) {
+		err = file.Close()
+		if err != nil {
+			log.Error("Failed to close config file", zap.Error(err))
+		}
+	}(file)
+
+	decoder := json.NewDecoder(file)
+	fileCfg := Config{}
+	if err = decoder.Decode(&fileCfg); err != nil {
+		return err
+	}
+
+	if fileCfg.Host != "" {
+		o.Host = fileCfg.Host
+	}
+	if fileCfg.Port != 0 {
+		o.Port = fileCfg.Port
+	}
+	if fileCfg.StoreInterval != 0 {
+		o.StoreInterval = fileCfg.StoreInterval
+	}
+	if fileCfg.FileStoragePath != "" {
+		o.FileStoragePath = fileCfg.FileStoragePath
+	}
+	if fileCfg.DatabaseDSN != "" {
+		o.DatabaseDSN = fileCfg.DatabaseDSN
+	}
+	if fileCfg.Restore {
+		o.Restore = fileCfg.Restore
+	}
+	if fileCfg.Key != "" {
+		o.Key = fileCfg.Key
+	}
+	if fileCfg.CryptoKey != "" {
+		o.CryptoKey = fileCfg.CryptoKey
+	}
+
+	return nil
 }
