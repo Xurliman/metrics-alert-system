@@ -17,6 +17,7 @@ type Config struct {
 	DatabaseDSN     string `env:"DATABASE_DSN"`
 	Restore         bool   `env:"RESTORE" envDefault:"false"`
 	Key             string `env:"KEY" envDefault:""`
+	CryptoKey       string `env:"CRYPTO_KEY"`
 }
 
 func Setup() (*Config, error) {
@@ -34,6 +35,7 @@ func Setup() (*Config, error) {
 	flag.BoolVar(&cfg.Restore, constants.RestoreFlag, constants.DefaultRestore, constants.RestoreFlagDescription)
 	flag.StringVar(&cfg.DatabaseDSN, constants.DatabaseDSNFlag, "", constants.DatabaseDSNFlagDescription)
 	flag.StringVar(&cfg.Key, constants.KeyFlag, "", constants.KeyFlagDescription)
+	flag.StringVar(&cfg.CryptoKey, "crypto-key", "", "set private key path")
 	flag.Parse()
 
 	err := env.Parse(cfg)

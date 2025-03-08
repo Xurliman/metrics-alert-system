@@ -10,7 +10,9 @@ import (
 	"strings"
 )
 
-type DecompressingMiddleware struct{}
+type DecompressingMiddleware struct {
+	Request
+}
 
 func NewDecompressingMiddleware() Middleware {
 	return &DecompressingMiddleware{}
@@ -37,6 +39,8 @@ func (d DecompressingMiddleware) Handle(ctx *gin.Context) {
 	}
 
 	ctx.Request.Body = io.NopCloser(bytes.NewBuffer(decompressedBody))
+
+	_ = d.Request.Handle(ctx)
 
 	ctx.Next()
 }

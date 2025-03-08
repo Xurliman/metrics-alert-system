@@ -16,6 +16,9 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/requests"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/config"
 	"github.com/Xurliman/metrics-alert-system/internal/compressor"
+	"github.com/Xurliman/metrics-alert-system/internal/log"
+	"github.com/Xurliman/metrics-alert-system/internal/rsa"
+	"go.uber.org/zap"
 	"math/rand"
 	"net/http"
 	"runtime"
@@ -117,7 +120,12 @@ func (s *MetricsService) SendBatchMetrics() error {
 		return err
 	}
 
-	request, err := http.NewRequest("POST", url, bytes.NewReader(compressedRequest))
+	encryptedRequest, err := rsa.Encrypt(compressedRequest)
+	if err != nil {
+		return err
+	}
+
+	request, err := http.NewRequest("POST", url, bytes.NewReader(encryptedRequest))
 	if err != nil {
 		return err
 	}
@@ -156,8 +164,14 @@ func (s *MetricsService) SendCompressedMetric(ctx context.Context, metric *model
 	if err != nil {
 		return err
 	}
+	
+	encryptedRequest, err := rsa.Encrypt(compressedRequest)
+	if err != nil {
+		log.Warn("ERRR", zap.Error(err))
+		return err
+	}
 
-	request, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewReader(compressedRequest))
+	request, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewReader(encryptedRequest))
 	if err != nil {
 		return errors.Join(errs, err)
 	}
@@ -183,7 +197,12 @@ func (s *MetricsService) SendMetric(ctx context.Context, metric *models.Metrics)
 		return err
 	}
 
-	request, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewReader(requestBody))
+	encryptedRequest, err := rsa.Encrypt(requestBody)
+	if err != nil {
+		return err
+	}
+
+	request, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewReader(encryptedRequest))
 	if err != nil {
 		return err
 	}

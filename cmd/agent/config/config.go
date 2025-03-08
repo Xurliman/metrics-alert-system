@@ -14,6 +14,7 @@ type Config struct {
 	PollInterval   int    `env:"POLL_INTERVAL"`
 	Key            string `json:"KEY"`
 	RateLimit      int    `env:"RATE_LIMIT"`
+	CryptoKey      string `env:"CRYPTO_KEY"`
 }
 
 func Setup() (*Config, error) {
@@ -23,6 +24,7 @@ func Setup() (*Config, error) {
 	flag.IntVar(&conf.PollInterval, "p", 2, "set poll interval")
 	flag.StringVar(&conf.Key, "k", "", "set key to hash")
 	flag.StringVar(&conf.ServerAddress, "a", constants.DefaultServerAddress, "give server host:port (default: localhost:8080)")
+	flag.StringVar(&conf.CryptoKey, "crypto-key", "", "set public key path")
 	flag.Parse()
 
 	if err := env.Parse(&conf); err != nil {
