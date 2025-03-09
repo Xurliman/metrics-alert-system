@@ -14,7 +14,9 @@ import (
 	"go.uber.org/zap"
 	"os"
 	"os/exec"
+	"os/signal"
 	"strings"
+	"syscall"
 	"time"
 )
 
@@ -51,6 +53,7 @@ func getValue(val string, fallback func() string) string {
 
 // go build -ldflags "-X 'main.buildVersion=1.0.0' -X 'main.buildDate=2024-04-03' -X 'main.buildCommit=$(git rev-parse HEAD)'"  -o server cmd/server/main.go
 func init() {
+	log.InitLogger(os.Getenv("APP_ENV"), constants.LogFilePath)
 	log.Info("Build:",
 		zap.String("version", getValue(buildVersion, func() string { return "N/A" })),
 		zap.String("date", getValue(buildDate, getDate)),
@@ -59,7 +62,6 @@ func init() {
 }
 
 func main() {
-	log.InitLogger(os.Getenv("APP_ENV"), constants.LogFilePath)
 	err := godotenv.Load(constants.EnvFilePath)
 	if err != nil {
 		log.Warn("error when loading env", zap.Error(constants.ErrLoadingEnv))
@@ -71,7 +73,12 @@ func main() {
 	}
 
 	archiveService := services.NewArchiveService(cfg.FileStoragePath)
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := signal.NotifyContext(context.Background(),
+		os.Interrupt,
+		syscall.SIGINT,
+		syscall.SIGTERM,
+		syscall.SIGQUIT,
+	)
 	defer cancel()
 
 	repo, err := initializeRepository(cfg, archiveService)
@@ -81,7 +88,7 @@ func main() {
 	}
 	go archiveToFile(ctx, cfg, repo, archiveService)
 
-	r := routes.SetupRoutes(repo, cfg.Key)
+	r := routes.SetupRoutes(repo, cfg)
 	err = r.Run(cfg.GetPort())
 	if err != nil {
 		log.Fatal("error when starting server", zap.Error(err))

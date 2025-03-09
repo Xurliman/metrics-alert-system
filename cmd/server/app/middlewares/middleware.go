@@ -13,7 +13,6 @@ import (
 )
 
 type Middleware interface {
-	//Handle(next gin.HandlerFunc) gin.HandlerFunc
 	Handle(ctx *gin.Context)
 }
 
@@ -43,6 +42,10 @@ func (request *Request) Handle(ctx *gin.Context) (size int64) {
 
 	requestBodyBytes := buf.Bytes()
 	ctx.Request.Body = io.NopCloser(bytes.NewBuffer(requestBodyBytes))
+
+	if len(requestBodyBytes) == 0 {
+		return 0
+	}
 
 	err = json.Unmarshal(buf.Bytes(), &request.Body)
 	if err != nil {

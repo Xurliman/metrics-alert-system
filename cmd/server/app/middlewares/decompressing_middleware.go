@@ -10,7 +10,9 @@ import (
 	"strings"
 )
 
-type DecompressingMiddleware struct{}
+type DecompressingMiddleware struct {
+	Request
+}
 
 func NewDecompressingMiddleware() Middleware {
 	return &DecompressingMiddleware{}
@@ -35,8 +37,15 @@ func (d DecompressingMiddleware) Handle(ctx *gin.Context) {
 		utils.JSONInternalServerError(ctx, fmt.Errorf("error decompressing request body: %v", err))
 		return
 	}
+	
+	if len(decompressedBody) == 0 {
+		ctx.Next()
+		return
+	}
 
 	ctx.Request.Body = io.NopCloser(bytes.NewBuffer(decompressedBody))
+
+	_ = d.Request.Handle(ctx)
 
 	ctx.Next()
 }

@@ -53,7 +53,6 @@ func (p *WorkerPool) AddJob(ctx context.Context, metric *models.Metrics) {
 	select {
 	case p.jobs <- job{ctx: ctx, metric: metric}:
 	default:
-		log.Warn("job queue is full, job was dropped")
 	}
 }
 

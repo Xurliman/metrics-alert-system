@@ -1,0 +1,10 @@
+{
+  "address": "localhost:9090",
+  "port": 9090,
+  "store_interval": 10,
+  "file_storage_path" : "/tmp",
+  "database_dsn": "host=localhost port=5432 user=postgres password=kali dbname=metrics sslmode=disable",
+  "restore": true,
+  "key" : "secret",
+  "crypto_key": "rsa/private.pem"
+}
