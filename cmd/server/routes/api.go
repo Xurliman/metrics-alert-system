@@ -6,10 +6,12 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/middlewares"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/services"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/config"
+	"github.com/Xurliman/metrics-alert-system/internal/pb"
 	"github.com/gin-gonic/gin"
+	"google.golang.org/grpc"
 )
 
-func SetupRoutes(metricsRepository interfaces.MetricsRepositoryInterface, cfg *config.Config) *gin.Engine {
+func SetupRoutes(metricsRepository interfaces.MetricsRepositoryInterface, cfg *config.Config, grpcServer *grpc.Server) *gin.Engine {
 	decompression := middlewares.NewDecompressingMiddleware()
 	logging := middlewares.NewLoggingMiddleware()
 	compression := middlewares.NewCompressingMiddleware()
@@ -31,5 +33,7 @@ func SetupRoutes(metricsRepository interfaces.MetricsRepositoryInterface, cfg *c
 	r.POST("/update/:type/:name/:value", metricsController.Save)
 	r.POST("/update/", metricsController.SaveBody)
 	r.POST("/updates/", metricsController.SaveMany)
+
+	pb.RegisterMetricsServiceServer(grpcServer, controllers.NewRPCMetricsController(metricsService))
 	return r
 }

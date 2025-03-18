@@ -12,6 +12,8 @@ import (
 	"github.com/Xurliman/metrics-alert-system/internal/log"
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
+	"net"
 	"os"
 	"os/exec"
 	"os/signal"
@@ -88,11 +90,33 @@ func main() {
 	}
 	go archiveToFile(ctx, cfg, repo, archiveService)
 
-	r := routes.SetupRoutes(repo, cfg)
-	err = r.Run(cfg.GetPort())
+	listener, err := net.Listen("tcp", ":50051")
 	if err != nil {
-		log.Fatal("error when starting server", zap.Error(err))
+		log.Fatal("error when listening on port", zap.Error(err))
 	}
+
+	grpcServer := grpc.NewServer()
+	r := routes.SetupRoutes(repo, cfg, grpcServer)
+
+	go func() {
+		err = grpcServer.Serve(listener)
+		if err != nil {
+			log.Fatal("error when starting grpc server", zap.Error(err))
+		}
+	}()
+
+	go func() {
+		err = r.Run(cfg.GetPort())
+		if err != nil {
+			log.Fatal("error when starting server", zap.Error(err))
+		}
+	}()
+
+	<-ctx.Done()
+	log.Info("shutdown signal received, stopping servers...")
+
+	grpcServer.GracefulStop()
+	log.Info("gRPC server stopped...")
 }
 
 func archiveToFile(ctx context.Context, cfg *config.Config, repository interfaces.MetricsRepositoryInterface, archiveService interfaces.ArchiveServiceInterface) {
