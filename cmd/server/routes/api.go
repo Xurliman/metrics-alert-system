@@ -6,15 +6,18 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/middlewares"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/app/services"
 	"github.com/Xurliman/metrics-alert-system/cmd/server/config"
+	"github.com/Xurliman/metrics-alert-system/internal/pb"
 	"github.com/gin-gonic/gin"
+	"google.golang.org/grpc"
 )
 
-func SetupRoutes(metricsRepository interfaces.MetricsRepositoryInterface, cfg *config.Config) *gin.Engine {
+func SetupRoutes(metricsRepository interfaces.MetricsRepositoryInterface, cfg *config.Config, grpcServer *grpc.Server) *gin.Engine {
 	decompression := middlewares.NewDecompressingMiddleware()
 	logging := middlewares.NewLoggingMiddleware()
 	compression := middlewares.NewCompressingMiddleware()
 	hashing := middlewares.NewHashingMiddleware(cfg.Key)
 	decrypting := middlewares.NewDecryptingMiddleware(cfg.CryptoKey)
+	subnet := middlewares.NewNetMiddleware(cfg.TrustedSubnet)
 
 	r := gin.New()
 	r.LoadHTMLFiles("./cmd/server/public/templates/metrics-all.html")
@@ -22,7 +25,7 @@ func SetupRoutes(metricsRepository interfaces.MetricsRepositoryInterface, cfg *c
 	metricsService := services.NewMetricsService(metricsRepository, services.NewSwitchService())
 	metricsController := controllers.NewMetricsController(metricsService)
 
-	r.Use(decrypting.Handle, decompression.Handle, hashing.Handle, compression.Handle, logging.Handle)
+	r.Use(subnet.Handle, decrypting.Handle, decompression.Handle, hashing.Handle, compression.Handle, logging.Handle)
 	r.GET("/ping", metricsController.Ping)
 	r.GET("/", metricsController.List)
 	r.GET("/value/:type/:name", metricsController.Show)
@@ -30,5 +33,7 @@ func SetupRoutes(metricsRepository interfaces.MetricsRepositoryInterface, cfg *c
 	r.POST("/update/:type/:name/:value", metricsController.Save)
 	r.POST("/update/", metricsController.SaveBody)
 	r.POST("/updates/", metricsController.SaveMany)
+
+	pb.RegisterMetricsServiceServer(grpcServer, controllers.NewRPCMetricsController(metricsService))
 	return r
 }

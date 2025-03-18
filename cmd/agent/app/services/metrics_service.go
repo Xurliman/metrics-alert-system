@@ -20,6 +20,7 @@ import (
 	"github.com/Xurliman/metrics-alert-system/internal/rsa"
 	"go.uber.org/zap"
 	"math/rand"
+	"net"
 	"net/http"
 	"runtime"
 )
@@ -221,6 +222,12 @@ func (s *MetricsService) SendMetric(ctx context.Context, metric *models.Metrics)
 }
 
 func (s *MetricsService) makeRequest(request *http.Request) (err error) {
+	ip, err := getLocalIP()
+	if err != nil {
+		return err
+	}
+
+	request.Header.Add("X-Real-IP", ip)
 	request.Header.Add("Content-Type", "application/json")
 
 	response, err := s.client.Do(request)
@@ -247,4 +254,20 @@ func (s *MetricsService) hashRequest(requestBody []byte) (string, error) {
 	h.Write(requestBody)
 	dst := h.Sum(nil)
 	return hex.EncodeToString(dst), nil
+}
+
+func getLocalIP() (string, error) {
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		return "", err
+	}
+
+	for _, addr := range addrs {
+		ipNet, ok := addr.(*net.IPNet)
+		if ok && !ipNet.IP.IsLoopback() && ipNet.IP.To4() != nil {
+			return ipNet.IP.String(), nil
+		}
+	}
+
+	return "", fmt.Errorf("no valid local IP found")
 }

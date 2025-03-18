@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option go_package = "internal/pb";
+
+service MetricsService {
+  rpc Get(GetRequest) returns (GetResponse);
+  rpc Add(AddRequest) returns (AddResponse);
+}
+
+message GetRequest {
+  string name = 1;
+}
+
+message GetResponse {
+  Metrics metrics = 1;
+}
+
+message AddRequest {
+  Metrics metrics = 1;
+}
+
+message AddResponse {
+  Metrics metrics = 1;
+}
+
+message Metrics {
+  string id = 1;
+  string type = 2;
+  optional double value = 3;
+  optional sfixed64 delta = 4;
+}

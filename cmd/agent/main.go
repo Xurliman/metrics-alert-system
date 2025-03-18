@@ -8,9 +8,12 @@ import (
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/app/services"
 	"github.com/Xurliman/metrics-alert-system/cmd/agent/config"
 	"github.com/Xurliman/metrics-alert-system/internal/log"
+	"github.com/Xurliman/metrics-alert-system/internal/pb"
 	"github.com/Xurliman/metrics-alert-system/internal/rsa"
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"os"
 	"os/exec"
 	"os/signal"
@@ -88,5 +91,21 @@ func main() {
 	metricRepository := repositories.NewMetricsRepository()
 	metricsService := services.NewMetricsService(metricRepository, cfg)
 	metricController := controllers.NewMetricsController(metricsService, cfg)
+
+	conn, err := grpc.NewClient(":50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatal("error creating grpc client", zap.Error(err))
+	}
+
+	defer func(conn *grpc.ClientConn) {
+		err = conn.Close()
+		if err != nil {
+			log.Error("error closing grpc connection", zap.Error(err))
+		}
+	}(conn)
+
+	client := pb.NewMetricsServiceClient(conn)
+	services.NewRPCMetricsService(client).TestMetrics()
+
 	metricController.Run(ctx)
 }
