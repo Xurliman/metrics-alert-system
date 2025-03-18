@@ -23,6 +23,7 @@ type Config struct {
 	Key             string `env:"KEY" envDefault:"invalid_key" json:"key"`
 	CryptoKey       string `env:"CRYPTO_KEY" envDefault:"" json:"crypto_key"`
 	ConfigFile      string `env:"CONFIG" envDefault:""`
+	TrustedSubnet   string `env:"TRUSTED_SUBNET" envDefault:"" json:"trusted_subnet"`
 }
 
 func Setup() (*Config, error) {
@@ -35,6 +36,7 @@ func Setup() (*Config, error) {
 	flag.StringVar(&cfg.Key, constants.KeyFlag, "", constants.KeyFlagDescription)
 	flag.StringVar(&cfg.CryptoKey, "crypto-key", "", "set private key path")
 	flag.StringVar(&cfg.ConfigFile, "c", "", "set config file path")
+	flag.StringVar(&cfg.TrustedSubnet, "t", "", "set trusted subnet in cidr notation")
 	flag.Parse()
 
 	if err := env.Parse(&cfg); err != nil {

@@ -68,6 +68,17 @@ func JSONNotFound(ctx *gin.Context, err error) {
 	})
 }
 
+func JSONForbiddenError(ctx *gin.Context, err error) {
+	log.Warn(logErrorFormat(err))
+	ctx.Header("Content-Type", "application/json; charset=utf-8")
+	ctx.JSON(http.StatusForbidden, DefaultResponse{
+		Success: false,
+		Status:  http.StatusForbidden,
+		Message: err.Error(),
+		Data:    nil,
+	})
+}
+
 func logSuccessFormat(data interface{}) string {
 	jsonData, _ := json.MarshalIndent(data, "", "    ")
 	return "✅" + string(jsonData)

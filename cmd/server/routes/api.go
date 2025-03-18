@@ -15,6 +15,7 @@ func SetupRoutes(metricsRepository interfaces.MetricsRepositoryInterface, cfg *c
 	compression := middlewares.NewCompressingMiddleware()
 	hashing := middlewares.NewHashingMiddleware(cfg.Key)
 	decrypting := middlewares.NewDecryptingMiddleware(cfg.CryptoKey)
+	subnet := middlewares.NewNetMiddleware(cfg.TrustedSubnet)
 
 	r := gin.New()
 	r.LoadHTMLFiles("./cmd/server/public/templates/metrics-all.html")
@@ -22,7 +23,7 @@ func SetupRoutes(metricsRepository interfaces.MetricsRepositoryInterface, cfg *c
 	metricsService := services.NewMetricsService(metricsRepository, services.NewSwitchService())
 	metricsController := controllers.NewMetricsController(metricsService)
 
-	r.Use(decrypting.Handle, decompression.Handle, hashing.Handle, compression.Handle, logging.Handle)
+	r.Use(subnet.Handle, decrypting.Handle, decompression.Handle, hashing.Handle, compression.Handle, logging.Handle)
 	r.GET("/ping", metricsController.Ping)
 	r.GET("/", metricsController.List)
 	r.GET("/value/:type/:name", metricsController.Show)

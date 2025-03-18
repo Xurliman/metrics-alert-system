@@ -29,7 +29,7 @@ func TestMetricsRepository_GetRequestURL(t *testing.T) {
 				MType: constants.GaugeMetricType,
 				Value: &allocValue,
 			},
-			want:    "/gauge/Alloc/" + strconv.FormatFloat(allocValue, 'f', -1, 64),
+			want:    "/update/gauge/Alloc/" + strconv.FormatFloat(allocValue, 'f', -1, 64),
 			wantErr: assert.NoError,
 		},
 	}
